@@ -1,0 +1,68 @@
+type Cart @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  createdAt: AWSTimestamp
+  updatedAt: AWSTimestamp
+  Products: [Product] @hasMany(indexName: "byCart", fields: ["id"])
+}
+
+type Inventory @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  quantity: Int
+  location: Address
+  lastUpdated: AWSTimestamp
+  productID: ID! @index(name: "byProduct")
+}
+
+type Product @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  description: String
+  price: String
+  category: String
+  tags: [String]
+  Inventories: [Inventory] @hasMany(indexName: "byProduct", fields: ["id"])
+  cartID: ID! @index(name: "byCart")
+}
+
+type OrderItem {
+  id: ID
+  quantity: Int
+  price: Float
+  productID: ID
+}
+
+type Order @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  shippingAddress: Address
+  billingAddress: Address
+  totalAmount: Float
+  status: String
+  createdAt: AWSTimestamp
+  updatedAt: AWSTimestamp
+  items: [OrderItem]
+  customerID: ID! @index(name: "byCustomer")
+}
+
+type Address {
+  id: ID
+  recipientName: String
+  street: String
+  city: String
+  state: String
+  postalCode: String
+  country: String
+}
+
+type Customer @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  dateOfBirth: AWSDate
+  email: AWSEmail
+  billingAddress: Address
+  shippingAddress: [Address]
+  profileImage: String
+  gender: String
+  Orders: [Order] @hasMany(indexName: "byCustomer", fields: ["id"])
+  Cart: Cart @hasOne
+}
+ 
