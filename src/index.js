@@ -8,7 +8,6 @@ import config from "./aws-exports";
 import { AmplifyProvider, ThemeProvider } from "@aws-amplify/ui-react";
 import { studioTheme } from "./ui-components";
 import "@aws-amplify/ui-react/styles.css";
-import { BrowserRouter } from "react-router-dom";
 
 Amplify.configure(config);
 
@@ -17,9 +16,7 @@ root.render(
   <React.StrictMode>
     <AmplifyProvider>
       <ThemeProvider theme={studioTheme}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <App />
       </ThemeProvider>
     </AmplifyProvider>
   </React.StrictMode>

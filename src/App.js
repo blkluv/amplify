@@ -1,18 +1,52 @@
-import "./App.css";
-import { Button, View, withAuthenticator } from "@aws-amplify/ui-react";
-import { Route, Routes } from "react-router";
+//App.js
+import { Authenticator } from "@aws-amplify/ui-react";
 
-function App({ signOut }) {
+import { Protected } from "./components/Protected/Protected";
+import { RequireAuth } from "./RequireAuth";
+import { Login } from "./components/Login/Login";
+import { ProtectedSecond } from "./components/ProtectedSecond/ProtectedSecond";
+import { Home } from "./components/Home/Home";
+import { Layout } from "./components/Layout/Layout";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import "./App.css";
+
+function MyRoutes() {
   return (
-    <View className="App">
-      inside app
-      <Button onClick={signOut}>Sign out</Button>
+    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>home</div>} />
-        <Route path="/profile" element={<div>profile</div>} />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route
+            path="/protected"
+            element={
+              <RequireAuth>
+                <Protected />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/protected2"
+            element={
+              <RequireAuth>
+                <ProtectedSecond />
+              </RequireAuth>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+        </Route>
       </Routes>
-    </View>
+    </BrowserRouter>
   );
 }
 
-export default withAuthenticator(App);
+function App() {
+  return (
+    <Authenticator.Provider>
+      <MyRoutes />
+    </Authenticator.Provider>
+  );
+}
+
+export default App;
