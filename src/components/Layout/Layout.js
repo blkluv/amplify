@@ -1,5 +1,6 @@
 // components/Layout.js
 import React from "react";
+import style from "./Layout.module.css";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuthenticator, Button, Heading, View } from "@aws-amplify/ui-react";
 
@@ -15,19 +16,18 @@ export function Layout() {
     navigate("/login");
   }
   return (
-    <>
+    <div className={style.container}>
       <nav>
         <Button onClick={() => navigate("/")}>Home</Button>
-        <Button onClick={() => navigate("/protected")}>
-          First Protected Route
-        </Button>
-        <Button onClick={() => navigate("/protected2")}>
-          Second Protected Route
-        </Button>
+        <Button onClick={() => navigate("/collections")}>Collections</Button>
+        <Button onClick={() => navigate("/cart")}>Cart</Button>
         {route !== "authenticated" ? (
           <Button onClick={() => navigate("/login")}>Login</Button>
         ) : (
-          <Button onClick={() => logOut()}>Logout</Button>
+          <>
+            <Button onClick={() => navigate("/profile")}>Profile</Button>
+            <Button onClick={() => logOut()}>Logout</Button>
+          </>
         )}
       </nav>
       <Heading level={1}>Example Auth Routes App</Heading>
@@ -36,6 +36,6 @@ export function Layout() {
       </View>
 
       <Outlet />
-    </>
+    </div>
   );
 }

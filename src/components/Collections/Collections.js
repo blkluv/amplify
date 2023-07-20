@@ -1,9 +1,8 @@
-// components/Protected.js
 import { useAuthenticator, Heading } from "@aws-amplify/ui-react";
-export function Protected() {
+export function Collections() {
   const { route } = useAuthenticator((context) => [context.route]);
 
   const message =
-    route === "authenticated" ? "FIRST PROTECTED ROUTE!" : "Loading...";
+    route === "authenticated" ? "See Our Collections" : "Loading...";
   return <Heading level={1}>{message}</Heading>;
 }
