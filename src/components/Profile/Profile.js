@@ -1,40 +1,32 @@
 import { useAuthenticator, Heading, Button } from "@aws-amplify/ui-react";
 import ProfileCard from "../../ui-components/ProfileCard";
-import { DataStore } from "@aws-amplify/datastore";
-import { Customer } from "../../models";
-import { API } from "aws-amplify";
-import * as mutations from "./graphql/mutations";
+import * as mutations from "../../graphql/mutations";
+import { API, graphqlOperation } from "aws-amplify";
 
-await DataStore.save(
-  new Customer({
-    name: "Lorem ipsum dolor sit amet",
-    dateOfBirth: "1970-01-01Z",
-    email: "test12346789@testemailtestemail.com",
-    billingAddress: [],
-    shippingAddress: [],
-    profileImage: "Lorem ipsum dolor sit amet",
-    gender: "Lorem ipsum dolor sit amet",
-    Orders: [],
-    Cart: [],
-  })
-);
+const address = {
+  recipientName: "Lorem ipsum dolor sit amet",
+  street: "Lorem ipsum dolor sit amet",
+  city: "Lorem ipsum dolor sit amet",
+  state: "Lorem ipsum dolor sit amet",
+  postalCode: "Lorem ipsum dolor sit amet",
+  country: "Lorem ipsum dolor sit amet",
+};
 
 const customer = {
   name: "Lorem ipsum dolor sit amet",
   dateOfBirth: "1970-01-01Z",
   email: "test12346789@testemailtestemail.com",
-  billingAddress: [],
-  shippingAddress: [],
-  profileImage: "Lorem ipsum dolor sit amet",
+  billingAddress: address,
+  shippingAddress: address,
   gender: "Lorem ipsum dolor sit amet",
-  Orders: [],
-  Cart: [],
 };
 
-const saveCustomer = await API.graphql({
-  graphqlOperation: mutations.createCustomer,
-  variables: { input: customer },
-});
+const saveCustomer = async () =>
+  await API.graphql(
+    graphqlOperation(mutations.createCustomer, { input: customer })
+  )
+    .then((response) => console.log(response))
+    .catch((error) => console.log(error));
 
 export function Profile() {
   const { route } = useAuthenticator((context) => [context.route]);
