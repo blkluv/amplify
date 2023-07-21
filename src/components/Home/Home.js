@@ -4,7 +4,11 @@ import { StorageManager } from "@aws-amplify/ui-react-storage";
 import "@aws-amplify/ui-react/styles.css";
 import { Storage } from "@aws-amplify/storage";
 
-const handleStorage = async () => await Storage.put("test.txt", "Hello");
+const handleStorage = async () =>
+  await Storage.put("test.txt", "Protected Content", {
+    level: "protected",
+    contentType: "text/plain",
+  });
 
 export function Home() {
   return (

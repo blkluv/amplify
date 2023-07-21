@@ -16,9 +16,13 @@
         "ecommerceapp32b6c20c": {
           "bucketName": "ecommerce-app-storage-1d5b1b9a70342-staging",
           "region": "ap-south-1"
-        }
+        },
+        "s34b05b821": {}
       },
       "auth": {
+        "ecommerceapp": {}
+      },
+      "api": {
         "ecommerceapp": {}
       }
     }
