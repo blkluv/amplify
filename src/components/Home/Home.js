@@ -1,8 +1,8 @@
 // components/Home.js
 import { Heading } from "@aws-amplify/ui-react";
 import { StorageManager } from "@aws-amplify/ui-react-storage";
-import "@aws-amplify/ui-react/styles.css";
 import { Storage } from "@aws-amplify/storage";
+import "@aws-amplify/ui-react/styles.css";
 
 const handleStorage = async () =>
   await Storage.put("test.txt", "Protected Content", {
