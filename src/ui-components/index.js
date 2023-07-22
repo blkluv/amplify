@@ -33,6 +33,7 @@ export { default as MyIcon } from "./MyIcon";
 export { default as NavBarHeader } from "./NavBarHeader";
 export { default as NavBarHeader2 } from "./NavBarHeader2";
 export { default as NavBarSide } from "./NavBarSide";
+export { default as NewForm1 } from "./NewForm1";
 export { default as OrderCreateForm } from "./OrderCreateForm";
 export { default as OrderUpdateForm } from "./OrderUpdateForm";
 export { default as ProductCard } from "./ProductCard";

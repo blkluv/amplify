@@ -8,15 +8,23 @@
 import * as React from "react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import MyIcon from "./MyIcon";
-import { Button, Flex, Image, Text, TextField } from "@aws-amplify/ui-react";
+import {
+  Button,
+  Flex,
+  Image,
+  PhoneNumberField,
+  SelectField,
+  Text,
+  TextField,
+} from "@aws-amplify/ui-react";
 export default function EditProfile(props) {
-  const { overrides, ...rest } = props;
+  const { imageSrc, ImageUpload, overrides, ...rest } = props;
   return (
     <Flex
       gap="16px"
       direction="column"
       width="640px"
-      height="unset"
+      height="697px"
       justifyContent="flex-start"
       alignItems="flex-start"
       position="relative"
@@ -29,7 +37,7 @@ export default function EditProfile(props) {
         gap="24px"
         direction="column"
         width="unset"
-        height="unset"
+        height="697px"
         justifyContent="flex-start"
         alignItems="flex-start"
         shrink="0"
@@ -141,7 +149,7 @@ export default function EditProfile(props) {
           gap="16px"
           direction="column"
           width="unset"
-          height="unset"
+          height="420px"
           justifyContent="flex-start"
           alignItems="flex-start"
           shrink="0"
@@ -164,12 +172,11 @@ export default function EditProfile(props) {
             {...getOverrideProps(overrides, "TextField29766922")}
           ></TextField>
           <TextField
-            width="unset"
-            height="unset"
+            width="592px"
+            height="68px"
             label="Location"
             placeholder="Seattle, WA"
             shrink="0"
-            alignSelf="stretch"
             size="default"
             isDisabled={false}
             labelHidden={false}
@@ -189,6 +196,29 @@ export default function EditProfile(props) {
             variation="default"
             {...getOverrideProps(overrides, "TextField29766924")}
           ></TextField>
+          <PhoneNumberField
+            width="592px"
+            height="unset"
+            shrink="0"
+            placeholder="Placeholder"
+            size="default"
+            isDisabled={false}
+            labelHidden={false}
+            variation="default"
+            {...getOverrideProps(overrides, "PhoneNumberField")}
+          ></PhoneNumberField>
+          <SelectField
+            width="592px"
+            height="unset"
+            shrink="0"
+            label="Label"
+            placeholder="Placeholder"
+            size="default"
+            isDisabled={false}
+            labelHidden={false}
+            variation="default"
+            {...getOverrideProps(overrides, "SelectField")}
+          ></SelectField>
         </Flex>
         <Button
           width="unset"

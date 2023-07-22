@@ -7,7 +7,7 @@
 import * as React from "react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { MyIconProps } from "./MyIcon";
-import { ButtonProps, FlexProps, ImageProps, TextFieldProps, TextProps } from "@aws-amplify/ui-react";
+import { ButtonProps, FlexProps, ImageProps, PhoneNumberFieldProps, SelectFieldProps, TextFieldProps, TextProps } from "@aws-amplify/ui-react";
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type EditProfileOverridesProps = {
     EditProfile?: PrimitiveOverrideProps<FlexProps>;
@@ -22,9 +22,14 @@ export declare type EditProfileOverridesProps = {
     TextField29766922?: PrimitiveOverrideProps<TextFieldProps>;
     TextField29766923?: PrimitiveOverrideProps<TextFieldProps>;
     TextField29766924?: PrimitiveOverrideProps<TextFieldProps>;
+    PhoneNumberField?: PrimitiveOverrideProps<PhoneNumberFieldProps>;
+    SelectField?: PrimitiveOverrideProps<SelectFieldProps>;
     Button?: PrimitiveOverrideProps<ButtonProps>;
 } & EscapeHatchProps;
 export declare type EditProfileProps = React.PropsWithChildren<Partial<FlexProps> & {
+    imageSrc?: String;
+    ImageUpload?: String;
+} & {
     overrides?: EditProfileOverridesProps | undefined | null;
 }>;
 export default function EditProfile(props: EditProfileProps): React.ReactElement;

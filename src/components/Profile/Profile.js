@@ -1,7 +1,11 @@
+import { useEffect, useState } from "react";
 import { useAuthenticator, Heading, Button } from "@aws-amplify/ui-react";
 import ProfileCard from "../../ui-components/ProfileCard";
 import * as mutations from "../../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
+import EditProfile from "../../ui-components/EditProfile";
+import NewForm1 from "../../ui-components/NewForm1";
+import { Auth } from "aws-amplify";
 
 const address = {
   recipientName: "Lorem ipsum dolor sit amet",
@@ -31,12 +35,35 @@ const saveCustomer = async () =>
 export function Profile() {
   const { route } = useAuthenticator((context) => [context.route]);
 
-  const message = route === "authenticated" ? "Your Profile" : "Loading...";
+  const [user, setUser] = useState(null);
+
+  async function getUserInfo() {
+    const user = await Auth.currentAuthenticatedUser();
+    console.log("attributes:", user.attributes.name);
+    setUser(user);
+  }
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
   return (
     <>
-      <Heading level={1}>{message}</Heading>
-      <Button onClick={saveCustomer}>Save</Button>
-      <ProfileCard />
+      <Heading level={4}>
+        {user
+          ? `Hi, ${user.attributes.name}. See your details here`
+          : "Hi, See your details here"}
+      </Heading>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <NewForm1 />
+      </div>
     </>
   );
 }

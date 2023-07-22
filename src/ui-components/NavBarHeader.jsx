@@ -6,12 +6,20 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import {
+  getOverrideProps,
+  useNavigateAction,
+} from "@aws-amplify/ui-react/internal";
 import LogoWithText from "./LogoWithText";
 import { Flex, Image, Text } from "@aws-amplify/ui-react";
 import MyIcon from "./MyIcon";
 export default function NavBarHeader(props) {
-  const { overrides, ...rest } = props;
+  const { buttonLinks, overrides, ...rest } = props;
+  const allCollectionsOnClick = useNavigateAction({
+    type: "url",
+    url: "/collections",
+  });
+  const imageOnClick = useNavigateAction({ type: "url", url: "/profile" });
   return (
     <Flex
       gap="40px"
@@ -72,8 +80,11 @@ export default function NavBarHeader(props) {
           position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
-          children="Dashboard"
-          {...getOverrideProps(overrides, "Dashboard")}
+          children="All Collections"
+          onClick={() => {
+            allCollectionsOnClick();
+          }}
+          {...getOverrideProps(overrides, "All Collections")}
         ></Text>
         <Text
           fontFamily="Inter"
@@ -93,8 +104,8 @@ export default function NavBarHeader(props) {
           position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
-          children="Jobs"
-          {...getOverrideProps(overrides, "Jobs")}
+          children="Shirts"
+          {...getOverrideProps(overrides, "Shirts")}
         ></Text>
         <Text
           fontFamily="Inter"
@@ -114,8 +125,8 @@ export default function NavBarHeader(props) {
           position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
-          children="Applicants"
-          {...getOverrideProps(overrides, "Applicants")}
+          children="Tshirts"
+          {...getOverrideProps(overrides, "Tshirts")}
         ></Text>
         <Text
           fontFamily="Inter"
@@ -135,8 +146,8 @@ export default function NavBarHeader(props) {
           position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
-          children="Company"
-          {...getOverrideProps(overrides, "Company")}
+          children="Pants"
+          {...getOverrideProps(overrides, "Pants")}
         ></Text>
       </Flex>
       <Flex
@@ -179,6 +190,9 @@ export default function NavBarHeader(props) {
           borderRadius="160px"
           padding="0px 0px 0px 0px"
           objectFit="cover"
+          onClick={() => {
+            imageOnClick();
+          }}
           {...getOverrideProps(overrides, "image")}
         ></Image>
       </Flex>
