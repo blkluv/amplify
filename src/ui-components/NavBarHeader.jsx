@@ -8,17 +8,21 @@
 import * as React from "react";
 import {
   getOverrideProps,
+  useAuthSignOutAction,
   useNavigateAction,
 } from "@aws-amplify/ui-react/internal";
 import LogoWithText from "./LogoWithText";
 import { Flex, Image, Text } from "@aws-amplify/ui-react";
 import MyIcon from "./MyIcon";
 export default function NavBarHeader(props) {
-  const { buttonLinks, overrides, ...rest } = props;
+  const { buttonLinks, cartHandler, overrides, ...rest } = props;
   const allCollectionsOnClick = useNavigateAction({
     type: "url",
     url: "/collections",
   });
+  const shirtsOnClick = useNavigateAction({ type: "url", url: "/shirts" });
+  const tshirtsOnClick = useNavigateAction({ type: "url", url: "/tshirts" });
+  const logoutOnClick = useAuthSignOutAction({ global: false });
   const imageOnClick = useNavigateAction({ type: "url", url: "/profile" });
   return (
     <Flex
@@ -105,6 +109,9 @@ export default function NavBarHeader(props) {
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
           children="Shirts"
+          onClick={() => {
+            shirtsOnClick();
+          }}
           {...getOverrideProps(overrides, "Shirts")}
         ></Text>
         <Text
@@ -126,8 +133,26 @@ export default function NavBarHeader(props) {
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
           children="Tshirts"
+          onClick={() => {
+            tshirtsOnClick();
+          }}
           {...getOverrideProps(overrides, "Tshirts")}
         ></Text>
+      </Flex>
+      <Flex
+        gap="32px"
+        direction="row"
+        width="unset"
+        height="unset"
+        justifyContent="flex-end"
+        alignItems="center"
+        grow="1"
+        shrink="1"
+        basis="0"
+        position="relative"
+        padding="0px 0px 0px 0px"
+        {...getOverrideProps(overrides, "Frame 32129767081")}
+      >
         <Text
           fontFamily="Inter"
           fontSize="16px"
@@ -146,24 +171,12 @@ export default function NavBarHeader(props) {
           position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
-          children="Pants"
-          {...getOverrideProps(overrides, "Pants")}
+          children="logout"
+          onClick={() => {
+            logoutOnClick();
+          }}
+          {...getOverrideProps(overrides, "logout")}
         ></Text>
-      </Flex>
-      <Flex
-        gap="32px"
-        direction="row"
-        width="unset"
-        height="unset"
-        justifyContent="flex-end"
-        alignItems="center"
-        grow="1"
-        shrink="1"
-        basis="0"
-        position="relative"
-        padding="0px 0px 0px 0px"
-        {...getOverrideProps(overrides, "Frame 32129767081")}
-      >
         <MyIcon
           width="24px"
           height="24px"
@@ -171,11 +184,10 @@ export default function NavBarHeader(props) {
           gap="unset"
           alignItems="unset"
           justifyContent="unset"
-          overflow="hidden"
           shrink="0"
           position="relative"
           padding="0px 0px 0px 0px"
-          type="notification"
+          type="shopping_bag"
           {...getOverrideProps(overrides, "MyIcon")}
         ></MyIcon>
         <Image

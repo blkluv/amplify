@@ -9,7 +9,7 @@ import * as React from "react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Button, Flex, Icon, Text, View } from "@aws-amplify/ui-react";
 export default function NavBarHeader2(props) {
-  const { overrides, ...rest } = props;
+  const { loginHandler, overrides, ...rest } = props;
   return (
     <Flex
       gap="10px"
@@ -183,6 +183,7 @@ export default function NavBarHeader2(props) {
           isDisabled={false}
           variation="link"
           children="Log in"
+          onClick={loginHandler}
           {...getOverrideProps(overrides, "Button39493466")}
         ></Button>
         <Button
@@ -193,6 +194,7 @@ export default function NavBarHeader2(props) {
           isDisabled={false}
           variation="primary"
           children="Sign up"
+          onClick={loginHandler}
           {...getOverrideProps(overrides, "Button39493467")}
         ></Button>
       </Flex>

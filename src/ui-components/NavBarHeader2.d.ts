@@ -7,6 +7,7 @@
 import * as React from "react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { ButtonProps, FlexProps, IconProps, TextProps, ViewProps } from "@aws-amplify/ui-react";
+import { SyntheticEvent } from "react";
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type NavBarHeader2OverridesProps = {
     NavBarHeader2?: PrimitiveOverrideProps<FlexProps>;
@@ -22,6 +23,8 @@ export declare type NavBarHeader2OverridesProps = {
     Button39493467?: PrimitiveOverrideProps<ButtonProps>;
 } & EscapeHatchProps;
 export declare type NavBarHeader2Props = React.PropsWithChildren<Partial<FlexProps> & {
+    loginHandler?: (event: SyntheticEvent) => void;
+} & {
     overrides?: NavBarHeader2OverridesProps | undefined | null;
 }>;
 export default function NavBarHeader2(props: NavBarHeader2Props): React.ReactElement;

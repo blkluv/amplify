@@ -9,6 +9,7 @@ import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { LogoWithTextProps } from "./LogoWithText";
 import { FlexProps, ImageProps, TextProps } from "@aws-amplify/ui-react";
 import { MyIconProps } from "./MyIcon";
+import { SyntheticEvent } from "react";
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type NavBarHeaderOverridesProps = {
     NavBarHeader?: PrimitiveOverrideProps<FlexProps>;
@@ -17,13 +18,14 @@ export declare type NavBarHeaderOverridesProps = {
     "All Collections"?: PrimitiveOverrideProps<TextProps>;
     Shirts?: PrimitiveOverrideProps<TextProps>;
     Tshirts?: PrimitiveOverrideProps<TextProps>;
-    Pants?: PrimitiveOverrideProps<TextProps>;
     "Frame 32129767081"?: PrimitiveOverrideProps<FlexProps>;
+    logout?: PrimitiveOverrideProps<TextProps>;
     MyIcon?: MyIconProps;
     image?: PrimitiveOverrideProps<ImageProps>;
 } & EscapeHatchProps;
 export declare type NavBarHeaderProps = React.PropsWithChildren<Partial<FlexProps> & {
     buttonLinks?: String;
+    cartHandler?: (event: SyntheticEvent) => void;
 } & {
     overrides?: NavBarHeaderOverridesProps | undefined | null;
 }>;
