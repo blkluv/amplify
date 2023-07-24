@@ -8,8 +8,11 @@ import {
   TextField,
 } from "@aws-amplify/ui-react";
 import { StorageManager } from "@aws-amplify/ui-react-storage";
-import { Customer } from "../models";
-import { fetchByPath, processFile, validateField } from "./utils";
+import {
+  fetchByPath,
+  processFile,
+  validateField,
+} from "../../ui-components/utils";
 import { DataStore } from "aws-amplify";
 
 const props = {
@@ -23,17 +26,7 @@ const props = {
   overrides: undefined,
 };
 
-export default function EditProfileLocal({ props }) {
-  const {
-    onSuccess,
-    onError,
-    onSubmit,
-    onValidate,
-    onChange,
-    overrides,
-    ...rest
-  } = props;
-
+export default function EditProfileLocal({ user }) {
   const initialValues = {
     name: "",
     email: "",

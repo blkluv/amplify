@@ -76,7 +76,7 @@ export default function NewForm1(props) {
   }, [idProp, customerModelProp]);
   React.useEffect(resetStateValues, [customerRecord]);
   const validations = {
-    name: [{ type: "Required" }],
+    name: [],
     email: [{ type: "Email" }],
     address: [],
     gender: [],
@@ -172,7 +172,7 @@ export default function NewForm1(props) {
     >
       <TextField
         label="Name"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         value={name}
         onChange={(e) => {
@@ -287,7 +287,23 @@ export default function NewForm1(props) {
         errorMessage={errors.gender?.errorMessage}
         hasError={errors.gender?.hasError}
         {...getOverrideProps(overrides, "gender")}
-      ></SelectField>
+      >
+        <option
+          children="Male"
+          value="Male"
+          {...getOverrideProps(overrides, "genderoption0")}
+        ></option>
+        <option
+          children="Female"
+          value="Female"
+          {...getOverrideProps(overrides, "genderoption1")}
+        ></option>
+        <option
+          children="Prefer not to say"
+          value="Prefer not to say"
+          {...getOverrideProps(overrides, "genderoption2")}
+        ></option>
+      </SelectField>
       <TextField
         label="Date of Birth"
         isRequired={false}

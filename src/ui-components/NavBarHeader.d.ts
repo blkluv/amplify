@@ -5,6 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
+import { Cart } from "../models";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { LogoWithTextProps } from "./LogoWithText";
 import { FlexProps, ImageProps, TextProps } from "@aws-amplify/ui-react";
@@ -24,8 +25,10 @@ export declare type NavBarHeaderOverridesProps = {
     image?: PrimitiveOverrideProps<ImageProps>;
 } & EscapeHatchProps;
 export declare type NavBarHeaderProps = React.PropsWithChildren<Partial<FlexProps> & {
-    buttonLinks?: String;
     cartHandler?: (event: SyntheticEvent) => void;
+    buttonLinks?: String;
+    cartLink?: Cart;
+    profileImage?: String;
 } & {
     overrides?: NavBarHeaderOverridesProps | undefined | null;
 }>;

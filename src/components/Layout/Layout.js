@@ -1,47 +1,65 @@
-// components/Layout.js
 import React from "react";
 import style from "./Layout.module.css";
 import { Outlet, useNavigate } from "react-router-dom";
-import {
-  useAuthenticator,
-  Button,
-  Heading,
-  View,
-  ThemeProvider,
-} from "@aws-amplify/ui-react";
+import { View, useAuthenticator } from "@aws-amplify/ui-react";
 import NavBarHeader from "../../ui-components/NavBarHeader";
 import NavBarHeader2 from "../../ui-components/NavBarHeader2";
+import { Auth } from "aws-amplify";
+import { Storage } from "@aws-amplify/storage";
 
 export function Layout() {
   const { route, signOut } = useAuthenticator((context) => [
     context.route,
     context.signOut,
   ]);
+
+  const [userProfilePhoto, setUserProfilePhoto] = React.useState(null);
+
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    getUserInfo();
+  }, []);
 
   function logOut() {
     signOut();
     navigate("/login");
   }
+
+  async function getUserInfo() {
+    const user = await Auth.currentAuthenticatedUser();
+    downloadFile(user);
+  }
+
+  const downloadFile = async (user) => {
+    await Storage.get(`${user.attributes.picture}`, {
+      level: "public",
+    })
+      .then((result) => {
+        setUserProfilePhoto(result);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
-    <div className={style.container}>
+    <View className={style.container}>
       {route !== "authenticated" ? (
-        <NavBarHeader2 loginHandler={() => navigate("/login")} />
+        <NavBarHeader2
+          width={"100%"}
+          className={style.navbar}
+          loginHandler={() => navigate("/login")}
+        />
       ) : (
         <>
           <NavBarHeader
-            style={{
-              width: "100vw",
-            }}
+            width={"100%"}
+            className={style.navbar}
             cartHandler={() => navigate("/cart")}
+            profileImage={userProfilePhoto}
           />
         </>
       )}
-      <View>
-        {route === "authenticated" ? "You are logged in!" : "Please Login!"}
-      </View>
-
       <Outlet />
-    </div>
+    </View>
   );
 }

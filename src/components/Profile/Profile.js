@@ -6,6 +6,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import EditProfile from "../../ui-components/EditProfile";
 import NewForm1 from "../../ui-components/NewForm1";
 import { Auth } from "aws-amplify";
+import EditProfileLocal from "../EditProfileLocal/EditProfileLocal";
 
 const address = {
   recipientName: "Lorem ipsum dolor sit amet",
@@ -62,7 +63,7 @@ export function Profile() {
           height: "100vh",
         }}
       >
-        <NewForm1 />
+        <EditProfileLocal user={user} />
       </div>
     </>
   );

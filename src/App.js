@@ -8,15 +8,22 @@ import { Layout } from "./components/Layout/Layout";
 import { Profile } from "./components/Profile/Profile";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
 import "./App.css";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 function MyRoutes() {
+  const { route } = useAuthenticator((context) => [context.route]);
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route
+            index
+            element={route === "authenticated" ? <Dashboard /> : <Home />}
+          />
           <Route
             path="/cart"
             element={
