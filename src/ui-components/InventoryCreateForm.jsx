@@ -199,20 +199,15 @@ export default function InventoryCreateForm(props) {
   const initialValues = {
     quantity: "",
     location: "",
-    lastUpdated: "",
     productID: undefined,
   };
   const [quantity, setQuantity] = React.useState(initialValues.quantity);
   const [location, setLocation] = React.useState(initialValues.location);
-  const [lastUpdated, setLastUpdated] = React.useState(
-    initialValues.lastUpdated
-  );
   const [productID, setProductID] = React.useState(initialValues.productID);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setQuantity(initialValues.quantity);
     setLocation(initialValues.location);
-    setLastUpdated(initialValues.lastUpdated);
     setProductID(initialValues.productID);
     setCurrentProductIDValue(undefined);
     setCurrentProductIDDisplayValue("");
@@ -233,7 +228,6 @@ export default function InventoryCreateForm(props) {
   const validations = {
     quantity: [],
     location: [{ type: "JSON" }],
-    lastUpdated: [],
     productID: [{ type: "Required" }],
   };
   const runValidationTasks = async (
@@ -264,7 +258,6 @@ export default function InventoryCreateForm(props) {
         let modelFields = {
           quantity,
           location,
-          lastUpdated,
           productID,
         };
         const validationResponses = await Promise.all(
@@ -297,7 +290,6 @@ export default function InventoryCreateForm(props) {
           });
           const modelFieldsToSave = {
             quantity: modelFields.quantity,
-            lastUpdated: modelFields.lastUpdated,
             productID: modelFields.productID,
             location: modelFields.location
               ? JSON.parse(modelFields.location)
@@ -334,7 +326,6 @@ export default function InventoryCreateForm(props) {
             const modelFields = {
               quantity: value,
               location,
-              lastUpdated,
               productID,
             };
             const result = onChange(modelFields);
@@ -352,15 +343,16 @@ export default function InventoryCreateForm(props) {
       ></TextField>
       <TextAreaField
         label="Location"
+        descriptiveText='Write your address in this format only seperated with comma: { "recipientName": "", "street", "city", "state": "", "postalCode": "", "country": ""'
         isRequired={false}
         isReadOnly={false}
+        placeholder='example address: {   "recipientName": "none",   "street": "232, anand vihar",   "city": "delhi",   "state": "delhi",   "postalCode": "20023",   "country": "India" }'
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               quantity,
               location: value,
-              lastUpdated,
               productID,
             };
             const result = onChange(modelFields);
@@ -376,37 +368,6 @@ export default function InventoryCreateForm(props) {
         hasError={errors.location?.hasError}
         {...getOverrideProps(overrides, "location")}
       ></TextAreaField>
-      <TextField
-        label="Last updated"
-        isRequired={false}
-        isReadOnly={false}
-        type="number"
-        step="any"
-        value={lastUpdated}
-        onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
-          if (onChange) {
-            const modelFields = {
-              quantity,
-              location,
-              lastUpdated: value,
-              productID,
-            };
-            const result = onChange(modelFields);
-            value = result?.lastUpdated ?? value;
-          }
-          if (errors.lastUpdated?.hasError) {
-            runValidationTasks("lastUpdated", value);
-          }
-          setLastUpdated(value);
-        }}
-        onBlur={() => runValidationTasks("lastUpdated", lastUpdated)}
-        errorMessage={errors.lastUpdated?.errorMessage}
-        hasError={errors.lastUpdated?.hasError}
-        {...getOverrideProps(overrides, "lastUpdated")}
-      ></TextField>
       <ArrayField
         lengthLimit={1}
         onChange={async (items) => {
@@ -415,7 +376,6 @@ export default function InventoryCreateForm(props) {
             const modelFields = {
               quantity,
               location,
-              lastUpdated,
               productID: value,
             };
             const result = onChange(modelFields);

@@ -20,7 +20,6 @@ export declare type ProductCreateFormInputValues = {
     category?: string;
     tags?: string[];
     Inventories?: Inventory[];
-    cartID?: string;
 };
 export declare type ProductCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -29,7 +28,6 @@ export declare type ProductCreateFormValidationValues = {
     category?: ValidationFunction<string>;
     tags?: ValidationFunction<string>;
     Inventories?: ValidationFunction<Inventory>;
-    cartID?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ProductCreateFormOverridesProps = {
@@ -40,7 +38,6 @@ export declare type ProductCreateFormOverridesProps = {
     category?: PrimitiveOverrideProps<TextFieldProps>;
     tags?: PrimitiveOverrideProps<TextFieldProps>;
     Inventories?: PrimitiveOverrideProps<AutocompleteProps>;
-    cartID?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type ProductCreateFormProps = React.PropsWithChildren<{
     overrides?: ProductCreateFormOverridesProps | undefined | null;

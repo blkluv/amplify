@@ -218,7 +218,7 @@ export default function CartUpdateForm(props) {
   };
   const [cartRecord, setCartRecord] = React.useState(cartModelProp);
   const [linkedProducts, setLinkedProducts] = React.useState([]);
-  const canUnlinkProducts = false;
+  const canUnlinkProducts = true;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp

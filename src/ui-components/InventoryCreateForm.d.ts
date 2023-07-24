@@ -15,13 +15,11 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type InventoryCreateFormInputValues = {
     quantity?: number;
     location?: string;
-    lastUpdated?: number;
     productID?: string;
 };
 export declare type InventoryCreateFormValidationValues = {
     quantity?: ValidationFunction<number>;
     location?: ValidationFunction<string>;
-    lastUpdated?: ValidationFunction<number>;
     productID?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -29,7 +27,6 @@ export declare type InventoryCreateFormOverridesProps = {
     InventoryCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     quantity?: PrimitiveOverrideProps<TextFieldProps>;
     location?: PrimitiveOverrideProps<TextAreaFieldProps>;
-    lastUpdated?: PrimitiveOverrideProps<TextFieldProps>;
     productID?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type InventoryCreateFormProps = React.PropsWithChildren<{

@@ -21,7 +21,7 @@ type Product @model @auth(rules: [{allow: public}]) {
   category: String
   tags: [String]
   Inventories: [Inventory] @hasMany(indexName: "byProduct", fields: ["id"])
-  cartID: ID! @index(name: "byCart")
+  cartID: ID @index(name: "byCart")
 }
 
 type OrderItem {

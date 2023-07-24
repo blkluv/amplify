@@ -297,7 +297,7 @@ export default function ProductUpdateForm(props) {
     category: [],
     tags: [],
     Inventories: [],
-    cartID: [{ type: "Required" }],
+    cartID: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -731,7 +731,7 @@ export default function ProductUpdateForm(props) {
       >
         <Autocomplete
           label="Cart id"
-          isRequired={true}
+          isRequired={false}
           isReadOnly={false}
           placeholder="Search Cart"
           value={currentCartIDDisplayValue}

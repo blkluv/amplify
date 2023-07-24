@@ -23,7 +23,7 @@ import {
   getOverrideProps,
   useDataStoreBinding,
 } from "@aws-amplify/ui-react/internal";
-import { Product, Inventory, Cart } from "../models";
+import { Product, Inventory } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 function ArrayField({
@@ -202,7 +202,6 @@ export default function ProductCreateForm(props) {
     category: "",
     tags: [],
     Inventories: [],
-    cartID: undefined,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [description, setDescription] = React.useState(
@@ -214,7 +213,6 @@ export default function ProductCreateForm(props) {
   const [Inventories, setInventories] = React.useState(
     initialValues.Inventories
   );
-  const [cartID, setCartID] = React.useState(initialValues.cartID);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
@@ -226,9 +224,6 @@ export default function ProductCreateForm(props) {
     setInventories(initialValues.Inventories);
     setCurrentInventoriesValue(undefined);
     setCurrentInventoriesDisplayValue("");
-    setCartID(initialValues.cartID);
-    setCurrentCartIDValue(undefined);
-    setCurrentCartIDDisplayValue("");
     setErrors({});
   };
   const [currentTagsValue, setCurrentTagsValue] = React.useState("");
@@ -238,10 +233,6 @@ export default function ProductCreateForm(props) {
   const [currentInventoriesValue, setCurrentInventoriesValue] =
     React.useState(undefined);
   const InventoriesRef = React.createRef();
-  const [currentCartIDDisplayValue, setCurrentCartIDDisplayValue] =
-    React.useState("");
-  const [currentCartIDValue, setCurrentCartIDValue] = React.useState(undefined);
-  const cartIDRef = React.createRef();
   const getIDValue = {
     Inventories: (r) => JSON.stringify({ id: r?.id }),
   };
@@ -254,13 +245,8 @@ export default function ProductCreateForm(props) {
     type: "collection",
     model: Inventory,
   }).items;
-  const cartRecords = useDataStoreBinding({
-    type: "collection",
-    model: Cart,
-  }).items;
   const getDisplayValue = {
     Inventories: (r) => `${r?.quantity ? r?.quantity + " - " : ""}${r?.id}`,
-    cartID: (r) => `${r?.createdAt ? r?.createdAt + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [],
@@ -269,7 +255,6 @@ export default function ProductCreateForm(props) {
     category: [],
     tags: [],
     Inventories: [],
-    cartID: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -303,7 +288,6 @@ export default function ProductCreateForm(props) {
           category,
           tags,
           Inventories,
-          cartID,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -347,7 +331,6 @@ export default function ProductCreateForm(props) {
             price: modelFields.price,
             category: modelFields.category,
             tags: modelFields.tags,
-            cartID: modelFields.cartID,
           };
           const product = await DataStore.save(new Product(modelFieldsToSave));
           const promises = [];
@@ -394,7 +377,6 @@ export default function ProductCreateForm(props) {
               category,
               tags,
               Inventories,
-              cartID,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -424,7 +406,6 @@ export default function ProductCreateForm(props) {
               category,
               tags,
               Inventories,
-              cartID,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -454,7 +435,6 @@ export default function ProductCreateForm(props) {
               category,
               tags,
               Inventories,
-              cartID,
             };
             const result = onChange(modelFields);
             value = result?.price ?? value;
@@ -484,7 +464,6 @@ export default function ProductCreateForm(props) {
               category: value,
               tags,
               Inventories,
-              cartID,
             };
             const result = onChange(modelFields);
             value = result?.category ?? value;
@@ -510,7 +489,6 @@ export default function ProductCreateForm(props) {
               category,
               tags: values,
               Inventories,
-              cartID,
             };
             const result = onChange(modelFields);
             values = result?.tags ?? values;
@@ -558,7 +536,6 @@ export default function ProductCreateForm(props) {
               category,
               tags,
               Inventories: values,
-              cartID,
             };
             const result = onChange(modelFields);
             values = result?.Inventories ?? values;
@@ -624,86 +601,6 @@ export default function ProductCreateForm(props) {
           ref={InventoriesRef}
           labelHidden={true}
           {...getOverrideProps(overrides, "Inventories")}
-        ></Autocomplete>
-      </ArrayField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
-          if (onChange) {
-            const modelFields = {
-              name,
-              description,
-              price,
-              category,
-              tags,
-              Inventories,
-              cartID: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.cartID ?? value;
-          }
-          setCartID(value);
-          setCurrentCartIDValue(undefined);
-        }}
-        currentFieldValue={currentCartIDValue}
-        label={"Cart id"}
-        items={cartID ? [cartID] : []}
-        hasError={errors?.cartID?.hasError}
-        errorMessage={errors?.cartID?.errorMessage}
-        getBadgeText={(value) =>
-          value
-            ? getDisplayValue.cartID(cartRecords.find((r) => r.id === value))
-            : ""
-        }
-        setFieldValue={(value) => {
-          setCurrentCartIDDisplayValue(
-            value
-              ? getDisplayValue.cartID(cartRecords.find((r) => r.id === value))
-              : ""
-          );
-          setCurrentCartIDValue(value);
-        }}
-        inputFieldRef={cartIDRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Cart id"
-          isRequired={true}
-          isReadOnly={false}
-          placeholder="Search Cart"
-          value={currentCartIDDisplayValue}
-          options={cartRecords
-            .filter(
-              (r, i, arr) =>
-                arr.findIndex((member) => member?.id === r?.id) === i
-            )
-            .map((r) => ({
-              id: r?.id,
-              label: getDisplayValue.cartID?.(r),
-            }))}
-          onSelect={({ id, label }) => {
-            setCurrentCartIDValue(id);
-            setCurrentCartIDDisplayValue(label);
-            runValidationTasks("cartID", label);
-          }}
-          onClear={() => {
-            setCurrentCartIDDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            if (errors.cartID?.hasError) {
-              runValidationTasks("cartID", value);
-            }
-            setCurrentCartIDDisplayValue(value);
-            setCurrentCartIDValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("cartID", currentCartIDValue)}
-          errorMessage={errors.cartID?.errorMessage}
-          hasError={errors.cartID?.hasError}
-          ref={cartIDRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "cartID")}
         ></Autocomplete>
       </ArrayField>
       <Flex

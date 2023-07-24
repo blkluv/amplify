@@ -223,7 +223,7 @@ export const schema = {
                     "name": "cartID",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "createdAt": {
@@ -624,5 +624,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "6f63d99635fc8f23f8499c973c9b369c"
+    "version": "728798a4da9dcaf7a59f40a9ad2331e1"
 };
