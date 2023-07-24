@@ -30,6 +30,7 @@ export default function NavBarHeader(props) {
   const shirtsOnClick = useNavigateAction({ type: "url", url: "/shirts" });
   const tshirtsOnClick = useNavigateAction({ type: "url", url: "/tshirts" });
   const logoutOnClick = useAuthSignOutAction({ global: false });
+  const imageOnClick = useNavigateAction({ type: "url", url: "/profile" });
   return (
     <Flex
       gap="40px"
@@ -209,6 +210,9 @@ export default function NavBarHeader(props) {
           padding="0px 0px 0px 0px"
           objectFit="cover"
           src={profileImage}
+          onClick={() => {
+            imageOnClick();
+          }}
           {...getOverrideProps(overrides, "image")}
         ></Image>
       </Flex>

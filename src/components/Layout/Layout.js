@@ -21,11 +21,6 @@ export function Layout() {
     getUserInfo();
   }, []);
 
-  function logOut() {
-    signOut();
-    navigate("/login");
-  }
-
   async function getUserInfo() {
     const user = await Auth.currentAuthenticatedUser();
     downloadFile(user);

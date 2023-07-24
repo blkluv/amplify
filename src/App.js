@@ -1,3 +1,4 @@
+import React from "react";
 import { Authenticator } from "@aws-amplify/ui-react";
 import { Cart } from "./components/Cart/Cart";
 import { RequireAuth } from "./RequireAuth";
@@ -5,7 +6,7 @@ import { Login } from "./components/Login/Login";
 import { Collections } from "./components/Collections/Collections";
 import { Home } from "./components/Home/Home";
 import { Layout } from "./components/Layout/Layout";
-import { Profile } from "./components/Profile/Profile";
+import Profile from "./components/Profile/Profile";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAuthenticator } from "@aws-amplify/ui-react";
