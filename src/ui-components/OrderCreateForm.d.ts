@@ -16,9 +16,6 @@ export declare type OrderCreateFormInputValues = {
     shippingAddress?: string;
     billingAddress?: string;
     totalAmount?: number;
-    status?: string;
-    createdAt?: number;
-    updatedAt?: number;
     items?: string[];
     customerID?: string;
 };
@@ -26,9 +23,6 @@ export declare type OrderCreateFormValidationValues = {
     shippingAddress?: ValidationFunction<string>;
     billingAddress?: ValidationFunction<string>;
     totalAmount?: ValidationFunction<number>;
-    status?: ValidationFunction<string>;
-    createdAt?: ValidationFunction<number>;
-    updatedAt?: ValidationFunction<number>;
     items?: ValidationFunction<string>;
     customerID?: ValidationFunction<string>;
 };
@@ -38,9 +32,6 @@ export declare type OrderCreateFormOverridesProps = {
     shippingAddress?: PrimitiveOverrideProps<TextAreaFieldProps>;
     billingAddress?: PrimitiveOverrideProps<TextAreaFieldProps>;
     totalAmount?: PrimitiveOverrideProps<TextFieldProps>;
-    status?: PrimitiveOverrideProps<TextFieldProps>;
-    createdAt?: PrimitiveOverrideProps<TextFieldProps>;
-    updatedAt?: PrimitiveOverrideProps<TextFieldProps>;
     items?: PrimitiveOverrideProps<TextAreaFieldProps>;
     customerID?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;

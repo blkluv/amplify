@@ -9,7 +9,13 @@ import * as React from "react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Badge, Flex, Text } from "@aws-amplify/ui-react";
 export default function Stat(props) {
-  const { overrides, ...rest } = props;
+  const {
+    lable = "Stat",
+    value = "3,000",
+    percentageChange = "+50%",
+    overrides,
+    ...rest
+  } = props;
   return (
     <Flex
       gap="16px"
@@ -43,7 +49,7 @@ export default function Stat(props) {
         position="relative"
         padding="0px 0px 0px 0px"
         whiteSpace="pre-wrap"
-        children="Sales"
+        children={lable}
         {...getOverrideProps(overrides, "Sales")}
       ></Text>
       <Flex
@@ -76,7 +82,7 @@ export default function Stat(props) {
           position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
-          children="8,260"
+          children={value}
           {...getOverrideProps(overrides, "8,260")}
         ></Text>
         <Badge
@@ -85,7 +91,7 @@ export default function Stat(props) {
           shrink="0"
           size="default"
           variation="success"
-          children="+17%"
+          children={percentageChange}
           {...getOverrideProps(overrides, "Badge")}
         ></Badge>
       </Flex>

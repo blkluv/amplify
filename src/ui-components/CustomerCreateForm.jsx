@@ -430,6 +430,7 @@ export default function CustomerCreateForm(props) {
           descriptiveText="You can add multiple shipping addresses"
           isRequired={false}
           isReadOnly={false}
+          placeholder="You can add more than one address here"
           value={currentShippingAddressValue}
           onChange={(e) => {
             let { value } = e.target;

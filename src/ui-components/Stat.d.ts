@@ -16,6 +16,10 @@ export declare type StatOverridesProps = {
     Badge?: PrimitiveOverrideProps<BadgeProps>;
 } & EscapeHatchProps;
 export declare type StatProps = React.PropsWithChildren<Partial<FlexProps> & {
+    lable?: String;
+    value?: String;
+    percentageChange?: String;
+} & {
     overrides?: StatOverridesProps | undefined | null;
 }>;
 export default function Stat(props: StatProps): React.ReactElement;
