@@ -7,6 +7,7 @@
 /* eslint-disable */
 import * as React from "react";
 import {
+  Autocomplete,
   Badge,
   Button,
   Divider,
@@ -14,14 +15,15 @@ import {
   Grid,
   Icon,
   ScrollView,
-  SelectField,
   Text,
-  TextAreaField,
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Customer } from "../models";
+import {
+  getOverrideProps,
+  useDataStoreBinding,
+} from "@aws-amplify/ui-react/internal";
+import { Product, Inventory } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 function ArrayField({
@@ -182,7 +184,7 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function CustomerCreateForm(props) {
+export default function AddProductForm(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -195,39 +197,64 @@ export default function CustomerCreateForm(props) {
   } = props;
   const initialValues = {
     name: "",
-    email: "",
-    billingAddress: "",
-    shippingAddress: [],
-    gender: "",
+    description: "",
+    price: "",
+    category: "",
+    tags: [],
+    Inventories: [],
   };
   const [name, setName] = React.useState(initialValues.name);
-  const [email, setEmail] = React.useState(initialValues.email);
-  const [billingAddress, setBillingAddress] = React.useState(
-    initialValues.billingAddress
+  const [description, setDescription] = React.useState(
+    initialValues.description
   );
-  const [shippingAddress, setShippingAddress] = React.useState(
-    initialValues.shippingAddress
+  const [price, setPrice] = React.useState(initialValues.price);
+  const [category, setCategory] = React.useState(initialValues.category);
+  const [tags, setTags] = React.useState(initialValues.tags);
+  const [Inventories, setInventories] = React.useState(
+    initialValues.Inventories
   );
-  const [gender, setGender] = React.useState(initialValues.gender);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
-    setEmail(initialValues.email);
-    setBillingAddress(initialValues.billingAddress);
-    setShippingAddress(initialValues.shippingAddress);
-    setCurrentShippingAddressValue("");
-    setGender(initialValues.gender);
+    setDescription(initialValues.description);
+    setPrice(initialValues.price);
+    setCategory(initialValues.category);
+    setTags(initialValues.tags);
+    setCurrentTagsValue("");
+    setInventories(initialValues.Inventories);
+    setCurrentInventoriesValue(undefined);
+    setCurrentInventoriesDisplayValue("");
     setErrors({});
   };
-  const [currentShippingAddressValue, setCurrentShippingAddressValue] =
+  const [currentTagsValue, setCurrentTagsValue] = React.useState("");
+  const tagsRef = React.createRef();
+  const [currentInventoriesDisplayValue, setCurrentInventoriesDisplayValue] =
     React.useState("");
-  const shippingAddressRef = React.createRef();
+  const [currentInventoriesValue, setCurrentInventoriesValue] =
+    React.useState(undefined);
+  const InventoriesRef = React.createRef();
+  const getIDValue = {
+    Inventories: (r) => JSON.stringify({ id: r?.id }),
+  };
+  const InventoriesIdSet = new Set(
+    Array.isArray(Inventories)
+      ? Inventories.map((r) => getIDValue.Inventories?.(r))
+      : getIDValue.Inventories?.(Inventories)
+  );
+  const inventoryRecords = useDataStoreBinding({
+    type: "collection",
+    model: Inventory,
+  }).items;
+  const getDisplayValue = {
+    Inventories: (r) => `${r?.quantity ? r?.quantity + " - " : ""}${r?.id}`,
+  };
   const validations = {
-    name: [{ type: "Required" }],
-    email: [{ type: "Email" }],
-    billingAddress: [{ type: "JSON" }],
-    shippingAddress: [{ type: "JSON" }],
-    gender: [],
+    name: [],
+    description: [],
+    price: [],
+    category: [],
+    tags: [],
+    Inventories: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -256,23 +283,32 @@ export default function CustomerCreateForm(props) {
         event.preventDefault();
         let modelFields = {
           name,
-          email,
-          billingAddress,
-          shippingAddress,
-          gender,
+          description,
+          price,
+          category,
+          tags,
+          Inventories,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(fieldName, item)
+                  runValidationTasks(
+                    fieldName,
+                    item,
+                    getDisplayValue[fieldName]
+                  )
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(fieldName, modelFields[fieldName])
+              runValidationTasks(
+                fieldName,
+                modelFields[fieldName],
+                getDisplayValue[fieldName]
+              )
             );
             return promises;
           }, [])
@@ -291,16 +327,26 @@ export default function CustomerCreateForm(props) {
           });
           const modelFieldsToSave = {
             name: modelFields.name,
-            email: modelFields.email,
-            gender: modelFields.gender,
-            shippingAddress: modelFields.shippingAddress.map((s) =>
-              JSON.parse(s)
-            ),
-            billingAddress: modelFields.billingAddress
-              ? JSON.parse(modelFields.billingAddress)
-              : modelFields.billingAddress,
+            description: modelFields.description,
+            price: modelFields.price,
+            category: modelFields.category,
+            tags: modelFields.tags,
           };
-          await DataStore.save(new Customer(modelFieldsToSave));
+          const product = await DataStore.save(new Product(modelFieldsToSave));
+          const promises = [];
+          promises.push(
+            ...Inventories.reduce((promises, original) => {
+              promises.push(
+                DataStore.save(
+                  Inventory.copyOf(original, (updated) => {
+                    updated.productID = product.id;
+                  })
+                )
+              );
+              return promises;
+            }, [])
+          );
+          await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -313,12 +359,12 @@ export default function CustomerCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "CustomerCreateForm")}
+      {...getOverrideProps(overrides, "AddProductForm")}
       {...rest}
     >
       <TextField
         label="Name"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         value={name}
         onChange={(e) => {
@@ -326,10 +372,11 @@ export default function CustomerCreateForm(props) {
           if (onChange) {
             const modelFields = {
               name: value,
-              email,
-              billingAddress,
-              shippingAddress,
-              gender,
+              description,
+              price,
+              category,
+              tags,
+              Inventories,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -345,153 +392,217 @@ export default function CustomerCreateForm(props) {
         {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
-        label="Email"
+        label="Description"
         isRequired={false}
         isReadOnly={false}
-        value={email}
+        value={description}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
-              email: value,
-              billingAddress,
-              shippingAddress,
-              gender,
+              description: value,
+              price,
+              category,
+              tags,
+              Inventories,
             };
             const result = onChange(modelFields);
-            value = result?.email ?? value;
+            value = result?.description ?? value;
           }
-          if (errors.email?.hasError) {
-            runValidationTasks("email", value);
+          if (errors.description?.hasError) {
+            runValidationTasks("description", value);
           }
-          setEmail(value);
+          setDescription(value);
         }}
-        onBlur={() => runValidationTasks("email", email)}
-        errorMessage={errors.email?.errorMessage}
-        hasError={errors.email?.hasError}
-        {...getOverrideProps(overrides, "email")}
+        onBlur={() => runValidationTasks("description", description)}
+        errorMessage={errors.description?.errorMessage}
+        hasError={errors.description?.hasError}
+        {...getOverrideProps(overrides, "description")}
       ></TextField>
-      <TextAreaField
-        label="Billing address"
+      <TextField
+        label="Price"
         isRequired={false}
         isReadOnly={false}
+        value={price}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
-              email,
-              billingAddress: value,
-              shippingAddress,
-              gender,
+              description,
+              price: value,
+              category,
+              tags,
+              Inventories,
             };
             const result = onChange(modelFields);
-            value = result?.billingAddress ?? value;
+            value = result?.price ?? value;
           }
-          if (errors.billingAddress?.hasError) {
-            runValidationTasks("billingAddress", value);
+          if (errors.price?.hasError) {
+            runValidationTasks("price", value);
           }
-          setBillingAddress(value);
+          setPrice(value);
         }}
-        onBlur={() => runValidationTasks("billingAddress", billingAddress)}
-        errorMessage={errors.billingAddress?.errorMessage}
-        hasError={errors.billingAddress?.hasError}
-        {...getOverrideProps(overrides, "billingAddress")}
-      ></TextAreaField>
+        onBlur={() => runValidationTasks("price", price)}
+        errorMessage={errors.price?.errorMessage}
+        hasError={errors.price?.hasError}
+        {...getOverrideProps(overrides, "price")}
+      ></TextField>
+      <TextField
+        label="Category"
+        isRequired={false}
+        isReadOnly={false}
+        value={category}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              description,
+              price,
+              category: value,
+              tags,
+              Inventories,
+            };
+            const result = onChange(modelFields);
+            value = result?.category ?? value;
+          }
+          if (errors.category?.hasError) {
+            runValidationTasks("category", value);
+          }
+          setCategory(value);
+        }}
+        onBlur={() => runValidationTasks("category", category)}
+        errorMessage={errors.category?.errorMessage}
+        hasError={errors.category?.hasError}
+        {...getOverrideProps(overrides, "category")}
+      ></TextField>
       <ArrayField
         onChange={async (items) => {
           let values = items;
           if (onChange) {
             const modelFields = {
               name,
-              email,
-              billingAddress,
-              shippingAddress: values,
-              gender,
+              description,
+              price,
+              category,
+              tags: values,
+              Inventories,
             };
             const result = onChange(modelFields);
-            values = result?.shippingAddress ?? values;
+            values = result?.tags ?? values;
           }
-          setShippingAddress(values);
-          setCurrentShippingAddressValue("");
+          setTags(values);
+          setCurrentTagsValue("");
         }}
-        currentFieldValue={currentShippingAddressValue}
-        label={"Shipping address"}
-        items={shippingAddress}
-        hasError={errors?.shippingAddress?.hasError}
-        errorMessage={errors?.shippingAddress?.errorMessage}
-        setFieldValue={setCurrentShippingAddressValue}
-        inputFieldRef={shippingAddressRef}
+        currentFieldValue={currentTagsValue}
+        label={"Tags"}
+        items={tags}
+        hasError={errors?.tags?.hasError}
+        errorMessage={errors?.tags?.errorMessage}
+        setFieldValue={setCurrentTagsValue}
+        inputFieldRef={tagsRef}
         defaultFieldValue={""}
       >
-        <TextAreaField
-          label="Shipping address"
-          descriptiveText="You can add multiple shipping addresses"
+        <TextField
+          label="Tags"
           isRequired={false}
           isReadOnly={false}
-          value={currentShippingAddressValue}
+          value={currentTagsValue}
           onChange={(e) => {
             let { value } = e.target;
-            if (errors.shippingAddress?.hasError) {
-              runValidationTasks("shippingAddress", value);
+            if (errors.tags?.hasError) {
+              runValidationTasks("tags", value);
             }
-            setCurrentShippingAddressValue(value);
+            setCurrentTagsValue(value);
           }}
-          onBlur={() =>
-            runValidationTasks("shippingAddress", currentShippingAddressValue)
-          }
-          errorMessage={errors.shippingAddress?.errorMessage}
-          hasError={errors.shippingAddress?.hasError}
-          ref={shippingAddressRef}
+          onBlur={() => runValidationTasks("tags", currentTagsValue)}
+          errorMessage={errors.tags?.errorMessage}
+          hasError={errors.tags?.hasError}
+          ref={tagsRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "shippingAddress")}
-        ></TextAreaField>
+          {...getOverrideProps(overrides, "tags")}
+        ></TextField>
       </ArrayField>
-      <SelectField
-        label="Gender"
-        placeholder="Please select an option"
-        isDisabled={false}
-        value={gender}
-        onChange={(e) => {
-          let { value } = e.target;
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
           if (onChange) {
             const modelFields = {
               name,
-              email,
-              billingAddress,
-              shippingAddress,
-              gender: value,
+              description,
+              price,
+              category,
+              tags,
+              Inventories: values,
             };
             const result = onChange(modelFields);
-            value = result?.gender ?? value;
+            values = result?.Inventories ?? values;
           }
-          if (errors.gender?.hasError) {
-            runValidationTasks("gender", value);
-          }
-          setGender(value);
+          setInventories(values);
+          setCurrentInventoriesValue(undefined);
+          setCurrentInventoriesDisplayValue("");
         }}
-        onBlur={() => runValidationTasks("gender", gender)}
-        errorMessage={errors.gender?.errorMessage}
-        hasError={errors.gender?.hasError}
-        {...getOverrideProps(overrides, "gender")}
+        currentFieldValue={currentInventoriesValue}
+        label={"Inventories"}
+        items={Inventories}
+        hasError={errors?.Inventories?.hasError}
+        errorMessage={errors?.Inventories?.errorMessage}
+        getBadgeText={getDisplayValue.Inventories}
+        setFieldValue={(model) => {
+          setCurrentInventoriesDisplayValue(
+            model ? getDisplayValue.Inventories(model) : ""
+          );
+          setCurrentInventoriesValue(model);
+        }}
+        inputFieldRef={InventoriesRef}
+        defaultFieldValue={""}
       >
-        <option
-          children="Male"
-          value="Male"
-          {...getOverrideProps(overrides, "genderoption0")}
-        ></option>
-        <option
-          children="Female"
-          value="Female"
-          {...getOverrideProps(overrides, "genderoption1")}
-        ></option>
-        <option
-          children="Prefer not to say"
-          value="Prefer not to say"
-          {...getOverrideProps(overrides, "genderoption2")}
-        ></option>
-      </SelectField>
+        <Autocomplete
+          label="Inventories"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Inventory"
+          value={currentInventoriesDisplayValue}
+          options={inventoryRecords
+            .filter((r) => !InventoriesIdSet.has(getIDValue.Inventories?.(r)))
+            .map((r) => ({
+              id: getIDValue.Inventories?.(r),
+              label: getDisplayValue.Inventories?.(r),
+            }))}
+          onSelect={({ id, label }) => {
+            setCurrentInventoriesValue(
+              inventoryRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentInventoriesDisplayValue(label);
+            runValidationTasks("Inventories", label);
+          }}
+          onClear={() => {
+            setCurrentInventoriesDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.Inventories?.hasError) {
+              runValidationTasks("Inventories", value);
+            }
+            setCurrentInventoriesDisplayValue(value);
+            setCurrentInventoriesValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("Inventories", currentInventoriesDisplayValue)
+          }
+          errorMessage={errors.Inventories?.errorMessage}
+          hasError={errors.Inventories?.hasError}
+          ref={InventoriesRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "Inventories")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

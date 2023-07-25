@@ -5,9 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { Order, Cart as Cart0 } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -15,38 +14,26 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type CustomerCreateFormInputValues = {
     name?: string;
-    dateOfBirth?: string;
     email?: string;
     billingAddress?: string;
     shippingAddress?: string[];
-    profileImage?: string;
     gender?: string;
-    Orders?: Order[];
-    Cart?: Cart0;
 };
 export declare type CustomerCreateFormValidationValues = {
     name?: ValidationFunction<string>;
-    dateOfBirth?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
     billingAddress?: ValidationFunction<string>;
     shippingAddress?: ValidationFunction<string>;
-    profileImage?: ValidationFunction<string>;
     gender?: ValidationFunction<string>;
-    Orders?: ValidationFunction<Order>;
-    Cart?: ValidationFunction<Cart0>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CustomerCreateFormOverridesProps = {
     CustomerCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
-    dateOfBirth?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     billingAddress?: PrimitiveOverrideProps<TextAreaFieldProps>;
     shippingAddress?: PrimitiveOverrideProps<TextAreaFieldProps>;
-    profileImage?: PrimitiveOverrideProps<TextFieldProps>;
-    gender?: PrimitiveOverrideProps<TextFieldProps>;
-    Orders?: PrimitiveOverrideProps<AutocompleteProps>;
-    Cart?: PrimitiveOverrideProps<AutocompleteProps>;
+    gender?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type CustomerCreateFormProps = React.PropsWithChildren<{
     overrides?: CustomerCreateFormOverridesProps | undefined | null;

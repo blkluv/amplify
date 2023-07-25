@@ -33,14 +33,7 @@ function MyRoutes() {
               </RequireAuth>
             }
           />
-          <Route
-            path="/collections"
-            element={
-              <RequireAuth>
-                <Collections />
-              </RequireAuth>
-            }
-          />
+          <Route path="/collections" element={<Collections />} />
           <Route
             path="/profile"
             element={

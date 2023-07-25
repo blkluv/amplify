@@ -6,18 +6,18 @@
 
 /* eslint-disable */
 import * as React from "react";
-import {
-  getOverrideProps,
-  useNavigateAction,
-} from "@aws-amplify/ui-react/internal";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import MyIcon from "./MyIcon";
 import { Flex, Text } from "@aws-amplify/ui-react";
 export default function SideBar(props) {
-  const { overrides, ...rest } = props;
-  const labelThreeNineFourNineThreeThreeSixTwoOnClick = useNavigateAction({
-    type: "url",
-    url: "/",
-  });
+  const {
+    HomeButtonHandler,
+    ProductButtonHandler,
+    CustomerButtonHandler,
+    OrderButtonHandler,
+    overrides,
+    ...rest
+  } = props;
   return (
     <Flex
       gap="10px"
@@ -134,9 +134,7 @@ export default function SideBar(props) {
                 padding="0px 0px 0px 0px"
                 whiteSpace="pre-wrap"
                 children="Home"
-                onClick={() => {
-                  labelThreeNineFourNineThreeThreeSixTwoOnClick();
-                }}
+                onClick={HomeButtonHandler}
                 {...getOverrideProps(overrides, "label39493362")}
               ></Text>
             </Flex>
@@ -234,7 +232,8 @@ export default function SideBar(props) {
                 position="relative"
                 padding="0px 0px 0px 0px"
                 whiteSpace="pre-wrap"
-                children="Content"
+                children="Products"
+                onClick={ProductButtonHandler}
                 {...getOverrideProps(overrides, "label39493368")}
               ></Text>
             </Flex>
@@ -298,7 +297,8 @@ export default function SideBar(props) {
                 position="relative"
                 padding="0px 0px 0px 0px"
                 whiteSpace="pre-wrap"
-                children="Users"
+                children="Customers"
+                onClick={CustomerButtonHandler}
                 {...getOverrideProps(overrides, "label39493372")}
               ></Text>
             </Flex>
@@ -362,7 +362,8 @@ export default function SideBar(props) {
                 position="relative"
                 padding="0px 0px 0px 0px"
                 whiteSpace="pre-wrap"
-                children="Files"
+                children="Orders"
+                onClick={OrderButtonHandler}
                 {...getOverrideProps(overrides, "label39493376")}
               ></Text>
             </Flex>

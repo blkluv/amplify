@@ -8,6 +8,7 @@ import * as React from "react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { MyIconProps } from "./MyIcon";
 import { FlexProps, TextProps } from "@aws-amplify/ui-react";
+import { SyntheticEvent } from "react";
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type SideBarOverridesProps = {
     SideBar?: PrimitiveOverrideProps<FlexProps>;
@@ -48,6 +49,11 @@ export declare type SideBarOverridesProps = {
     label39493390?: PrimitiveOverrideProps<TextProps>;
 } & EscapeHatchProps;
 export declare type SideBarProps = React.PropsWithChildren<Partial<FlexProps> & {
+    HomeButtonHandler?: (event: SyntheticEvent) => void;
+    ProductButtonHandler?: (event: SyntheticEvent) => void;
+    CustomerButtonHandler?: (event: SyntheticEvent) => void;
+    OrderButtonHandler?: (event: SyntheticEvent) => void;
+} & {
     overrides?: SideBarOverridesProps | undefined | null;
 }>;
 export default function SideBar(props: SideBarProps): React.ReactElement;

@@ -13,7 +13,7 @@ export function Layout() {
     context.signOut,
   ]);
 
-  const [userProfilePhoto, setUserProfilePhoto] = React.useState(null);
+  const [userProfilePhoto, setUserProfilePhoto] = React.useState("");
 
   const navigate = useNavigate();
 
