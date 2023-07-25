@@ -21,6 +21,21 @@
       },
       "api": {
         "ecommerceapp": {}
+      },
+      "notifications": {
+        "Pinpoint": {
+          "Name": "ecommerceapp-staging",
+          "Id": "fc5a7878e51a49a1b3e046e868087eaf",
+          "Region": "ap-south-1"
+        }
+      },
+      "analytics": {
+        "Pinpoint": {
+          "Name": "ecommerceapp-staging",
+          "Id": "fc5a7878e51a49a1b3e046e868087eaf",
+          "Region": "ap-south-1"
+        },
+        "ecommerceapp": {}
       }
     }
   }

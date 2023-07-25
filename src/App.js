@@ -7,12 +7,12 @@ import { Collections } from "./components/Collections/Collections";
 import { Home } from "./components/Home/Home";
 import { Layout } from "./components/Layout/Layout";
 import Profile from "./components/Profile/Profile";
-
+import Dashboard from "./components/Dashboard/Dashboard";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAuthenticator } from "@aws-amplify/ui-react";
-
 import "./App.css";
-import Dashboard from "./components/Dashboard/Dashboard";
+import "@aws-amplify/ui-react/styles.css";
+import { withInAppMessaging } from "@aws-amplify/ui-react-notifications";
 
 function MyRoutes() {
   const { route } = useAuthenticator((context) => [context.route]);
@@ -57,4 +57,4 @@ function App() {
   );
 }
 
-export default App;
+export default withInAppMessaging(App);

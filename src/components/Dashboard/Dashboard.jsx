@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import style from "./Dashboard.module.css";
 import SideBar from "../../ui-components/SideBar";
 import { Button, Card, Heading, View, Alert } from "@aws-amplify/ui-react";
@@ -11,6 +11,7 @@ import OrderCreateForm from "../../ui-components/OrderCreateForm";
 import Stat from "../../ui-components/Stat";
 import { DataStore } from "@aws-amplify/datastore";
 import { Customer, Order } from "../../models";
+import { Notifications, Analytics } from "aws-amplify";
 
 function Dashboard() {
   const [showProductCreateForm, setShowProductCreateForm] =
@@ -41,6 +42,17 @@ function Dashboard() {
     React.useState(false);
   const [showOrderCreateFailureAlert, setShowOrderCreateFailureAlert] =
     React.useState(false);
+
+  const { InAppMessaging } = Notifications;
+  const myFirstEvent = {
+    name: "My_first_event",
+    attributes: { color: "red" },
+    metrics: { quantity: 1 },
+  };
+
+  useEffect(() => {
+    InAppMessaging.syncMessages();
+  }, []);
 
   const handleHomeButton = () => {
     setShowHome(true);
@@ -275,6 +287,26 @@ function Dashboard() {
     );
   };
 
+  useEffect(() => {
+    const listener = InAppMessaging.onMessageReceived(myMessageReceivedHandler);
+    return () => listener.remove();
+  }, []);
+
+  useEffect(() => {
+    const displayListener = InAppMessaging.onMessageDisplayed(
+      myMessageDisplayedHandler
+    );
+    return () => displayListener.remove();
+  }, []);
+
+  const myMessageReceivedHandler = (message) => {
+    console.log(message);
+  };
+
+  const myMessageDisplayedHandler = (message) => {
+    console.log("Message displayed", message);
+  };
+
   return (
     <View className={style.container}>
       <SideBar
@@ -286,242 +318,273 @@ function Dashboard() {
         OrderButtonHandler={handleOrderSummaryButton}
       />
       {showHome && (
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "left",
-          }}
-        >
-          <Heading
-            style={{
-              display: "flex",
-              alignContent: "left",
-              marginTop: "1rem",
-            }}
-            level={3}
-          >
-            Admin Dashboard
-          </Heading>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "left",
-              gap: "1rem",
-            }}
-          >
-            <Button
-              style={{
-                width: "11rem",
-                height: "3rem",
-                marginTop: "2rem",
-              }}
-              onClick={() => {
-                setShowProductCreateForm(!showProductCreateForm);
-                setShowCustomerCreateForm(false);
-                setShowOrderCreateForm(false);
-              }}
-            >
-              Add Product
-            </Button>
-            <Button
-              style={{
-                width: "11rem",
-                height: "3rem",
-                marginTop: "2rem",
-              }}
-              onClick={() => {
-                setShowCustomerCreateForm(!showCustomerCreateForm);
-                setShowProductCreateForm(false);
-                setShowOrderCreateForm(false);
-              }}
-            >
-              Add Customer
-            </Button>
-            <Button
-              style={{
-                width: "11rem",
-                height: "3rem",
-                marginTop: "2rem",
-              }}
-              onClick={() => {
-                setShowOrderCreateForm(!showOrderCreateForm);
-                setShowCustomerCreateForm(false);
-                setShowProductCreateForm(false);
-              }}
-            >
-              Add Order
-            </Button>
-          </View>
+        <>
           <View
             style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "left",
-              marginTop: "2rem",
             }}
           >
             <Heading
               style={{
                 display: "flex",
                 alignContent: "left",
+                marginTop: "1rem",
               }}
               level={3}
             >
-              Summary
+              Admin Dashboard
             </Heading>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "left",
+                gap: "1rem",
+              }}
+            >
+              <Button
+                style={{
+                  width: "11rem",
+                  height: "3rem",
+                  marginTop: "2rem",
+                }}
+                onClick={() => {
+                  setShowProductCreateForm(!showProductCreateForm);
+                  setShowCustomerCreateForm(false);
+                  setShowOrderCreateForm(false);
+                }}
+              >
+                Add Product
+              </Button>
+              <Button
+                style={{
+                  width: "11rem",
+                  height: "3rem",
+                  marginTop: "2rem",
+                }}
+                onClick={() => {
+                  setShowCustomerCreateForm(!showCustomerCreateForm);
+                  setShowProductCreateForm(false);
+                  setShowOrderCreateForm(false);
+                }}
+              >
+                Add Customer
+              </Button>
+              <Button
+                style={{
+                  width: "11rem",
+                  height: "3rem",
+                  marginTop: "2rem",
+                }}
+                onClick={() => {
+                  setShowOrderCreateForm(!showOrderCreateForm);
+                  setShowCustomerCreateForm(false);
+                  setShowProductCreateForm(false);
+                }}
+              >
+                Add Order
+              </Button>
+            </View>
             <View
               style={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "left",
-                justifyContent: "left",
                 marginTop: "2rem",
               }}
             >
-              <Button
+              <Heading
                 style={{
-                  width: "6rem",
-                  height: "1.5rem",
-                  border: "1px solid black",
+                  display: "flex",
+                  alignContent: "left",
                 }}
-                onClick={() => {
-                  fetchCustomerData();
-                  fetchOrderData();
+                level={3}
+              >
+                Summary
+              </Heading>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "left",
+                  justifyContent: "left",
+                  marginTop: "2rem",
                 }}
               >
-                Refresh
-              </Button>
-              <Stat
-                lable={"Total Sales"}
-                value={salesValue}
-                percentageChange={salesValueChange}
-                padding={"1rem 0 1rem 0"}
-              />
-              <Stat
-                lable={"Total Customers"}
-                value={customerValue}
-                percentageChange={customerValueChange}
-                padding={"1rem 0 1rem 0"}
-              />
-              <Stat
-                lable={"Total Orders"}
-                value={orderValue}
-                percentageChange={orderValueChange}
-                padding={"1rem 0 1rem 0"}
-              />
+                <Button
+                  style={{
+                    width: "6rem",
+                    height: "1.5rem",
+                    border: "1px solid black",
+                  }}
+                  onClick={() => {
+                    fetchCustomerData();
+                    fetchOrderData();
+                  }}
+                >
+                  Refresh
+                </Button>
+                <Stat
+                  lable={"Total Sales"}
+                  value={salesValue}
+                  percentageChange={salesValueChange}
+                  padding={"1rem 0 1rem 0"}
+                />
+                <Stat
+                  lable={"Total Customers"}
+                  value={customerValue}
+                  percentageChange={customerValueChange}
+                  padding={"1rem 0 1rem 0"}
+                />
+                <Stat
+                  lable={"Total Orders"}
+                  value={orderValue}
+                  percentageChange={orderValueChange}
+                  padding={"1rem 0 1rem 0"}
+                />
+              </View>
+            </View>
+            <View
+              style={{
+                position: "fixed",
+                top: "0",
+                left: "0",
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                backdropFilter: "blur(5px)",
+                zIndex: "9998",
+                display:
+                  showProductCreateForm ||
+                  showCustomerCreateForm ||
+                  showOrderCreateForm
+                    ? "flex"
+                    : "none",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {showProductCreateForm && (
+                <View style={{ zIndex: "9999" }}>
+                  <Card variation="elevated">
+                    <Button
+                      style={{
+                        position: "absolute",
+                        top: "7rem",
+                        right: "47rem",
+                        margin: "1rem",
+                        border: "none",
+                        borderRadius: "25rem",
+                      }}
+                      onClick={closeModel}
+                    >
+                      X
+                    </Button>
+                    <ProductCreateForm
+                      onSuccess={() => {
+                        setShowProductCreateSuccessAlert(true);
+                        setShowProductCreateForm(false);
+                      }}
+                      onError={() => {
+                        setShowCustomerCreateFailureAlert(true);
+                        setShowProductCreateForm(false);
+                      }}
+                    />
+                  </Card>
+                </View>
+              )}
+              {showCustomerCreateForm && (
+                <View style={{ zIndex: "9999" }}>
+                  <Card variation="elevated">
+                    <Button
+                      style={{
+                        position: "absolute",
+                        top: "9rem",
+                        right: "47rem",
+                        margin: "1rem",
+                        border: "none",
+                        borderRadius: "25rem",
+                      }}
+                      onClick={closeModel}
+                    >
+                      X
+                    </Button>
+                    <CustomerCreateForm
+                      onSuccess={() => {
+                        setShowCustomerCreateSuccessAlert(true);
+                        setShowCustomerCreateForm(false);
+                      }}
+                      onError={() => {
+                        setShowCustomerCreateFailureAlert(true);
+                        setShowCustomerCreateForm(false);
+                      }}
+                    />
+                  </Card>
+                </View>
+              )}
+              {showOrderCreateForm && (
+                <View style={{ zIndex: "9999" }}>
+                  <Card variation="elevated">
+                    <Button
+                      style={{
+                        position: "absolute",
+                        top: "7rem",
+                        right: "47rem",
+                        margin: "1rem",
+                        border: "none",
+                        borderRadius: "25rem",
+                      }}
+                      onClick={closeModel}
+                    >
+                      X
+                    </Button>
+                    <OrderCreateForm
+                      onSuccess={() => {
+                        setShowOrderCreateSuccessAlert(true);
+                        setShowOrderCreateForm(false);
+                      }}
+                      onError={() => {
+                        setShowOrderCreateFailureAlert(true);
+                        setShowOrderCreateForm(false);
+                      }}
+                    />
+                  </Card>
+                </View>
+              )}
             </View>
           </View>
-          <View
-            style={{
-              position: "fixed",
-              top: "0",
-              left: "0",
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              backdropFilter: "blur(5px)",
-              zIndex: "9998",
-              display:
-                showProductCreateForm ||
-                showCustomerCreateForm ||
-                showOrderCreateForm
-                  ? "flex"
-                  : "none",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {showProductCreateForm && (
-              <View style={{ zIndex: "9999" }}>
-                <Card variation="elevated">
-                  <Button
-                    style={{
-                      position: "absolute",
-                      top: "7rem",
-                      right: "47rem",
-                      margin: "1rem",
-                      border: "none",
-                      borderRadius: "25rem",
-                    }}
-                    onClick={closeModel}
-                  >
-                    X
-                  </Button>
-                  <ProductCreateForm
-                    onSuccess={() => {
-                      setShowProductCreateSuccessAlert(true);
-                      setShowProductCreateForm(false);
-                    }}
-                    onError={() => {
-                      setShowCustomerCreateFailureAlert(true);
-                      setShowProductCreateForm(false);
-                    }}
-                  />
-                </Card>
-              </View>
-            )}
-            {showCustomerCreateForm && (
-              <View style={{ zIndex: "9999" }}>
-                <Card variation="elevated">
-                  <Button
-                    style={{
-                      position: "absolute",
-                      top: "9rem",
-                      right: "47rem",
-                      margin: "1rem",
-                      border: "none",
-                      borderRadius: "25rem",
-                    }}
-                    onClick={closeModel}
-                  >
-                    X
-                  </Button>
-                  <CustomerCreateForm
-                    onSuccess={() => {
-                      setShowCustomerCreateSuccessAlert(true);
-                      setShowCustomerCreateForm(false);
-                    }}
-                    onError={() => {
-                      setShowCustomerCreateFailureAlert(true);
-                      setShowCustomerCreateForm(false);
-                    }}
-                  />
-                </Card>
-              </View>
-            )}
-            {showOrderCreateForm && (
-              <View style={{ zIndex: "9999" }}>
-                <Card variation="elevated">
-                  <Button
-                    style={{
-                      position: "absolute",
-                      top: "7rem",
-                      right: "47rem",
-                      margin: "1rem",
-                      border: "none",
-                      borderRadius: "25rem",
-                    }}
-                    onClick={closeModel}
-                  >
-                    X
-                  </Button>
-                  <OrderCreateForm
-                    onSuccess={() => {
-                      setShowOrderCreateSuccessAlert(true);
-                      setShowOrderCreateForm(false);
-                    }}
-                    onError={() => {
-                      setShowOrderCreateFailureAlert(true);
-                      setShowOrderCreateForm(false);
-                    }}
-                  />
-                </Card>
-              </View>
-            )}
+          <View>
+            <Button
+              onClick={() => {
+                const userInfo = {
+                  address: "visheshbaghel99@gmail.com",
+                };
+                InAppMessaging.identifyUser("2323", userInfo);
+                Analytics.record(myFirstEvent)
+                  .then(() => console.log("recorded"))
+                  .catch((err) => console.log(err));
+              }}
+            >
+              Record Analytics Event
+            </Button>
+
+            <Button
+              onClick={() => {
+                const userInfo = {
+                  address: "visheshbaghel99@gmail.com",
+                };
+                InAppMessaging.identifyUser("2323", userInfo);
+                InAppMessaging.dispatchEvent(myFirstEvent)
+                  .then(() => console.log("dispatched"))
+                  .catch((err) => console.log(err));
+              }}
+            >
+              Send In-App Messaging Event
+            </Button>
           </View>
-        </View>
+        </>
       )}
       {showCustomerSummary && <CustomerSummary />}
       {showProductSummary && <ProductSummary />}

@@ -7,7 +7,6 @@
 /* eslint-disable */
 import * as React from "react";
 import {
-  Autocomplete,
   Badge,
   Button,
   Divider,
@@ -20,11 +19,8 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
-import {
-  getOverrideProps,
-  useDataStoreBinding,
-} from "@aws-amplify/ui-react/internal";
-import { Customer, Order, Cart as Cart0 } from "../models";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { Customer } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 function ArrayField({
@@ -205,8 +201,6 @@ export default function CustomerUpdateForm(props) {
     shippingAddress: [],
     profileImage: "",
     gender: "",
-    Orders: [],
-    Cart: undefined,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [dateOfBirth, setDateOfBirth] = React.useState(
@@ -223,12 +217,10 @@ export default function CustomerUpdateForm(props) {
     initialValues.profileImage
   );
   const [gender, setGender] = React.useState(initialValues.gender);
-  const [Orders, setOrders] = React.useState(initialValues.Orders);
-  const [Cart, setCart] = React.useState(initialValues.Cart);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = customerRecord
-      ? { ...initialValues, ...customerRecord, Orders: linkedOrders, Cart }
+      ? { ...initialValues, ...customerRecord }
       : initialValues;
     setName(cleanValues.name);
     setDateOfBirth(cleanValues.dateOfBirth);
@@ -246,68 +238,22 @@ export default function CustomerUpdateForm(props) {
     setCurrentShippingAddressValue("");
     setProfileImage(cleanValues.profileImage);
     setGender(cleanValues.gender);
-    setOrders(cleanValues.Orders ?? []);
-    setCurrentOrdersValue(undefined);
-    setCurrentOrdersDisplayValue("");
-    setCart(cleanValues.Cart);
-    setCurrentCartValue(undefined);
-    setCurrentCartDisplayValue("");
     setErrors({});
   };
   const [customerRecord, setCustomerRecord] = React.useState(customerModelProp);
-  const [linkedOrders, setLinkedOrders] = React.useState([]);
-  const canUnlinkOrders = false;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
         ? await DataStore.query(Customer, idProp)
         : customerModelProp;
       setCustomerRecord(record);
-      const linkedOrders = record ? await record.Orders.toArray() : [];
-      setLinkedOrders(linkedOrders);
-      const CartRecord = record ? await record.Cart : undefined;
-      setCart(CartRecord);
     };
     queryData();
   }, [idProp, customerModelProp]);
-  React.useEffect(resetStateValues, [customerRecord, linkedOrders, Cart]);
+  React.useEffect(resetStateValues, [customerRecord]);
   const [currentShippingAddressValue, setCurrentShippingAddressValue] =
     React.useState("");
   const shippingAddressRef = React.createRef();
-  const [currentOrdersDisplayValue, setCurrentOrdersDisplayValue] =
-    React.useState("");
-  const [currentOrdersValue, setCurrentOrdersValue] = React.useState(undefined);
-  const OrdersRef = React.createRef();
-  const [currentCartDisplayValue, setCurrentCartDisplayValue] =
-    React.useState("");
-  const [currentCartValue, setCurrentCartValue] = React.useState(undefined);
-  const CartRef = React.createRef();
-  const getIDValue = {
-    Orders: (r) => JSON.stringify({ id: r?.id }),
-    Cart: (r) => JSON.stringify({ id: r?.id }),
-  };
-  const OrdersIdSet = new Set(
-    Array.isArray(Orders)
-      ? Orders.map((r) => getIDValue.Orders?.(r))
-      : getIDValue.Orders?.(Orders)
-  );
-  const CartIdSet = new Set(
-    Array.isArray(Cart)
-      ? Cart.map((r) => getIDValue.Cart?.(r))
-      : getIDValue.Cart?.(Cart)
-  );
-  const orderRecords = useDataStoreBinding({
-    type: "collection",
-    model: Order,
-  }).items;
-  const cartRecords = useDataStoreBinding({
-    type: "collection",
-    model: Cart0,
-  }).items;
-  const getDisplayValue = {
-    Orders: (r) => `${r?.totalAmount ? r?.totalAmount + " - " : ""}${r?.id}`,
-    Cart: (r) => `${r?.createdAt ? r?.createdAt + " - " : ""}${r?.id}`,
-  };
   const validations = {
     name: [{ type: "Required" }],
     dateOfBirth: [],
@@ -316,8 +262,6 @@ export default function CustomerUpdateForm(props) {
     shippingAddress: [{ type: "JSON" }],
     profileImage: [],
     gender: [],
-    Orders: [],
-    Cart: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -352,29 +296,19 @@ export default function CustomerUpdateForm(props) {
           shippingAddress,
           profileImage,
           gender,
-          Orders,
-          Cart,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(
-                    fieldName,
-                    item,
-                    getDisplayValue[fieldName]
-                  )
+                  runValidationTasks(fieldName, item)
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(
-                fieldName,
-                modelFields[fieldName],
-                getDisplayValue[fieldName]
-              )
+              runValidationTasks(fieldName, modelFields[fieldName])
             );
             return promises;
           }, [])
@@ -391,55 +325,12 @@ export default function CustomerUpdateForm(props) {
               modelFields[key] = undefined;
             }
           });
-          const promises = [];
-          const ordersToLink = [];
-          const ordersToUnLink = [];
-          const ordersSet = new Set();
-          const linkedOrdersSet = new Set();
-          Orders.forEach((r) => ordersSet.add(getIDValue.Orders?.(r)));
-          linkedOrders.forEach((r) =>
-            linkedOrdersSet.add(getIDValue.Orders?.(r))
-          );
-          linkedOrders.forEach((r) => {
-            if (!ordersSet.has(getIDValue.Orders?.(r))) {
-              ordersToUnLink.push(r);
-            }
-          });
-          Orders.forEach((r) => {
-            if (!linkedOrdersSet.has(getIDValue.Orders?.(r))) {
-              ordersToLink.push(r);
-            }
-          });
-          ordersToUnLink.forEach((original) => {
-            if (!canUnlinkOrders) {
-              throw Error(
-                `Order ${original.id} cannot be unlinked from Customer because customerID is a required field.`
-              );
-            }
-            promises.push(
-              DataStore.save(
-                Order.copyOf(original, (updated) => {
-                  updated.customerID = null;
-                })
-              )
-            );
-          });
-          ordersToLink.forEach((original) => {
-            promises.push(
-              DataStore.save(
-                Order.copyOf(original, (updated) => {
-                  updated.customerID = customerRecord.id;
-                })
-              )
-            );
-          });
           const modelFieldsToSave = {
             name: modelFields.name,
             dateOfBirth: modelFields.dateOfBirth,
             email: modelFields.email,
             profileImage: modelFields.profileImage,
             gender: modelFields.gender,
-            Cart: modelFields.Cart,
             shippingAddress: modelFields.shippingAddress.map((s) =>
               JSON.parse(s)
             ),
@@ -447,17 +338,11 @@ export default function CustomerUpdateForm(props) {
               ? JSON.parse(modelFields.billingAddress)
               : modelFields.billingAddress,
           };
-          promises.push(
-            DataStore.save(
-              Customer.copyOf(customerRecord, (updated) => {
-                Object.assign(updated, modelFieldsToSave);
-                if (!modelFieldsToSave.Cart) {
-                  updated.customerCartId = undefined;
-                }
-              })
-            )
+          await DataStore.save(
+            Customer.copyOf(customerRecord, (updated) => {
+              Object.assign(updated, modelFieldsToSave);
+            })
           );
-          await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -486,8 +371,6 @@ export default function CustomerUpdateForm(props) {
               shippingAddress,
               profileImage,
               gender,
-              Orders,
-              Cart,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -519,8 +402,6 @@ export default function CustomerUpdateForm(props) {
               shippingAddress,
               profileImage,
               gender,
-              Orders,
-              Cart,
             };
             const result = onChange(modelFields);
             value = result?.dateOfBirth ?? value;
@@ -551,8 +432,6 @@ export default function CustomerUpdateForm(props) {
               shippingAddress,
               profileImage,
               gender,
-              Orders,
-              Cart,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -583,8 +462,6 @@ export default function CustomerUpdateForm(props) {
               shippingAddress,
               profileImage,
               gender,
-              Orders,
-              Cart,
             };
             const result = onChange(modelFields);
             value = result?.billingAddress ?? value;
@@ -611,8 +488,6 @@ export default function CustomerUpdateForm(props) {
               shippingAddress: values,
               profileImage,
               gender,
-              Orders,
-              Cart,
             };
             const result = onChange(modelFields);
             values = result?.shippingAddress ?? values;
@@ -667,8 +542,6 @@ export default function CustomerUpdateForm(props) {
               shippingAddress,
               profileImage: value,
               gender,
-              Orders,
-              Cart,
             };
             const result = onChange(modelFields);
             value = result?.profileImage ?? value;
@@ -699,8 +572,6 @@ export default function CustomerUpdateForm(props) {
               shippingAddress,
               profileImage,
               gender: value,
-              Orders,
-              Cart,
             };
             const result = onChange(modelFields);
             value = result?.gender ?? value;
@@ -715,164 +586,6 @@ export default function CustomerUpdateForm(props) {
         hasError={errors.gender?.hasError}
         {...getOverrideProps(overrides, "gender")}
       ></TextField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              name,
-              dateOfBirth,
-              email,
-              billingAddress,
-              shippingAddress,
-              profileImage,
-              gender,
-              Orders: values,
-              Cart,
-            };
-            const result = onChange(modelFields);
-            values = result?.Orders ?? values;
-          }
-          setOrders(values);
-          setCurrentOrdersValue(undefined);
-          setCurrentOrdersDisplayValue("");
-        }}
-        currentFieldValue={currentOrdersValue}
-        label={"Orders"}
-        items={Orders}
-        hasError={errors?.Orders?.hasError}
-        errorMessage={errors?.Orders?.errorMessage}
-        getBadgeText={getDisplayValue.Orders}
-        setFieldValue={(model) => {
-          setCurrentOrdersDisplayValue(
-            model ? getDisplayValue.Orders(model) : ""
-          );
-          setCurrentOrdersValue(model);
-        }}
-        inputFieldRef={OrdersRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Orders"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Order"
-          value={currentOrdersDisplayValue}
-          options={orderRecords
-            .filter((r) => !OrdersIdSet.has(getIDValue.Orders?.(r)))
-            .map((r) => ({
-              id: getIDValue.Orders?.(r),
-              label: getDisplayValue.Orders?.(r),
-            }))}
-          onSelect={({ id, label }) => {
-            setCurrentOrdersValue(
-              orderRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentOrdersDisplayValue(label);
-            runValidationTasks("Orders", label);
-          }}
-          onClear={() => {
-            setCurrentOrdersDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            if (errors.Orders?.hasError) {
-              runValidationTasks("Orders", value);
-            }
-            setCurrentOrdersDisplayValue(value);
-            setCurrentOrdersValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("Orders", currentOrdersDisplayValue)}
-          errorMessage={errors.Orders?.errorMessage}
-          hasError={errors.Orders?.hasError}
-          ref={OrdersRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "Orders")}
-        ></Autocomplete>
-      </ArrayField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
-          if (onChange) {
-            const modelFields = {
-              name,
-              dateOfBirth,
-              email,
-              billingAddress,
-              shippingAddress,
-              profileImage,
-              gender,
-              Orders,
-              Cart: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.Cart ?? value;
-          }
-          setCart(value);
-          setCurrentCartValue(undefined);
-          setCurrentCartDisplayValue("");
-        }}
-        currentFieldValue={currentCartValue}
-        label={"Cart"}
-        items={Cart ? [Cart] : []}
-        hasError={errors?.Cart?.hasError}
-        errorMessage={errors?.Cart?.errorMessage}
-        getBadgeText={getDisplayValue.Cart}
-        setFieldValue={(model) => {
-          setCurrentCartDisplayValue(model ? getDisplayValue.Cart(model) : "");
-          setCurrentCartValue(model);
-        }}
-        inputFieldRef={CartRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Cart"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Cart"
-          value={currentCartDisplayValue}
-          options={cartRecords
-            .filter((r) => !CartIdSet.has(getIDValue.Cart?.(r)))
-            .map((r) => ({
-              id: getIDValue.Cart?.(r),
-              label: getDisplayValue.Cart?.(r),
-            }))}
-          onSelect={({ id, label }) => {
-            setCurrentCartValue(
-              cartRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentCartDisplayValue(label);
-            runValidationTasks("Cart", label);
-          }}
-          onClear={() => {
-            setCurrentCartDisplayValue("");
-          }}
-          defaultValue={Cart}
-          onChange={(e) => {
-            let { value } = e.target;
-            if (errors.Cart?.hasError) {
-              runValidationTasks("Cart", value);
-            }
-            setCurrentCartDisplayValue(value);
-            setCurrentCartValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("Cart", currentCartDisplayValue)}
-          errorMessage={errors.Cart?.errorMessage}
-          hasError={errors.Cart?.hasError}
-          ref={CartRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "Cart")}
-        ></Autocomplete>
-      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

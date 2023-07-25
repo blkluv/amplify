@@ -8,7 +8,7 @@ import { Auth } from "aws-amplify";
 import { Storage } from "@aws-amplify/storage";
 
 export function Layout() {
-  const { route, signOut } = useAuthenticator((context) => [
+  const { route } = useAuthenticator((context) => [
     context.route,
     context.signOut,
   ]);

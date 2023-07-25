@@ -1,0 +1,22 @@
+{
+  "appName": "ecommerceapp",
+  "roleName": "pinpointLambdaRole3b39747f",
+  "cloudformationPolicyName": "cloudformationPolicy3b39747f",
+  "cloudWatchPolicyName": "cloudWatchPolicy3b39747f",
+  "pinpointPolicyName": "pinpointPolicy3b39747f",
+  "authPolicyName": "pinpoint_amplify_3b39747f",
+  "unauthPolicyName": "pinpoint_amplify_3b39747f",
+  "authRoleName": {
+    "Ref": "AuthRoleName"
+  },
+  "unauthRoleName": {
+    "Ref": "UnauthRoleName"
+  },
+  "authRoleArn": {
+    "Fn::GetAtt": [
+      "AuthRole",
+      "Arn"
+    ]
+  },
+  "pinpointInAppMessagingPolicyName": "pinpointInAppMessagingPolicyName3b39747f"
+}

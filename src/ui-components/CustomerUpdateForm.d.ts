@@ -5,9 +5,9 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { Customer, Order, Cart as Cart0 } from "../models";
+import { Customer } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -21,8 +21,6 @@ export declare type CustomerUpdateFormInputValues = {
     shippingAddress?: string[];
     profileImage?: string;
     gender?: string;
-    Orders?: Order[];
-    Cart?: Cart0;
 };
 export declare type CustomerUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -32,8 +30,6 @@ export declare type CustomerUpdateFormValidationValues = {
     shippingAddress?: ValidationFunction<string>;
     profileImage?: ValidationFunction<string>;
     gender?: ValidationFunction<string>;
-    Orders?: ValidationFunction<Order>;
-    Cart?: ValidationFunction<Cart0>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CustomerUpdateFormOverridesProps = {
@@ -45,8 +41,6 @@ export declare type CustomerUpdateFormOverridesProps = {
     shippingAddress?: PrimitiveOverrideProps<TextAreaFieldProps>;
     profileImage?: PrimitiveOverrideProps<TextFieldProps>;
     gender?: PrimitiveOverrideProps<TextFieldProps>;
-    Orders?: PrimitiveOverrideProps<AutocompleteProps>;
-    Cart?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type CustomerUpdateFormProps = React.PropsWithChildren<{
     overrides?: CustomerUpdateFormOverridesProps | undefined | null;
