@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./Dashboard.module.css";
 import SideBar from "../../ui-components/SideBar";
-import { Button, Heading, View } from "@aws-amplify/ui-react";
+import { Button, Card, Heading, View, Alert } from "@aws-amplify/ui-react";
 import CustomerCreateForm from "../../ui-components/CustomerCreateForm";
 import CustomerSummary from "../CustomerSummary/CustomerSummary";
 import ProductSummary from "../ProductSummary/ProductSummary";
@@ -22,12 +22,25 @@ function Dashboard() {
   const [showCustomerSummary, setShowCustomerSummary] = React.useState(false);
   const [showProductSummary, setShowProductSummary] = React.useState(false);
   const [showOrderSummary, setShowOrderSummary] = React.useState(false);
-  const [salesValue, setSalesValue] = React.useState("$32,393");
-  const [customerValue, setCustomerValue] = React.useState("4,536");
-  const [orderValue, setOrderValue] = React.useState("2,345");
-  const [salesValueChange, setSalesValueChange] = React.useState("+20.5%");
-  const [customerValueChange, setCustomerValueChange] = React.useState("-1.2%");
-  const [orderValueChange, setOrderValueChange] = React.useState("+300.4%");
+  const [salesValue, setSalesValue] = React.useState("");
+  const [customerValue, setCustomerValue] = React.useState("");
+  const [orderValue, setOrderValue] = React.useState("");
+  const [salesValueChange, setSalesValueChange] = React.useState("");
+  const [customerValueChange, setCustomerValueChange] = React.useState("");
+  const [orderValueChange, setOrderValueChange] = React.useState("");
+
+  const [showProductCreateSuccessAlert, setShowProductCreateSuccessAlert] =
+    React.useState(false);
+  const [showProductCreateFailureAlert, setShowProductCreateFailureAlert] =
+    React.useState(false);
+  const [showCustomerCreateSuccessAlert, setShowCustomerCreateSuccessAlert] =
+    React.useState(false);
+  const [showCustomerCreateFailureAlert, setShowCustomerCreateFailureAlert] =
+    React.useState(false);
+  const [showOrderCreateSuccessAlert, setShowOrderCreateSuccessAlert] =
+    React.useState(false);
+  const [showOrderCreateFailureAlert, setShowOrderCreateFailureAlert] =
+    React.useState(false);
 
   const handleHomeButton = () => {
     setShowHome(true);
@@ -115,6 +128,153 @@ function Dashboard() {
     }
   };
 
+  const closeModel = () => {
+    setShowProductCreateForm(false);
+    setShowCustomerCreateForm(false);
+    setShowOrderCreateForm(false);
+  };
+
+  setTimeout(() => {
+    setShowProductCreateSuccessAlert(false);
+    setShowProductCreateFailureAlert(false);
+    setShowCustomerCreateSuccessAlert(false);
+    setShowCustomerCreateFailureAlert(false);
+    setShowOrderCreateSuccessAlert(false);
+    setShowOrderCreateFailureAlert(false);
+  }, 3000);
+
+  const alertProductCreateSuccess = () => {
+    return (
+      <Alert
+        style={{
+          position: "fixed",
+          top: "3%",
+          left: "40%",
+          width: "fit-content",
+          height: "3rem",
+          zIndex: "9999",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        isDismissible={true}
+        hasIcon={true}
+        variation="success"
+      >
+        Product created successfully!
+      </Alert>
+    );
+  };
+
+  const alertProductCreateFailure = () => {
+    return (
+      <Alert
+        style={{
+          position: "fixed",
+          top: "3%",
+          left: "40%",
+          width: "fit-content",
+          height: "3rem",
+          zIndex: "9999",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        isDismissible={true}
+        hasIcon={true}
+        variation="error"
+      >
+        Product creation failed!
+      </Alert>
+    );
+  };
+
+  const alertCustomerCreateSuccess = () => {
+    return (
+      <Alert
+        style={{
+          position: "fixed",
+          top: "3%",
+          left: "40%",
+          width: "fit-content",
+          height: "3rem",
+          zIndex: "9999",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        isDismissible={true}
+        hasIcon={true}
+        variation="success"
+      >
+        Customer created successfully!
+      </Alert>
+    );
+  };
+
+  const alertCustomerCreateFailure = () => {
+    return (
+      <Alert
+        style={{
+          position: "fixed",
+          top: "3%",
+          left: "40%",
+          width: "fit-content",
+          height: "3rem",
+          zIndex: "9999",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        isDismissible={true}
+        hasIcon={true}
+        variation="error"
+      >
+        Customer creation failed!
+      </Alert>
+    );
+  };
+
+  const alertOrderCreateSuccess = () => {
+    return (
+      <Alert
+        style={{
+          position: "fixed",
+          top: "3%",
+          left: "40%",
+          width: "fit-content",
+          height: "3rem",
+          zIndex: "9999",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        isDismissible={true}
+        hasIcon={true}
+        variation="success"
+      >
+        Order created successfully!
+      </Alert>
+    );
+  };
+
+  const alertOrderCreateFailure = () => {
+    return (
+      <Alert
+        style={{
+          position: "fixed",
+          top: "3%",
+          left: "40%",
+          width: "fit-content",
+          height: "3rem",
+          zIndex: "9999",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        isDismissible={true}
+        hasIcon={true}
+        variation="error"
+      >
+        Order creation failed!
+      </Alert>
+    );
+  };
+
   return (
     <View className={style.container}>
       <SideBar
@@ -131,7 +291,6 @@ function Dashboard() {
             display: "flex",
             flexDirection: "column",
             alignItems: "left",
-            position: "relative",
           }}
         >
           <Heading
@@ -256,33 +415,110 @@ function Dashboard() {
           </View>
           <View
             style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "35rem",
+              position: "fixed",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              backdropFilter: "blur(5px)",
+              zIndex: "9998",
+              display:
+                showProductCreateForm ||
+                showCustomerCreateForm ||
+                showOrderCreateForm
+                  ? "flex"
+                  : "none",
               justifyContent: "center",
               alignItems: "center",
-              position: "absolute",
-              top: "30%",
-              left: "100%",
-              backdropFilter: "blur(10px)",
             }}
           >
-            {showProductCreateForm && <ProductCreateForm />}
+            {showProductCreateForm && (
+              <View style={{ zIndex: "9999" }}>
+                <Card variation="elevated">
+                  <Button
+                    style={{
+                      position: "absolute",
+                      top: "7rem",
+                      right: "47rem",
+                      margin: "1rem",
+                      border: "none",
+                      borderRadius: "25rem",
+                    }}
+                    onClick={closeModel}
+                  >
+                    X
+                  </Button>
+                  <ProductCreateForm
+                    onSuccess={() => {
+                      setShowProductCreateSuccessAlert(true);
+                      setShowProductCreateForm(false);
+                    }}
+                    onError={() => {
+                      setShowCustomerCreateFailureAlert(true);
+                      setShowProductCreateForm(false);
+                    }}
+                  />
+                </Card>
+              </View>
+            )}
             {showCustomerCreateForm && (
-              <CustomerCreateForm
-                border={"2px solid black"}
-                onSuccess={() => {
-                  alert("Customer created successfully!");
-                  setShowCustomerCreateForm(false);
-                }}
-                onError={() => {
-                  alert("Customer creation failed!");
-                  setShowCustomerCreateForm(false);
-                }}
-              />
+              <View style={{ zIndex: "9999" }}>
+                <Card variation="elevated">
+                  <Button
+                    style={{
+                      position: "absolute",
+                      top: "9rem",
+                      right: "47rem",
+                      margin: "1rem",
+                      border: "none",
+                      borderRadius: "25rem",
+                    }}
+                    onClick={closeModel}
+                  >
+                    X
+                  </Button>
+                  <CustomerCreateForm
+                    onSuccess={() => {
+                      setShowCustomerCreateSuccessAlert(true);
+                      setShowCustomerCreateForm(false);
+                    }}
+                    onError={() => {
+                      setShowCustomerCreateFailureAlert(true);
+                      setShowCustomerCreateForm(false);
+                    }}
+                  />
+                </Card>
+              </View>
             )}
             {showOrderCreateForm && (
-              <OrderCreateForm border={"2px solid black"} />
+              <View style={{ zIndex: "9999" }}>
+                <Card variation="elevated">
+                  <Button
+                    style={{
+                      position: "absolute",
+                      top: "7rem",
+                      right: "47rem",
+                      margin: "1rem",
+                      border: "none",
+                      borderRadius: "25rem",
+                    }}
+                    onClick={closeModel}
+                  >
+                    X
+                  </Button>
+                  <OrderCreateForm
+                    onSuccess={() => {
+                      setShowOrderCreateSuccessAlert(true);
+                      setShowOrderCreateForm(false);
+                    }}
+                    onError={() => {
+                      setShowOrderCreateFailureAlert(true);
+                      setShowOrderCreateForm(false);
+                    }}
+                  />
+                </Card>
+              </View>
             )}
           </View>
         </View>
@@ -290,6 +526,12 @@ function Dashboard() {
       {showCustomerSummary && <CustomerSummary />}
       {showProductSummary && <ProductSummary />}
       {showOrderSummary && <OrderSummary />}
+      {showProductCreateSuccessAlert && alertProductCreateSuccess()}
+      {showProductCreateFailureAlert && alertProductCreateFailure()}
+      {showCustomerCreateSuccessAlert && alertCustomerCreateSuccess()}
+      {showCustomerCreateFailureAlert && alertCustomerCreateFailure()}
+      {showOrderCreateSuccessAlert && alertOrderCreateSuccess()}
+      {showOrderCreateFailureAlert && alertOrderCreateFailure()}
     </View>
   );
 }
