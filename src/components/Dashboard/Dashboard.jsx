@@ -11,7 +11,7 @@ import OrderCreateForm from "../../ui-components/OrderCreateForm";
 import Stat from "../../ui-components/Stat";
 import { DataStore } from "@aws-amplify/datastore";
 import { Customer, Order } from "../../models";
-import { Notifications, Analytics } from "aws-amplify";
+import { Notifications, Analytics, AWSPinpointProvider } from "aws-amplify";
 
 function Dashboard() {
   const [showProductCreateForm, setShowProductCreateForm] =
@@ -47,7 +47,6 @@ function Dashboard() {
   const myFirstEvent = {
     name: "My_first_event",
     attributes: { color: "red" },
-    metrics: { quantity: 1 },
   };
 
   useEffect(() => {
@@ -306,6 +305,8 @@ function Dashboard() {
   const myMessageDisplayedHandler = (message) => {
     console.log("Message displayed", message);
   };
+
+  const queryData = async () => {};
 
   return (
     <View className={style.container}>
@@ -583,6 +584,7 @@ function Dashboard() {
             >
               Send In-App Messaging Event
             </Button>
+            <Button onClick={queryData}>Query pinpoint</Button>
           </View>
         </>
       )}
