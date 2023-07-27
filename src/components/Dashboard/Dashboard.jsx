@@ -584,7 +584,7 @@ function Dashboard() {
             >
               Send In-App Messaging Event
             </Button>
-            <Button onClick={queryData}>Query pinpoint</Button>
+            <Button onClick={queryData}>Query pinpoint data</Button>
           </View>
         </>
       )}
