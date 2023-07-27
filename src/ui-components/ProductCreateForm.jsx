@@ -200,8 +200,9 @@ export default function ProductCreateForm(props) {
     description: "",
     price: "",
     category: "",
-    tags: [],
+    tags: "",
     Inventories: [],
+    productTags: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [description, setDescription] = React.useState(
@@ -213,6 +214,9 @@ export default function ProductCreateForm(props) {
   const [Inventories, setInventories] = React.useState(
     initialValues.Inventories
   );
+  const [productTags, setProductTags] = React.useState(
+    initialValues.productTags
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
@@ -220,19 +224,21 @@ export default function ProductCreateForm(props) {
     setPrice(initialValues.price);
     setCategory(initialValues.category);
     setTags(initialValues.tags);
-    setCurrentTagsValue("");
     setInventories(initialValues.Inventories);
     setCurrentInventoriesValue(undefined);
     setCurrentInventoriesDisplayValue("");
+    setProductTags(initialValues.productTags);
+    setCurrentProductTagsValue("");
     setErrors({});
   };
-  const [currentTagsValue, setCurrentTagsValue] = React.useState("");
-  const tagsRef = React.createRef();
   const [currentInventoriesDisplayValue, setCurrentInventoriesDisplayValue] =
     React.useState("");
   const [currentInventoriesValue, setCurrentInventoriesValue] =
     React.useState(undefined);
   const InventoriesRef = React.createRef();
+  const [currentProductTagsValue, setCurrentProductTagsValue] =
+    React.useState("");
+  const productTagsRef = React.createRef();
   const getIDValue = {
     Inventories: (r) => JSON.stringify({ id: r?.id }),
   };
@@ -255,6 +261,7 @@ export default function ProductCreateForm(props) {
     category: [],
     tags: [],
     Inventories: [],
+    productTags: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -288,6 +295,7 @@ export default function ProductCreateForm(props) {
           category,
           tags,
           Inventories,
+          productTags,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -330,7 +338,7 @@ export default function ProductCreateForm(props) {
             description: modelFields.description,
             price: modelFields.price,
             category: modelFields.category,
-            tags: modelFields.tags,
+            productTags: modelFields.productTags,
           };
           const product = await DataStore.save(new Product(modelFieldsToSave));
           const promises = [];
@@ -377,6 +385,7 @@ export default function ProductCreateForm(props) {
               category,
               tags,
               Inventories,
+              productTags,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -406,6 +415,7 @@ export default function ProductCreateForm(props) {
               category,
               tags,
               Inventories,
+              productTags,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -435,6 +445,7 @@ export default function ProductCreateForm(props) {
               category,
               tags,
               Inventories,
+              productTags,
             };
             const result = onChange(modelFields);
             value = result?.price ?? value;
@@ -464,6 +475,7 @@ export default function ProductCreateForm(props) {
               category: value,
               tags,
               Inventories,
+              productTags,
             };
             const result = onChange(modelFields);
             value = result?.category ?? value;
@@ -478,53 +490,34 @@ export default function ProductCreateForm(props) {
         hasError={errors.category?.hasError}
         {...getOverrideProps(overrides, "category")}
       ></TextField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
+      <TextField
+        label="Label"
+        value={tags}
+        onChange={(e) => {
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
               description,
               price,
               category,
-              tags: values,
+              tags: value,
               Inventories,
+              productTags,
             };
             const result = onChange(modelFields);
-            values = result?.tags ?? values;
+            value = result?.tags ?? value;
           }
-          setTags(values);
-          setCurrentTagsValue("");
+          if (errors.tags?.hasError) {
+            runValidationTasks("tags", value);
+          }
+          setTags(value);
         }}
-        currentFieldValue={currentTagsValue}
-        label={"Tags"}
-        items={tags}
-        hasError={errors?.tags?.hasError}
-        errorMessage={errors?.tags?.errorMessage}
-        setFieldValue={setCurrentTagsValue}
-        inputFieldRef={tagsRef}
-        defaultFieldValue={""}
-      >
-        <TextField
-          label="Tags"
-          isRequired={false}
-          isReadOnly={false}
-          value={currentTagsValue}
-          onChange={(e) => {
-            let { value } = e.target;
-            if (errors.tags?.hasError) {
-              runValidationTasks("tags", value);
-            }
-            setCurrentTagsValue(value);
-          }}
-          onBlur={() => runValidationTasks("tags", currentTagsValue)}
-          errorMessage={errors.tags?.errorMessage}
-          hasError={errors.tags?.hasError}
-          ref={tagsRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "tags")}
-        ></TextField>
-      </ArrayField>
+        onBlur={() => runValidationTasks("tags", tags)}
+        errorMessage={errors.tags?.errorMessage}
+        hasError={errors.tags?.hasError}
+        {...getOverrideProps(overrides, "tags")}
+      ></TextField>
       <ArrayField
         onChange={async (items) => {
           let values = items;
@@ -536,6 +529,7 @@ export default function ProductCreateForm(props) {
               category,
               tags,
               Inventories: values,
+              productTags,
             };
             const result = onChange(modelFields);
             values = result?.Inventories ?? values;
@@ -602,6 +596,56 @@ export default function ProductCreateForm(props) {
           labelHidden={true}
           {...getOverrideProps(overrides, "Inventories")}
         ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              description,
+              price,
+              category,
+              tags,
+              Inventories,
+              productTags: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.productTags ?? values;
+          }
+          setProductTags(values);
+          setCurrentProductTagsValue("");
+        }}
+        currentFieldValue={currentProductTagsValue}
+        label={"Product tags"}
+        items={productTags}
+        hasError={errors?.productTags?.hasError}
+        errorMessage={errors?.productTags?.errorMessage}
+        setFieldValue={setCurrentProductTagsValue}
+        inputFieldRef={productTagsRef}
+        defaultFieldValue={""}
+      >
+        <TextField
+          label="Product tags"
+          isRequired={false}
+          isReadOnly={false}
+          value={currentProductTagsValue}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.productTags?.hasError) {
+              runValidationTasks("productTags", value);
+            }
+            setCurrentProductTagsValue(value);
+          }}
+          onBlur={() =>
+            runValidationTasks("productTags", currentProductTagsValue)
+          }
+          errorMessage={errors.productTags?.errorMessage}
+          hasError={errors.productTags?.hasError}
+          ref={productTagsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "productTags")}
+        ></TextField>
       </ArrayField>
       <Flex
         justifyContent="space-between"

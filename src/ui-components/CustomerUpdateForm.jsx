@@ -14,6 +14,7 @@ import {
   Grid,
   Icon,
   ScrollView,
+  SelectField,
   Text,
   TextAreaField,
   TextField,
@@ -199,7 +200,6 @@ export default function CustomerUpdateForm(props) {
     email: "",
     billingAddress: "",
     shippingAddress: [],
-    profileImage: "",
     gender: "",
   };
   const [name, setName] = React.useState(initialValues.name);
@@ -212,9 +212,6 @@ export default function CustomerUpdateForm(props) {
   );
   const [shippingAddress, setShippingAddress] = React.useState(
     initialValues.shippingAddress
-  );
-  const [profileImage, setProfileImage] = React.useState(
-    initialValues.profileImage
   );
   const [gender, setGender] = React.useState(initialValues.gender);
   const [errors, setErrors] = React.useState({});
@@ -236,7 +233,6 @@ export default function CustomerUpdateForm(props) {
       ) ?? []
     );
     setCurrentShippingAddressValue("");
-    setProfileImage(cleanValues.profileImage);
     setGender(cleanValues.gender);
     setErrors({});
   };
@@ -260,7 +256,6 @@ export default function CustomerUpdateForm(props) {
     email: [{ type: "Email" }],
     billingAddress: [{ type: "JSON" }],
     shippingAddress: [{ type: "JSON" }],
-    profileImage: [],
     gender: [],
   };
   const runValidationTasks = async (
@@ -294,7 +289,6 @@ export default function CustomerUpdateForm(props) {
           email,
           billingAddress,
           shippingAddress,
-          profileImage,
           gender,
         };
         const validationResponses = await Promise.all(
@@ -329,7 +323,6 @@ export default function CustomerUpdateForm(props) {
             name: modelFields.name,
             dateOfBirth: modelFields.dateOfBirth,
             email: modelFields.email,
-            profileImage: modelFields.profileImage,
             gender: modelFields.gender,
             shippingAddress: modelFields.shippingAddress.map((s) =>
               JSON.parse(s)
@@ -369,7 +362,6 @@ export default function CustomerUpdateForm(props) {
               email,
               billingAddress,
               shippingAddress,
-              profileImage,
               gender,
             };
             const result = onChange(modelFields);
@@ -400,7 +392,6 @@ export default function CustomerUpdateForm(props) {
               email,
               billingAddress,
               shippingAddress,
-              profileImage,
               gender,
             };
             const result = onChange(modelFields);
@@ -430,7 +421,6 @@ export default function CustomerUpdateForm(props) {
               email: value,
               billingAddress,
               shippingAddress,
-              profileImage,
               gender,
             };
             const result = onChange(modelFields);
@@ -460,7 +450,6 @@ export default function CustomerUpdateForm(props) {
               email,
               billingAddress: value,
               shippingAddress,
-              profileImage,
               gender,
             };
             const result = onChange(modelFields);
@@ -486,7 +475,6 @@ export default function CustomerUpdateForm(props) {
               email,
               billingAddress,
               shippingAddress: values,
-              profileImage,
               gender,
             };
             const result = onChange(modelFields);
@@ -526,40 +514,10 @@ export default function CustomerUpdateForm(props) {
           {...getOverrideProps(overrides, "shippingAddress")}
         ></TextAreaField>
       </ArrayField>
-      <TextField
-        label="Profile image"
-        isRequired={false}
-        isReadOnly={false}
-        value={profileImage}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              dateOfBirth,
-              email,
-              billingAddress,
-              shippingAddress,
-              profileImage: value,
-              gender,
-            };
-            const result = onChange(modelFields);
-            value = result?.profileImage ?? value;
-          }
-          if (errors.profileImage?.hasError) {
-            runValidationTasks("profileImage", value);
-          }
-          setProfileImage(value);
-        }}
-        onBlur={() => runValidationTasks("profileImage", profileImage)}
-        errorMessage={errors.profileImage?.errorMessage}
-        hasError={errors.profileImage?.hasError}
-        {...getOverrideProps(overrides, "profileImage")}
-      ></TextField>
-      <TextField
+      <SelectField
         label="Gender"
-        isRequired={false}
-        isReadOnly={false}
+        placeholder="Please select an option"
+        isDisabled={false}
         value={gender}
         onChange={(e) => {
           let { value } = e.target;
@@ -570,7 +528,6 @@ export default function CustomerUpdateForm(props) {
               email,
               billingAddress,
               shippingAddress,
-              profileImage,
               gender: value,
             };
             const result = onChange(modelFields);
@@ -585,7 +542,23 @@ export default function CustomerUpdateForm(props) {
         errorMessage={errors.gender?.errorMessage}
         hasError={errors.gender?.hasError}
         {...getOverrideProps(overrides, "gender")}
-      ></TextField>
+      >
+        <option
+          children="Male"
+          value="Male"
+          {...getOverrideProps(overrides, "genderoption0")}
+        ></option>
+        <option
+          children="Female"
+          value="Female"
+          {...getOverrideProps(overrides, "genderoption1")}
+        ></option>
+        <option
+          children="Prefer not to say"
+          value="Prefer not to say"
+          {...getOverrideProps(overrides, "genderoption2")}
+        ></option>
+      </SelectField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

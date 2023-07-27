@@ -201,7 +201,7 @@ export default function ProductUpdateForm(props) {
     description: "",
     price: "",
     category: "",
-    tags: [],
+    productTags: [],
     Inventories: [],
     cartID: undefined,
   };
@@ -211,7 +211,9 @@ export default function ProductUpdateForm(props) {
   );
   const [price, setPrice] = React.useState(initialValues.price);
   const [category, setCategory] = React.useState(initialValues.category);
-  const [tags, setTags] = React.useState(initialValues.tags);
+  const [productTags, setProductTags] = React.useState(
+    initialValues.productTags
+  );
   const [Inventories, setInventories] = React.useState(
     initialValues.Inventories
   );
@@ -230,8 +232,8 @@ export default function ProductUpdateForm(props) {
     setDescription(cleanValues.description);
     setPrice(cleanValues.price);
     setCategory(cleanValues.category);
-    setTags(cleanValues.tags ?? []);
-    setCurrentTagsValue("");
+    setProductTags(cleanValues.productTags ?? []);
+    setCurrentProductTagsValue("");
     setInventories(cleanValues.Inventories ?? []);
     setCurrentInventoriesValue(undefined);
     setCurrentInventoriesDisplayValue("");
@@ -259,8 +261,9 @@ export default function ProductUpdateForm(props) {
     queryData();
   }, [idProp, productModelProp]);
   React.useEffect(resetStateValues, [productRecord, linkedInventories, cartID]);
-  const [currentTagsValue, setCurrentTagsValue] = React.useState("");
-  const tagsRef = React.createRef();
+  const [currentProductTagsValue, setCurrentProductTagsValue] =
+    React.useState("");
+  const productTagsRef = React.createRef();
   const [currentInventoriesDisplayValue, setCurrentInventoriesDisplayValue] =
     React.useState("");
   const [currentInventoriesValue, setCurrentInventoriesValue] =
@@ -295,7 +298,7 @@ export default function ProductUpdateForm(props) {
     description: [],
     price: [],
     category: [],
-    tags: [],
+    productTags: [],
     Inventories: [],
     cartID: [],
   };
@@ -329,7 +332,7 @@ export default function ProductUpdateForm(props) {
           description,
           price,
           category,
-          tags,
+          productTags,
           Inventories,
           cartID,
         };
@@ -418,7 +421,7 @@ export default function ProductUpdateForm(props) {
             description: modelFields.description,
             price: modelFields.price,
             category: modelFields.category,
-            tags: modelFields.tags,
+            productTags: modelFields.productTags,
             cartID: modelFields.cartID,
           };
           promises.push(
@@ -454,7 +457,7 @@ export default function ProductUpdateForm(props) {
               description,
               price,
               category,
-              tags,
+              productTags,
               Inventories,
               cartID,
             };
@@ -484,7 +487,7 @@ export default function ProductUpdateForm(props) {
               description: value,
               price,
               category,
-              tags,
+              productTags,
               Inventories,
               cartID,
             };
@@ -514,7 +517,7 @@ export default function ProductUpdateForm(props) {
               description,
               price: value,
               category,
-              tags,
+              productTags,
               Inventories,
               cartID,
             };
@@ -544,7 +547,7 @@ export default function ProductUpdateForm(props) {
               description,
               price,
               category: value,
-              tags,
+              productTags,
               Inventories,
               cartID,
             };
@@ -570,43 +573,45 @@ export default function ProductUpdateForm(props) {
               description,
               price,
               category,
-              tags: values,
+              productTags: values,
               Inventories,
               cartID,
             };
             const result = onChange(modelFields);
-            values = result?.tags ?? values;
+            values = result?.productTags ?? values;
           }
-          setTags(values);
-          setCurrentTagsValue("");
+          setProductTags(values);
+          setCurrentProductTagsValue("");
         }}
-        currentFieldValue={currentTagsValue}
-        label={"Tags"}
-        items={tags}
-        hasError={errors?.tags?.hasError}
-        errorMessage={errors?.tags?.errorMessage}
-        setFieldValue={setCurrentTagsValue}
-        inputFieldRef={tagsRef}
+        currentFieldValue={currentProductTagsValue}
+        label={"Product tags"}
+        items={productTags}
+        hasError={errors?.productTags?.hasError}
+        errorMessage={errors?.productTags?.errorMessage}
+        setFieldValue={setCurrentProductTagsValue}
+        inputFieldRef={productTagsRef}
         defaultFieldValue={""}
       >
         <TextField
-          label="Tags"
+          label="Product tags"
           isRequired={false}
           isReadOnly={false}
-          value={currentTagsValue}
+          value={currentProductTagsValue}
           onChange={(e) => {
             let { value } = e.target;
-            if (errors.tags?.hasError) {
-              runValidationTasks("tags", value);
+            if (errors.productTags?.hasError) {
+              runValidationTasks("productTags", value);
             }
-            setCurrentTagsValue(value);
+            setCurrentProductTagsValue(value);
           }}
-          onBlur={() => runValidationTasks("tags", currentTagsValue)}
-          errorMessage={errors.tags?.errorMessage}
-          hasError={errors.tags?.hasError}
-          ref={tagsRef}
+          onBlur={() =>
+            runValidationTasks("productTags", currentProductTagsValue)
+          }
+          errorMessage={errors.productTags?.errorMessage}
+          hasError={errors.productTags?.hasError}
+          ref={productTagsRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "tags")}
+          {...getOverrideProps(overrides, "productTags")}
         ></TextField>
       </ArrayField>
       <ArrayField
@@ -618,7 +623,7 @@ export default function ProductUpdateForm(props) {
               description,
               price,
               category,
-              tags,
+              productTags,
               Inventories: values,
               cartID,
             };
@@ -698,7 +703,7 @@ export default function ProductUpdateForm(props) {
               description,
               price,
               category,
-              tags,
+              productTags,
               Inventories,
               cartID: value,
             };

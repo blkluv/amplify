@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { Customer } from "../models";
 export declare type ValidationResponse = {
@@ -19,7 +19,6 @@ export declare type CustomerUpdateFormInputValues = {
     email?: string;
     billingAddress?: string;
     shippingAddress?: string[];
-    profileImage?: string;
     gender?: string;
 };
 export declare type CustomerUpdateFormValidationValues = {
@@ -28,7 +27,6 @@ export declare type CustomerUpdateFormValidationValues = {
     email?: ValidationFunction<string>;
     billingAddress?: ValidationFunction<string>;
     shippingAddress?: ValidationFunction<string>;
-    profileImage?: ValidationFunction<string>;
     gender?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -39,8 +37,7 @@ export declare type CustomerUpdateFormOverridesProps = {
     email?: PrimitiveOverrideProps<TextFieldProps>;
     billingAddress?: PrimitiveOverrideProps<TextAreaFieldProps>;
     shippingAddress?: PrimitiveOverrideProps<TextAreaFieldProps>;
-    profileImage?: PrimitiveOverrideProps<TextFieldProps>;
-    gender?: PrimitiveOverrideProps<TextFieldProps>;
+    gender?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type CustomerUpdateFormProps = React.PropsWithChildren<{
     overrides?: CustomerUpdateFormOverridesProps | undefined | null;

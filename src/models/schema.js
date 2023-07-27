@@ -195,8 +195,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "tags": {
-                    "name": "tags",
+                "productTags": {
+                    "name": "productTags",
                     "isArray": true,
                     "type": "String",
                     "isRequired": false,
@@ -624,5 +624,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "728798a4da9dcaf7a59f40a9ad2331e1"
+    "version": "08d70d006d4d0920b1685f605d6d41bc"
 };

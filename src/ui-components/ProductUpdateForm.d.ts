@@ -18,7 +18,7 @@ export declare type ProductUpdateFormInputValues = {
     description?: string;
     price?: string;
     category?: string;
-    tags?: string[];
+    productTags?: string[];
     Inventories?: Inventory[];
     cartID?: string;
 };
@@ -27,7 +27,7 @@ export declare type ProductUpdateFormValidationValues = {
     description?: ValidationFunction<string>;
     price?: ValidationFunction<string>;
     category?: ValidationFunction<string>;
-    tags?: ValidationFunction<string>;
+    productTags?: ValidationFunction<string>;
     Inventories?: ValidationFunction<Inventory>;
     cartID?: ValidationFunction<string>;
 };
@@ -38,7 +38,7 @@ export declare type ProductUpdateFormOverridesProps = {
     description?: PrimitiveOverrideProps<TextFieldProps>;
     price?: PrimitiveOverrideProps<TextFieldProps>;
     category?: PrimitiveOverrideProps<TextFieldProps>;
-    tags?: PrimitiveOverrideProps<TextFieldProps>;
+    productTags?: PrimitiveOverrideProps<TextFieldProps>;
     Inventories?: PrimitiveOverrideProps<AutocompleteProps>;
     cartID?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;

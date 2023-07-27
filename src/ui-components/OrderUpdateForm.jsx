@@ -201,9 +201,6 @@ export default function OrderUpdateForm(props) {
     shippingAddress: "",
     billingAddress: "",
     totalAmount: "",
-    status: "",
-    createdAt: "",
-    updatedAt: "",
     items: [],
     customerID: undefined,
   };
@@ -216,9 +213,6 @@ export default function OrderUpdateForm(props) {
   const [totalAmount, setTotalAmount] = React.useState(
     initialValues.totalAmount
   );
-  const [status, setStatus] = React.useState(initialValues.status);
-  const [createdAt, setCreatedAt] = React.useState(initialValues.createdAt);
-  const [updatedAt, setUpdatedAt] = React.useState(initialValues.updatedAt);
   const [items, setItems] = React.useState(initialValues.items);
   const [customerID, setCustomerID] = React.useState(initialValues.customerID);
   const [errors, setErrors] = React.useState({});
@@ -237,9 +231,6 @@ export default function OrderUpdateForm(props) {
         : JSON.stringify(cleanValues.billingAddress)
     );
     setTotalAmount(cleanValues.totalAmount);
-    setStatus(cleanValues.status);
-    setCreatedAt(cleanValues.createdAt);
-    setUpdatedAt(cleanValues.updatedAt);
     setItems(
       cleanValues.items?.map((item) =>
         typeof item === "string" ? item : JSON.stringify(item)
@@ -282,9 +273,6 @@ export default function OrderUpdateForm(props) {
     shippingAddress: [{ type: "JSON" }],
     billingAddress: [{ type: "JSON" }],
     totalAmount: [],
-    status: [],
-    createdAt: [],
-    updatedAt: [],
     items: [{ type: "JSON" }],
     customerID: [{ type: "Required" }],
   };
@@ -317,9 +305,6 @@ export default function OrderUpdateForm(props) {
           shippingAddress,
           billingAddress,
           totalAmount,
-          status,
-          createdAt,
-          updatedAt,
           items,
           customerID,
         };
@@ -353,9 +338,6 @@ export default function OrderUpdateForm(props) {
           });
           const modelFieldsToSave = {
             totalAmount: modelFields.totalAmount,
-            status: modelFields.status,
-            createdAt: modelFields.createdAt,
-            updatedAt: modelFields.updatedAt,
             customerID: modelFields.customerID,
             items: modelFields.items.map((s) => JSON.parse(s)),
             shippingAddress: modelFields.shippingAddress
@@ -394,9 +376,6 @@ export default function OrderUpdateForm(props) {
               shippingAddress: value,
               billingAddress,
               totalAmount,
-              status,
-              createdAt,
-              updatedAt,
               items,
               customerID,
             };
@@ -425,9 +404,6 @@ export default function OrderUpdateForm(props) {
               shippingAddress,
               billingAddress: value,
               totalAmount,
-              status,
-              createdAt,
-              updatedAt,
               items,
               customerID,
             };
@@ -460,9 +436,6 @@ export default function OrderUpdateForm(props) {
               shippingAddress,
               billingAddress,
               totalAmount: value,
-              status,
-              createdAt,
-              updatedAt,
               items,
               customerID,
             };
@@ -479,107 +452,6 @@ export default function OrderUpdateForm(props) {
         hasError={errors.totalAmount?.hasError}
         {...getOverrideProps(overrides, "totalAmount")}
       ></TextField>
-      <TextField
-        label="Status"
-        isRequired={false}
-        isReadOnly={false}
-        value={status}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              shippingAddress,
-              billingAddress,
-              totalAmount,
-              status: value,
-              createdAt,
-              updatedAt,
-              items,
-              customerID,
-            };
-            const result = onChange(modelFields);
-            value = result?.status ?? value;
-          }
-          if (errors.status?.hasError) {
-            runValidationTasks("status", value);
-          }
-          setStatus(value);
-        }}
-        onBlur={() => runValidationTasks("status", status)}
-        errorMessage={errors.status?.errorMessage}
-        hasError={errors.status?.hasError}
-        {...getOverrideProps(overrides, "status")}
-      ></TextField>
-      <TextField
-        label="Created at"
-        isRequired={false}
-        isReadOnly={false}
-        type="number"
-        step="any"
-        value={createdAt}
-        onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
-          if (onChange) {
-            const modelFields = {
-              shippingAddress,
-              billingAddress,
-              totalAmount,
-              status,
-              createdAt: value,
-              updatedAt,
-              items,
-              customerID,
-            };
-            const result = onChange(modelFields);
-            value = result?.createdAt ?? value;
-          }
-          if (errors.createdAt?.hasError) {
-            runValidationTasks("createdAt", value);
-          }
-          setCreatedAt(value);
-        }}
-        onBlur={() => runValidationTasks("createdAt", createdAt)}
-        errorMessage={errors.createdAt?.errorMessage}
-        hasError={errors.createdAt?.hasError}
-        {...getOverrideProps(overrides, "createdAt")}
-      ></TextField>
-      <TextField
-        label="Updated at"
-        isRequired={false}
-        isReadOnly={false}
-        type="number"
-        step="any"
-        value={updatedAt}
-        onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
-          if (onChange) {
-            const modelFields = {
-              shippingAddress,
-              billingAddress,
-              totalAmount,
-              status,
-              createdAt,
-              updatedAt: value,
-              items,
-              customerID,
-            };
-            const result = onChange(modelFields);
-            value = result?.updatedAt ?? value;
-          }
-          if (errors.updatedAt?.hasError) {
-            runValidationTasks("updatedAt", value);
-          }
-          setUpdatedAt(value);
-        }}
-        onBlur={() => runValidationTasks("updatedAt", updatedAt)}
-        errorMessage={errors.updatedAt?.errorMessage}
-        hasError={errors.updatedAt?.hasError}
-        {...getOverrideProps(overrides, "updatedAt")}
-      ></TextField>
       <ArrayField
         onChange={async (items) => {
           let values = items;
@@ -588,9 +460,6 @@ export default function OrderUpdateForm(props) {
               shippingAddress,
               billingAddress,
               totalAmount,
-              status,
-              createdAt,
-              updatedAt,
               items: values,
               customerID,
             };
@@ -638,9 +507,6 @@ export default function OrderUpdateForm(props) {
               shippingAddress,
               billingAddress,
               totalAmount,
-              status,
-              createdAt,
-              updatedAt,
               items,
               customerID: value,
             };

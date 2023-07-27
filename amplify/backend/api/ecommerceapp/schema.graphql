@@ -19,7 +19,7 @@ type Product @model @auth(rules: [{allow: public}]) {
   description: String
   price: String
   category: String
-  tags: [String]
+  productTags: [String]
   Inventories: [Inventory] @hasMany(indexName: "byProduct", fields: ["id"])
   cartID: ID @index(name: "byCart")
 }

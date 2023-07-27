@@ -9,10 +9,12 @@ import {
   Heading,
   Button,
   Alert,
+  Card,
 } from "@aws-amplify/ui-react";
 import { DataStore } from "aws-amplify";
 import { Customer } from "../../models";
 import { useState, useEffect } from "react";
+import CustomerUpdateForm from "../../ui-components/CustomerUpdateForm";
 
 function CustomerSummary() {
   const [customers, setCustomers] = useState([]);
@@ -20,6 +22,7 @@ function CustomerSummary() {
     useState(false);
   const [showDeleteUnsuccessFullAlert, setShowDeleteUnsuccessFullAlert] =
     useState(false);
+  const [showCustomerUpdateForm, setShowCustomerUpdateForm] = useState(false);
 
   useEffect(() => {
     fetchCustomers();
@@ -32,6 +35,7 @@ function CustomerSummary() {
 
   const handleCustomerUpdate = (id) => (e) => {
     console.log(id);
+    setShowCustomerUpdateForm(true);
   };
 
   const handleCustomerDelete = (id) => async (e) => {
@@ -175,6 +179,21 @@ function CustomerSummary() {
         </Table>
         {showDeleteSuccessFullAlert && showSuccessfullDeleteAlert()}
         {showDeleteUnsuccessFullAlert && showUnsuccessfullDeleteAlert()}
+        {showCustomerUpdateForm && (
+          <Card
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: "9999",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CustomerUpdateForm />
+          </Card>
+        )}
       </View>
     </>
   );
