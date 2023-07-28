@@ -15,6 +15,7 @@ import { Notifications, Analytics, AWSPinpointProvider } from "aws-amplify";
 import AddProduct from "../AddProduct/AddProduct";
 import { Product } from "../../models";
 import { Storage } from "aws-amplify";
+import { Buffer } from "buffer";
 
 function Dashboard() {
   const [showProductCreateForm, setShowProductCreateForm] =
@@ -321,6 +322,30 @@ function Dashboard() {
     });
   };
 
+  const [customerModelActivity, setCustomerModelActivity] = React.useState({});
+  const [orderModelActivity, setOrderModelActivity] = React.useState({});
+  const [productModelActivity, setProductModelActivity] = React.useState({});
+
+  useEffect(() => {
+    const customerSub = DataStore.observe(Customer).subscribe((msg) => {
+      setCustomerModelActivity(msg);
+    });
+
+    const orderSub = DataStore.observe(Order).subscribe((msg) => {
+      setOrderModelActivity(msg);
+    });
+
+    const productSub = DataStore.observe(Product).subscribe((msg) => {
+      setProductModelActivity(msg);
+    });
+
+    return () => {
+      customerSub.unsubscribe();
+      orderSub.unsubscribe();
+      productSub.unsubscribe();
+    };
+  }, []);
+
   return (
     <View className={style.container}>
       <SideBar
@@ -599,12 +624,42 @@ function Dashboard() {
             </Button>
             <Button
               onClick={async () => {
-                const products = await DataStore.query(Product);
-                console.log(products);
-                downloadProductImages(products);
+                let obj = {
+                  firstname: "vishesh",
+                  lastname: "baghel",
+                };
+                let data = {
+                  Bucket:
+                    "ecommerceappca7f386258834b109bcf533779c27846122736-staging",
+                  Key: "auditLogs.json",
+                  Body: JSON.stringify(obj),
+                };
+                await Storage.put(data)
+                  .then((result) => {
+                    console.log(result.key);
+                  })
+                  .catch((err) => console.log(err));
               }}
             >
-              getProducts
+              save audit logs
+            </Button>
+            <Button
+              onClick={async () => {
+                const params = {
+                  bucket:
+                    "your-ecommerceappca7f386258834b109bcf533779c27846122736-name",
+                  key: "auditLogs.json",
+                };
+                Storage.get(params)
+                  .then((result) => {
+                    const data = result.Body.toString("utf-8");
+                    const jsonObject = JSON.parse(data);
+                    console.log(jsonObject);
+                  })
+                  .catch((err) => console.log(err));
+              }}
+            >
+              get audit logs
             </Button>
           </View>
         </>

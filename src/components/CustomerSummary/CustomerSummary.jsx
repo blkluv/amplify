@@ -14,7 +14,7 @@ import {
 import { DataStore } from "aws-amplify";
 import { Customer } from "../../models";
 import { useState, useEffect } from "react";
-import CustomerUpdateForm from "../../ui-components/CustomerUpdateForm";
+import UpdateCustomer from "../UpdateCustomer/UpdateCustomer";
 
 function CustomerSummary() {
   const [customers, setCustomers] = useState([]);
@@ -23,6 +23,7 @@ function CustomerSummary() {
   const [showDeleteUnsuccessFullAlert, setShowDeleteUnsuccessFullAlert] =
     useState(false);
   const [showCustomerUpdateForm, setShowCustomerUpdateForm] = useState(false);
+  const [customer, setCustomer] = useState({});
 
   useEffect(() => {
     fetchCustomers();
@@ -33,9 +34,15 @@ function CustomerSummary() {
     setCustomers(customers);
   };
 
-  const handleCustomerUpdate = (id) => (e) => {
-    console.log(id);
+  const handleCustomerUpdate = (id) => async (e) => {
     setShowCustomerUpdateForm(true);
+    await DataStore.query(Customer, id)
+      .then((res) => {
+        setCustomer(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleCustomerDelete = (id) => async (e) => {
@@ -85,14 +92,6 @@ function CustomerSummary() {
     );
   };
 
-  useEffect(() => {
-    const subscription = DataStore.observe(Customer).subscribe((msg) => {
-      console.log(msg.model, msg.opType, msg.element);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
   return (
     <>
       <View>
@@ -130,6 +129,7 @@ function CustomerSummary() {
               <TableCell as="th">Billing Address</TableCell>
               <TableCell as="th">Shipping Address</TableCell>
               <TableCell as="th">Date of Birth</TableCell>
+              <TableCell as="th">Gender</TableCell>
               <TableCell as="th">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -151,6 +151,9 @@ function CustomerSummary() {
                 </TableCell>
                 <TableCell>
                   {customer.dateOfBirth ? customer.dateOfBirth : "NA"}
+                </TableCell>
+                <TableCell>
+                  {customer.gender ? customer.gender : "NA"}
                 </TableCell>
                 <TableCell>
                   <Button
@@ -179,34 +182,42 @@ function CustomerSummary() {
         </Table>
         {showDeleteSuccessFullAlert && showSuccessfullDeleteAlert()}
         {showDeleteUnsuccessFullAlert && showUnsuccessfullDeleteAlert()}
-        {showCustomerUpdateForm && (
-          <Card
-            style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              zIndex: "9999",
-              justifyContent: "center",
-              alignItems: "center",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Button
+        <View
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backdropFilter: "blur(5px)",
+            zIndex: "9998",
+            display: showCustomerUpdateForm ? "flex" : "none",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {showCustomerUpdateForm && (
+            <Card
               style={{
-                height: "1rem",
-                width: "1rem",
-                border: "none",
-                backgroundColor: "transparent",
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: "9999",
+                justifyContent: "center",
+                alignItems: "center",
+                display: "flex",
+                flexDirection: "column",
               }}
-              onClick={() => setShowCustomerUpdateForm(false)}
             >
-              X
-            </Button>
-            <CustomerUpdateForm />
-          </Card>
-        )}
+              <UpdateCustomer
+                Customer={customer}
+                closeModel={() => setShowCustomerUpdateForm(false)}
+              />
+            </Card>
+          )}
+        </View>
       </View>
     </>
   );

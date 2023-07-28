@@ -238,19 +238,26 @@ export default function Profile() {
         {showUpdateProfile && (
           <View style={{ zIndex: "9999" }}>
             <Card variation="elevated">
-              <Button
+              <View
                 style={{
-                  position: "absolute",
-                  top: "1rem",
-                  right: "47rem",
-                  margin: "1rem",
-                  border: "none",
-                  borderRadius: "25rem",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignContent: "center",
+                  alignItems: "center",
                 }}
-                onClick={closeModel}
               >
-                X
-              </Button>
+                <Heading level={3}>Edit Profile</Heading>
+                <Button
+                  style={{
+                    width: "4rem",
+                    height: "2rem",
+                    margin: "0 0 0 4rem",
+                  }}
+                  onClick={closeModel}
+                >
+                  Close
+                </Button>
+              </View>
               <EditProfileLocal user={user} />
             </Card>
           </View>

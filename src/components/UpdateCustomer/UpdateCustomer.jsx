@@ -10,98 +10,86 @@ import {
   View,
 } from "@aws-amplify/ui-react";
 import { StorageManager } from "@aws-amplify/ui-react-storage";
-import { Storage, Auth } from "aws-amplify";
+import { DataStore } from "aws-amplify";
+import { Customer } from "../../models";
 
-const props = {
-  idProp: undefined,
-  customerModelProp: undefined,
-  onSuccess: undefined,
-  onError: undefined,
-  onSubmit: undefined,
-  onValidate: undefined,
-  onChange: undefined,
-  overrides: undefined,
-};
-
-export default function EditProfileLocal({ user }) {
-  const initialValues = {
-    name: user ? user.attributes.name : "",
-    email: user ? user.attributes.email : "",
-    DateOfBirth: user ? user.attributes.birthdate : "",
-    address: user ? user.attributes.address : "",
-    gender: user ? user.attributes.gender : "",
-    phoneNumber: user ? user.attributes.phone_number : "",
-    profilePhoto: user ? user.attributes.picture : "",
+export default function UpdateCustomer({ Customer: CustomerObj, closeModel }) {
+  const initialAddressValue = {
+    recipientName: "",
+    street: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
   };
 
-  const [name, setName] = React.useState(initialValues.name);
-  const [email, setEmail] = React.useState(initialValues.email);
-  const [DateOfBirth, setDateOfBirth] = React.useState(
-    initialValues.DateOfBirth
+  const [name, setName] = React.useState(CustomerObj.name);
+  const [email, setEmail] = React.useState(CustomerObj.email);
+  const [dateOfBirth, setDateOfBirth] = React.useState(CustomerObj.dateOfBirth);
+  const [gender, setGender] = React.useState(CustomerObj.gender);
+  const [profileImage, setProfileImage] = React.useState(
+    CustomerObj.profileImage
   );
-  const [address, setAddress] = React.useState(initialValues.address);
-  const [gender, setGender] = React.useState(initialValues.gender);
-  const [phoneNumber, setPhoneNumber] = React.useState(
-    initialValues.phoneNumber
+  const [billingAddress, setBillingAddress] = React.useState(
+    CustomerObj.billingAddress
   );
-  const [picture, setPicture] = React.useState(initialValues.profilePhoto);
+  const [shippingAddress, setShippingAddress] = React.useState(
+    CustomerObj.shippingAddress
+  );
+  const [key, setKey] = React.useState("");
 
   const resetStateValues = () => {
     const cleanValues = {
       name: "",
       email: "",
-      DateOfBirth: "",
-      address: "",
+      dateOfBirth: "",
       gender: "",
-      phoneNumber: "",
-      profilePhoto: "",
+      profileImage: "",
+      billingAddress: initialAddressValue,
+      shippingAddress: [initialAddressValue],
     };
     setName(cleanValues.name);
     setEmail(cleanValues.email);
-    setDateOfBirth(cleanValues.DateOfBirth);
-    setAddress(cleanValues.address);
+    setDateOfBirth(cleanValues.dateOfBirth);
     setGender(cleanValues.gender);
-    setPhoneNumber(cleanValues.phoneNumber);
-    setPicture(cleanValues.profilePhoto);
+    setProfileImage(cleanValues.profileImage);
+    setBillingAddress(cleanValues.billingAddress);
+    setShippingAddress(cleanValues.shippingAddress);
   };
-
-  const downloadFile = async (user) => {
-    await Storage.get(`${user.attributes.picture}`, {
-      level: "public",
-    })
-      .then((result) => {
-        setPicture(result);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  React.useEffect(() => {
-    downloadFile(user);
-  }, []);
-
-  React.useEffect(resetStateValues, [user]);
 
   const handleSubmit = async () => {
-    const userAttributes = {
-      name: name ? name : user.attributes.name,
-      email: email ? email : user.attributes.email,
-      birthdate: DateOfBirth ? DateOfBirth : user.attributes.birthdate,
-      address: address,
+    const customerAttributes = {
+      name: name,
+      email: email,
+      birthdate: dateOfBirth,
+      billingAddress: billingAddress,
+      shippingAddress: shippingAddress,
       gender: gender,
-      phone_number: phoneNumber,
-      picture: key ? key : user.attributes.picture,
+      profileImage: key,
     };
-    updateUser({ userAttributes });
+    updateCustomer({ customerAttributes: customerAttributes });
   };
 
-  async function updateUser({ userAttributes }) {
-    const user = await Auth.currentAuthenticatedUser();
-    await Auth.updateUserAttributes(user, userAttributes).catch((err) =>
-      console.log(err)
-    );
+  async function updateCustomer({ customerAttributes }) {
+    const original = await DataStore.query(Customer, CustomerObj.id);
+    await DataStore.save(
+      Customer.copyOf(original, (updated) => {
+        updated.name = customerAttributes?.name;
+        updated.email = customerAttributes?.email;
+        updated.dateOfBirth = customerAttributes.birthdate;
+        updated.billingAddress = customerAttributes.billingAddress;
+        updated.shippingAddress = customerAttributes.shippingAddress;
+        updated.gender = customerAttributes.gender;
+        updated.profileImage = customerAttributes.profileImage;
+      })
+    )
+      .then(() => {
+        resetStateValues();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
-
-  const [key, setKey] = React.useState("");
 
   const processFile = async ({ file }) => {
     const fileExtension = file.name.split(".").pop();
@@ -119,13 +107,6 @@ export default function EditProfileLocal({ user }) {
       });
   };
 
-  const onUploadSuccess = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    await Auth.updateUserAttributes(user, {
-      picture: key,
-    }).catch((err) => console.log(err));
-  };
-
   return (
     <View
       style={{
@@ -135,6 +116,26 @@ export default function EditProfileLocal({ user }) {
         justifyContent: "center",
       }}
     >
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Heading level={3}>Edit Profile</Heading>
+        <Button
+          style={{
+            width: "4rem",
+            height: "2rem",
+            margin: "0 0 0 4rem",
+          }}
+          onClick={closeModel}
+        >
+          Close
+        </Button>
+      </View>
       <Grid
         as="form"
         rowGap="15px"
@@ -162,16 +163,24 @@ export default function EditProfileLocal({ user }) {
         <TextField
           label="Date of Birth"
           type="date"
-          value={DateOfBirth}
+          value={dateOfBirth}
           onChange={(e) => {
             setDateOfBirth(e.target.value);
           }}
         ></TextField>
         <TextField
-          label="Address"
-          value={address}
+          label="Billing Address"
+          value={billingAddress}
           onChange={(e) => {
-            setAddress(e.target.value);
+            setBillingAddress(e.target.value);
+          }}
+        ></TextField>
+        <TextField
+          label="Shipping Address"
+          value={shippingAddress}
+          onChange={(e) => {
+            const shippingAddressArray = e.target.value.split(",");
+            setShippingAddress(shippingAddressArray);
           }}
         ></TextField>
         <SelectField
@@ -189,14 +198,6 @@ export default function EditProfileLocal({ user }) {
             value="Prefer Not to Say"
           ></option>
         </SelectField>
-        <TextField
-          label="Phone Number"
-          type="tel"
-          value={phoneNumber}
-          onChange={(e) => {
-            setPhoneNumber(e.target.value);
-          }}
-        ></TextField>
         <View>
           <StorageManager
             acceptedFileTypes={["image/*"]}
@@ -204,7 +205,6 @@ export default function EditProfileLocal({ user }) {
             maxFileCount={1}
             isResumable
             processFile={processFile}
-            onUploadSuccess={onUploadSuccess}
           />
         </View>
         <Flex justifyContent="space-between">
