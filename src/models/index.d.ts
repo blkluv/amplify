@@ -46,6 +46,36 @@ export declare type Address = LazyLoading extends LazyLoadingDisabled ? EagerAdd
 
 export declare const Address: (new (init: ModelInit<Address>) => Address)
 
+type EagerAuditLogs = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<AuditLogs, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly model?: string | null;
+  readonly opType?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyAuditLogs = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<AuditLogs, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly model?: string | null;
+  readonly opType?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type AuditLogs = LazyLoading extends LazyLoadingDisabled ? EagerAuditLogs : LazyAuditLogs
+
+export declare const AuditLogs: (new (init: ModelInit<AuditLogs>) => AuditLogs) & {
+  copyOf(source: AuditLogs, mutator: (draft: MutableModel<AuditLogs>) => MutableModel<AuditLogs> | void): AuditLogs;
+}
+
 type EagerCart = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<Cart, 'id'>;

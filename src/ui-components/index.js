@@ -7,6 +7,8 @@
 export { default as ActionCard } from "./ActionCard";
 export { default as AddProductForm } from "./AddProductForm";
 export { default as Ampligram } from "./Ampligram";
+export { default as AuditLogsCreateForm } from "./AuditLogsCreateForm";
+export { default as AuditLogsUpdateForm } from "./AuditLogsUpdateForm";
 export { default as CTASection } from "./CTASection";
 export { default as CartCreateForm } from "./CartCreateForm";
 export { default as CartUpdateForm } from "./CartUpdateForm";

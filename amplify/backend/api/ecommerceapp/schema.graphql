@@ -1,3 +1,9 @@
+type AuditLogs @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  model: String
+  opType: String
+}
+
 type Cart @model @auth(rules: [{allow: public}]) {
   id: ID!
   createdAt: AWSTimestamp

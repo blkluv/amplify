@@ -10,12 +10,13 @@ import ProductCreateForm from "../../ui-components/ProductCreateForm";
 import OrderCreateForm from "../../ui-components/OrderCreateForm";
 import Stat from "../../ui-components/Stat";
 import { DataStore } from "@aws-amplify/datastore";
-import { Customer, Order } from "../../models";
+import { Customer, Order, AuditLogs } from "../../models";
 import { Notifications, Analytics, AWSPinpointProvider } from "aws-amplify";
 import AddProduct from "../AddProduct/AddProduct";
 import { Product } from "../../models";
 import { Storage } from "aws-amplify";
 import { Buffer } from "buffer";
+import ActivityLogs from "../ActivityLogs/ActivityLogs";
 
 function Dashboard() {
   const [showProductCreateForm, setShowProductCreateForm] =
@@ -322,21 +323,19 @@ function Dashboard() {
     });
   };
 
-  const [customerModelActivity, setCustomerModelActivity] = React.useState({});
-  const [orderModelActivity, setOrderModelActivity] = React.useState({});
-  const [productModelActivity, setProductModelActivity] = React.useState({});
+  const [auditLogs, setAuditLogs] = React.useState([]);
 
   useEffect(() => {
     const customerSub = DataStore.observe(Customer).subscribe((msg) => {
-      setCustomerModelActivity(msg);
+      setAuditLogs((prev) => [...prev, msg]);
     });
 
     const orderSub = DataStore.observe(Order).subscribe((msg) => {
-      setOrderModelActivity(msg);
+      setAuditLogs((prev) => [...prev, msg]);
     });
 
     const productSub = DataStore.observe(Product).subscribe((msg) => {
-      setProductModelActivity(msg);
+      setAuditLogs((prev) => [...prev, msg]);
     });
 
     return () => {
@@ -344,6 +343,17 @@ function Dashboard() {
       orderSub.unsubscribe();
       productSub.unsubscribe();
     };
+  }, []);
+
+  useEffect(() => {
+    auditLogs.forEach((log) => {
+      DataStore.save(
+        new AuditLogs({
+          modelName: log.modelName,
+          operationType: log.opType,
+        })
+      );
+    });
   }, []);
 
   return (
@@ -673,6 +683,7 @@ function Dashboard() {
       {showCustomerCreateFailureAlert && alertCustomerCreateFailure()}
       {showOrderCreateSuccessAlert && alertOrderCreateSuccess()}
       {showOrderCreateFailureAlert && alertOrderCreateFailure()}
+      <ActivityLogs />
     </View>
   );
 }
