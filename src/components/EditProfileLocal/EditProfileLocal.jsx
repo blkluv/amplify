@@ -10,11 +10,6 @@ import {
   View,
 } from "@aws-amplify/ui-react";
 import { StorageManager } from "@aws-amplify/ui-react-storage";
-import {
-  fetchByPath,
-  processFile,
-  validateField,
-} from "../../ui-components/utils";
 import { Storage, Auth } from "aws-amplify";
 
 const props = {

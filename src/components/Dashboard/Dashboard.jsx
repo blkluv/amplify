@@ -12,6 +12,9 @@ import Stat from "../../ui-components/Stat";
 import { DataStore } from "@aws-amplify/datastore";
 import { Customer, Order } from "../../models";
 import { Notifications, Analytics, AWSPinpointProvider } from "aws-amplify";
+import AddProduct from "../AddProduct/AddProduct";
+import { Product } from "../../models";
+import { Storage } from "aws-amplify";
 
 function Dashboard() {
   const [showProductCreateForm, setShowProductCreateForm] =
@@ -306,7 +309,17 @@ function Dashboard() {
     console.log("Message displayed", message);
   };
 
-  const queryData = async () => {};
+  const downloadProductImages = async (products) => {
+    products.forEach(async (product) => {
+      await Storage.get(`${product.productImages[0]}`, {
+        level: "public",
+      })
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((err) => console.log(err));
+    });
+  };
 
   return (
     <View className={style.container}>
@@ -483,16 +496,7 @@ function Dashboard() {
                     >
                       X
                     </Button>
-                    <ProductCreateForm
-                      onSuccess={() => {
-                        setShowProductCreateSuccessAlert(true);
-                        setShowProductCreateForm(false);
-                      }}
-                      onError={() => {
-                        setShowCustomerCreateFailureAlert(true);
-                        setShowProductCreateForm(false);
-                      }}
-                    />
+                    <AddProduct />
                   </Card>
                 </View>
               )}
@@ -584,7 +588,15 @@ function Dashboard() {
             >
               Send In-App Messaging Event
             </Button>
-            <Button onClick={queryData}>Query pinpoint data</Button>
+            <Button
+              onClick={async () => {
+                const products = await DataStore.query(Product);
+                console.log(products);
+                downloadProductImages(products);
+              }}
+            >
+              getProducts
+            </Button>
           </View>
         </>
       )}

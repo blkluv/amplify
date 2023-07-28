@@ -119,6 +119,7 @@ type EagerProduct = {
   readonly productTags?: (string | null)[] | null;
   readonly Inventories?: (Inventory | null)[] | null;
   readonly cartID?: string | null;
+  readonly productImages?: (string | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -136,6 +137,7 @@ type LazyProduct = {
   readonly productTags?: (string | null)[] | null;
   readonly Inventories: AsyncCollection<Inventory>;
   readonly cartID?: string | null;
+  readonly productImages?: (string | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

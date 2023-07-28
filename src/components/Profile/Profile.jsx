@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Heading, View } from "@aws-amplify/ui-react";
+import { Card, Heading, View } from "@aws-amplify/ui-react";
 import * as mutations from "../../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
 import { Auth } from "aws-amplify";
 import EditProfileLocal from "../EditProfileLocal/EditProfileLocal";
 import React from "react";
 import { Storage } from "aws-amplify";
+import { Button } from "@aws-amplify/ui-react";
 
 const address = {
   recipientName: "Lorem ipsum dolor sit amet",
@@ -44,6 +45,7 @@ export default function Profile() {
   });
 
   const [userProfilePhoto, setUserProfilePhoto] = useState("");
+  const [showUpdateProfile, setShowUpdateProfile] = useState(false);
 
   useEffect(() => {
     getUserInfo();
@@ -65,156 +67,194 @@ export default function Profile() {
       .catch((err) => console.log(err));
   };
 
+  const closeModel = () => {
+    setShowUpdateProfile(false);
+  };
+
   return (
-    <View
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        width: "100%",
-      }}
-    >
+    <View>
       <View
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "space-between",
+          alignItems: "center",
           justifyContent: "left",
-          width: "50%",
-          marginRight: "10px",
-          borderRight: "1px solid #ddd",
+          width: "100%",
         }}
       >
-        <Heading level={3}>Profile</Heading>
-        <View
+        <Heading
           style={{
+            marginBottom: "1rem",
             display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
             justifyContent: "left",
-            marginLeft: "50px",
+            alignItems: "left",
+            margin: "1rem 0 1rem 0",
           }}
+          level={3}
         >
-          <img
+          Profile
+        </Heading>
+        <View>
+          <View
             style={{
-              width: "100px",
-              height: "100px",
-              borderRadius: "50%",
-              marginRight: "10px",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "left",
+              justifyContent: "left",
+              marginLeft: "50px",
             }}
-            src={userProfilePhoto}
-            alt="profile"
-          />
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "left",
-            marginLeft: "50px",
-          }}
-        >
-          <Heading
-            style={{
-              marginRight: "10px",
-            }}
-            level={4}
           >
-            Name:
-          </Heading>
-          <p>{user.attributes.name}</p>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "left",
-            marginLeft: "50px",
-          }}
-        >
-          <Heading
+            <img
+              style={{
+                width: "100px",
+                height: "100px",
+                borderRadius: "50%",
+                marginRight: "10px",
+              }}
+              src={userProfilePhoto}
+              alt="profile"
+            />
+          </View>
+          <View
             style={{
-              marginRight: "10px",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "left",
+              marginLeft: "50px",
             }}
-            level={4}
           >
-            Email:
-          </Heading>
-          <p>{user.attributes.email}</p>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "left",
-            marginLeft: "50px",
-          }}
-        >
-          <Heading
+            <Heading
+              style={{
+                marginRight: "10px",
+              }}
+              level={4}
+            >
+              Name:
+            </Heading>
+            <p>{user.attributes.name}</p>
+          </View>
+          <View
             style={{
-              marginRight: "10px",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "left",
+              marginLeft: "50px",
             }}
-            level={4}
           >
-            Address:
-          </Heading>
-          <p>{user.attributes.address}</p>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "left",
-            marginLeft: "50px",
-          }}
-        >
-          <Heading
+            <Heading
+              style={{
+                marginRight: "10px",
+              }}
+              level={4}
+            >
+              Email:
+            </Heading>
+            <p>{user.attributes.email}</p>
+          </View>
+          <View
             style={{
-              marginRight: "10px",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "left",
+              marginLeft: "50px",
             }}
-            level={4}
           >
-            Gender:
-          </Heading>
-          <p>{user.attributes.gender}</p>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "left",
-            marginLeft: "50px",
-          }}
-        >
-          <Heading
+            <Heading
+              style={{
+                marginRight: "10px",
+              }}
+              level={4}
+            >
+              Address:
+            </Heading>
+            <p>{user.attributes.address}</p>
+          </View>
+          <View
             style={{
-              marginRight: "10px",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "left",
+              marginLeft: "50px",
             }}
-            level={4}
           >
-            Phone Number:
-          </Heading>
-          <p>
-            {user.attributes.phoneNumber ? user.attributes.phoneNumber : "none"}
-          </p>
+            <Heading
+              style={{
+                marginRight: "10px",
+              }}
+              level={4}
+            >
+              Gender:
+            </Heading>
+            <p>{user.attributes.gender}</p>
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "left",
+              marginLeft: "50px",
+            }}
+          >
+            <Heading
+              style={{
+                marginRight: "10px",
+              }}
+              level={4}
+            >
+              Phone Number:
+            </Heading>
+            <p>
+              {user.attributes.phoneNumber
+                ? user.attributes.phoneNumber
+                : "none"}
+            </p>
+          </View>
+          <Button onClick={() => setShowUpdateProfile(!showUpdateProfile)}>
+            Update Profile
+          </Button>
         </View>
       </View>
 
       <View
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "space-between",
+          position: "fixed",
+          top: "0",
+          left: "0",
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backdropFilter: "blur(5px)",
+          zIndex: "9998",
+          display: showUpdateProfile ? "flex" : "none",
           justifyContent: "center",
-          width: "50%",
-          marginLeft: "10px",
+          alignItems: "center",
         }}
       >
-        <EditProfileLocal user={user} />
+        {showUpdateProfile && (
+          <View style={{ zIndex: "9999" }}>
+            <Card variation="elevated">
+              <Button
+                style={{
+                  position: "absolute",
+                  top: "1rem",
+                  right: "47rem",
+                  margin: "1rem",
+                  border: "none",
+                  borderRadius: "25rem",
+                }}
+                onClick={closeModel}
+              >
+                X
+              </Button>
+              <EditProfileLocal user={user} />
+            </Card>
+          </View>
+        )}
       </View>
     </View>
   );

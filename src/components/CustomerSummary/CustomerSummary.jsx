@@ -189,8 +189,21 @@ function CustomerSummary() {
               zIndex: "9999",
               justifyContent: "center",
               alignItems: "center",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
+            <Button
+              style={{
+                height: "1rem",
+                width: "1rem",
+                border: "none",
+                backgroundColor: "transparent",
+              }}
+              onClick={() => setShowCustomerUpdateForm(false)}
+            >
+              X
+            </Button>
             <CustomerUpdateForm />
           </Card>
         )}

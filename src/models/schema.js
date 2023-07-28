@@ -226,6 +226,14 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "productImages": {
+                    "name": "productImages",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -624,5 +632,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "08d70d006d4d0920b1685f605d6d41bc"
+    "version": "5fba5710989e9500b886f3cf5337bb3e"
 };

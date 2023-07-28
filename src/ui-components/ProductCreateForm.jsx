@@ -203,6 +203,7 @@ export default function ProductCreateForm(props) {
     tags: "",
     Inventories: [],
     productTags: [],
+    productImages: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [description, setDescription] = React.useState(
@@ -217,6 +218,9 @@ export default function ProductCreateForm(props) {
   const [productTags, setProductTags] = React.useState(
     initialValues.productTags
   );
+  const [productImages, setProductImages] = React.useState(
+    initialValues.productImages
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
@@ -229,6 +233,8 @@ export default function ProductCreateForm(props) {
     setCurrentInventoriesDisplayValue("");
     setProductTags(initialValues.productTags);
     setCurrentProductTagsValue("");
+    setProductImages(initialValues.productImages);
+    setCurrentProductImagesValue("");
     setErrors({});
   };
   const [currentInventoriesDisplayValue, setCurrentInventoriesDisplayValue] =
@@ -239,6 +245,9 @@ export default function ProductCreateForm(props) {
   const [currentProductTagsValue, setCurrentProductTagsValue] =
     React.useState("");
   const productTagsRef = React.createRef();
+  const [currentProductImagesValue, setCurrentProductImagesValue] =
+    React.useState("");
+  const productImagesRef = React.createRef();
   const getIDValue = {
     Inventories: (r) => JSON.stringify({ id: r?.id }),
   };
@@ -262,6 +271,7 @@ export default function ProductCreateForm(props) {
     tags: [],
     Inventories: [],
     productTags: [],
+    productImages: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -296,6 +306,7 @@ export default function ProductCreateForm(props) {
           tags,
           Inventories,
           productTags,
+          productImages,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -339,6 +350,7 @@ export default function ProductCreateForm(props) {
             price: modelFields.price,
             category: modelFields.category,
             productTags: modelFields.productTags,
+            productImages: modelFields.productImages,
           };
           const product = await DataStore.save(new Product(modelFieldsToSave));
           const promises = [];
@@ -386,6 +398,7 @@ export default function ProductCreateForm(props) {
               tags,
               Inventories,
               productTags,
+              productImages,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -416,6 +429,7 @@ export default function ProductCreateForm(props) {
               tags,
               Inventories,
               productTags,
+              productImages,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -446,6 +460,7 @@ export default function ProductCreateForm(props) {
               tags,
               Inventories,
               productTags,
+              productImages,
             };
             const result = onChange(modelFields);
             value = result?.price ?? value;
@@ -476,6 +491,7 @@ export default function ProductCreateForm(props) {
               tags,
               Inventories,
               productTags,
+              productImages,
             };
             const result = onChange(modelFields);
             value = result?.category ?? value;
@@ -504,6 +520,7 @@ export default function ProductCreateForm(props) {
               tags: value,
               Inventories,
               productTags,
+              productImages,
             };
             const result = onChange(modelFields);
             value = result?.tags ?? value;
@@ -530,6 +547,7 @@ export default function ProductCreateForm(props) {
               tags,
               Inventories: values,
               productTags,
+              productImages,
             };
             const result = onChange(modelFields);
             values = result?.Inventories ?? values;
@@ -609,6 +627,7 @@ export default function ProductCreateForm(props) {
               tags,
               Inventories,
               productTags: values,
+              productImages,
             };
             const result = onChange(modelFields);
             values = result?.productTags ?? values;
@@ -645,6 +664,57 @@ export default function ProductCreateForm(props) {
           ref={productTagsRef}
           labelHidden={true}
           {...getOverrideProps(overrides, "productTags")}
+        ></TextField>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              description,
+              price,
+              category,
+              tags,
+              Inventories,
+              productTags,
+              productImages: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.productImages ?? values;
+          }
+          setProductImages(values);
+          setCurrentProductImagesValue("");
+        }}
+        currentFieldValue={currentProductImagesValue}
+        label={"Product images"}
+        items={productImages}
+        hasError={errors?.productImages?.hasError}
+        errorMessage={errors?.productImages?.errorMessage}
+        setFieldValue={setCurrentProductImagesValue}
+        inputFieldRef={productImagesRef}
+        defaultFieldValue={""}
+      >
+        <TextField
+          label="Product images"
+          isRequired={false}
+          isReadOnly={false}
+          value={currentProductImagesValue}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.productImages?.hasError) {
+              runValidationTasks("productImages", value);
+            }
+            setCurrentProductImagesValue(value);
+          }}
+          onBlur={() =>
+            runValidationTasks("productImages", currentProductImagesValue)
+          }
+          errorMessage={errors.productImages?.errorMessage}
+          hasError={errors.productImages?.hasError}
+          ref={productImagesRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "productImages")}
         ></TextField>
       </ArrayField>
       <Flex

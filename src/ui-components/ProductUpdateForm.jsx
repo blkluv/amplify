@@ -204,6 +204,7 @@ export default function ProductUpdateForm(props) {
     productTags: [],
     Inventories: [],
     cartID: undefined,
+    productImages: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [description, setDescription] = React.useState(
@@ -218,6 +219,9 @@ export default function ProductUpdateForm(props) {
     initialValues.Inventories
   );
   const [cartID, setCartID] = React.useState(initialValues.cartID);
+  const [productImages, setProductImages] = React.useState(
+    initialValues.productImages
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = productRecord
@@ -240,6 +244,8 @@ export default function ProductUpdateForm(props) {
     setCartID(cleanValues.cartID);
     setCurrentCartIDValue(undefined);
     setCurrentCartIDDisplayValue("");
+    setProductImages(cleanValues.productImages ?? []);
+    setCurrentProductImagesValue("");
     setErrors({});
   };
   const [productRecord, setProductRecord] = React.useState(productModelProp);
@@ -273,6 +279,9 @@ export default function ProductUpdateForm(props) {
     React.useState("");
   const [currentCartIDValue, setCurrentCartIDValue] = React.useState(undefined);
   const cartIDRef = React.createRef();
+  const [currentProductImagesValue, setCurrentProductImagesValue] =
+    React.useState("");
+  const productImagesRef = React.createRef();
   const getIDValue = {
     Inventories: (r) => JSON.stringify({ id: r?.id }),
   };
@@ -301,6 +310,7 @@ export default function ProductUpdateForm(props) {
     productTags: [],
     Inventories: [],
     cartID: [],
+    productImages: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -335,6 +345,7 @@ export default function ProductUpdateForm(props) {
           productTags,
           Inventories,
           cartID,
+          productImages,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -423,6 +434,7 @@ export default function ProductUpdateForm(props) {
             category: modelFields.category,
             productTags: modelFields.productTags,
             cartID: modelFields.cartID,
+            productImages: modelFields.productImages,
           };
           promises.push(
             DataStore.save(
@@ -460,6 +472,7 @@ export default function ProductUpdateForm(props) {
               productTags,
               Inventories,
               cartID,
+              productImages,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -490,6 +503,7 @@ export default function ProductUpdateForm(props) {
               productTags,
               Inventories,
               cartID,
+              productImages,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -520,6 +534,7 @@ export default function ProductUpdateForm(props) {
               productTags,
               Inventories,
               cartID,
+              productImages,
             };
             const result = onChange(modelFields);
             value = result?.price ?? value;
@@ -550,6 +565,7 @@ export default function ProductUpdateForm(props) {
               productTags,
               Inventories,
               cartID,
+              productImages,
             };
             const result = onChange(modelFields);
             value = result?.category ?? value;
@@ -576,6 +592,7 @@ export default function ProductUpdateForm(props) {
               productTags: values,
               Inventories,
               cartID,
+              productImages,
             };
             const result = onChange(modelFields);
             values = result?.productTags ?? values;
@@ -626,6 +643,7 @@ export default function ProductUpdateForm(props) {
               productTags,
               Inventories: values,
               cartID,
+              productImages,
             };
             const result = onChange(modelFields);
             values = result?.Inventories ?? values;
@@ -706,6 +724,7 @@ export default function ProductUpdateForm(props) {
               productTags,
               Inventories,
               cartID: value,
+              productImages,
             };
             const result = onChange(modelFields);
             value = result?.cartID ?? value;
@@ -773,6 +792,57 @@ export default function ProductUpdateForm(props) {
           labelHidden={true}
           {...getOverrideProps(overrides, "cartID")}
         ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              description,
+              price,
+              category,
+              productTags,
+              Inventories,
+              cartID,
+              productImages: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.productImages ?? values;
+          }
+          setProductImages(values);
+          setCurrentProductImagesValue("");
+        }}
+        currentFieldValue={currentProductImagesValue}
+        label={"Product images"}
+        items={productImages}
+        hasError={errors?.productImages?.hasError}
+        errorMessage={errors?.productImages?.errorMessage}
+        setFieldValue={setCurrentProductImagesValue}
+        inputFieldRef={productImagesRef}
+        defaultFieldValue={""}
+      >
+        <TextField
+          label="Product images"
+          isRequired={false}
+          isReadOnly={false}
+          value={currentProductImagesValue}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.productImages?.hasError) {
+              runValidationTasks("productImages", value);
+            }
+            setCurrentProductImagesValue(value);
+          }}
+          onBlur={() =>
+            runValidationTasks("productImages", currentProductImagesValue)
+          }
+          errorMessage={errors.productImages?.errorMessage}
+          hasError={errors.productImages?.hasError}
+          ref={productImagesRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "productImages")}
+        ></TextField>
       </ArrayField>
       <Flex
         justifyContent="space-between"
