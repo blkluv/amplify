@@ -483,78 +483,87 @@ function Dashboard() {
               {showProductCreateForm && (
                 <View style={{ zIndex: "9999" }}>
                   <Card variation="elevated">
-                    <Button
-                      style={{
-                        position: "absolute",
-                        top: "7rem",
-                        right: "47rem",
-                        margin: "1rem",
-                        border: "none",
-                        borderRadius: "25rem",
+                    <AddProduct
+                      closeModal={() => {
+                        setShowProductCreateForm(false);
                       }}
-                      onClick={closeModel}
-                    >
-                      X
-                    </Button>
-                    <AddProduct />
+                    />
                   </Card>
                 </View>
               )}
               {showCustomerCreateForm && (
                 <View style={{ zIndex: "9999" }}>
                   <Card variation="elevated">
-                    <Button
-                      style={{
-                        position: "absolute",
-                        top: "9rem",
-                        right: "47rem",
-                        margin: "1rem",
-                        border: "none",
-                        borderRadius: "25rem",
-                      }}
-                      onClick={closeModel}
-                    >
-                      X
-                    </Button>
-                    <CustomerCreateForm
-                      onSuccess={() => {
-                        setShowCustomerCreateSuccessAlert(true);
-                        setShowCustomerCreateForm(false);
-                      }}
-                      onError={() => {
-                        setShowCustomerCreateFailureAlert(true);
-                        setShowCustomerCreateForm(false);
-                      }}
-                    />
+                    <View>
+                      <View
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Heading level={3}>Add Customer</Heading>
+                        <Button
+                          style={{
+                            width: "4rem",
+                            height: "2rem",
+                            margin: "0 0 0 1rem",
+                          }}
+                          onClick={closeModel}
+                        >
+                          Close
+                        </Button>
+                      </View>
+                      <CustomerCreateForm
+                        onSuccess={() => {
+                          setShowCustomerCreateSuccessAlert(true);
+                          setShowCustomerCreateForm(false);
+                        }}
+                        onError={() => {
+                          setShowCustomerCreateFailureAlert(true);
+                          setShowCustomerCreateForm(false);
+                        }}
+                      />
+                    </View>
                   </Card>
                 </View>
               )}
               {showOrderCreateForm && (
                 <View style={{ zIndex: "9999" }}>
                   <Card variation="elevated">
-                    <Button
-                      style={{
-                        position: "absolute",
-                        top: "7rem",
-                        right: "47rem",
-                        margin: "1rem",
-                        border: "none",
-                        borderRadius: "25rem",
-                      }}
-                      onClick={closeModel}
-                    >
-                      X
-                    </Button>
-                    <OrderCreateForm
-                      onSuccess={() => {
-                        setShowOrderCreateSuccessAlert(true);
-                        setShowOrderCreateForm(false);
-                      }}
-                      onError={() => {
-                        setShowOrderCreateFailureAlert(true);
-                        setShowOrderCreateForm(false);
-                      }}
-                    />
+                    <View>
+                      <View
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Heading level={3}>Add Order</Heading>
+                        <Button
+                          style={{
+                            width: "4rem",
+                            height: "2rem",
+                            margin: "0 0 0 4rem",
+                          }}
+                          onClick={closeModel}
+                        >
+                          Close
+                        </Button>
+                      </View>
+                      <OrderCreateForm
+                        onSuccess={() => {
+                          setShowOrderCreateSuccessAlert(true);
+                          setShowOrderCreateForm(false);
+                        }}
+                        onError={() => {
+                          setShowOrderCreateFailureAlert(true);
+                          setShowOrderCreateForm(false);
+                        }}
+                      />
+                    </View>
                   </Card>
                 </View>
               )}

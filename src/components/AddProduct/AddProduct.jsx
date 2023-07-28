@@ -13,7 +13,7 @@ import { StorageManager } from "@aws-amplify/ui-react-storage";
 import { Auth, DataStore, Storage } from "aws-amplify";
 import { Product } from "../../models";
 
-export default function AddProduct() {
+export default function AddProduct({ closeModal }) {
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [price, setPrice] = React.useState("");
@@ -93,7 +93,26 @@ export default function AddProduct() {
         justifyContent: "center",
       }}
     >
-      <Heading level={3}>Add Product</Heading>
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Heading level={3}>Add Product</Heading>
+        <Button
+          style={{
+            width: "4rem",
+            height: "2rem",
+            margin: "0 0 0 2rem",
+          }}
+          onClick={closeModal}
+        >
+          Close
+        </Button>
+      </View>
       <Grid
         as="form"
         rowGap="15px"
@@ -140,7 +159,11 @@ export default function AddProduct() {
             setCategory(e.target.value);
           }}
         ></TextField>
-        <View>
+        <View
+          style={{
+            maxWidth: "500px",
+          }}
+        >
           <StorageManager
             acceptedFileTypes={["image/*"]}
             accessLevel="public"
