@@ -161,6 +161,7 @@ function CustomerSummary() {
                       marginRight: "0.5rem",
                       width: "5rem",
                       height: "2rem",
+                      border: "none",
                     }}
                     onClick={handleCustomerUpdate(customer.id)}
                   >
@@ -170,6 +171,7 @@ function CustomerSummary() {
                     style={{
                       width: "5rem",
                       height: "2rem",
+                      border: "none",
                     }}
                     onClick={handleCustomerDelete(customer.id)}
                   >

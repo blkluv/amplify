@@ -129,6 +129,7 @@ function ProductSummary() {
               <TableCell as="th">Category</TableCell>
               <TableCell as="th">Description</TableCell>
               <TableCell as="th">Tags</TableCell>
+              <TableCell as="th">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -152,6 +153,7 @@ function ProductSummary() {
                       marginRight: "0.5rem",
                       width: "5rem",
                       height: "2rem",
+                      border: "none",
                     }}
                     onClick={handleProductUpdate(product.id)}
                   >
@@ -161,6 +163,7 @@ function ProductSummary() {
                     style={{
                       width: "5rem",
                       height: "2rem",
+                      border: "none",
                     }}
                     onClick={handleProductDelete(product.id)}
                   >

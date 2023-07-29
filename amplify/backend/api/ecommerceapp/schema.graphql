@@ -44,8 +44,6 @@ type Order @model @auth(rules: [{allow: public}]) {
   billingAddress: Address
   totalAmount: Float
   status: String
-  createdAt: AWSTimestamp
-  updatedAt: AWSTimestamp
   items: [OrderItem]
   customerID: ID! @index(name: "byCustomer")
 }

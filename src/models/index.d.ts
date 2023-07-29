@@ -181,31 +181,33 @@ export declare const Product: (new (init: ModelInit<Product>) => Product) & {
 type EagerOrder = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<Order, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
   readonly shippingAddress?: Address | null;
   readonly billingAddress?: Address | null;
   readonly totalAmount?: number | null;
   readonly status?: string | null;
-  readonly createdAt?: number | null;
-  readonly updatedAt?: number | null;
   readonly items?: (OrderItem | null)[] | null;
   readonly customerID: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
 }
 
 type LazyOrder = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<Order, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
   readonly shippingAddress?: Address | null;
   readonly billingAddress?: Address | null;
   readonly totalAmount?: number | null;
   readonly status?: string | null;
-  readonly createdAt?: number | null;
-  readonly updatedAt?: number | null;
   readonly items?: (OrderItem | null)[] | null;
   readonly customerID: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
 }
 
 export declare type Order = LazyLoading extends LazyLoadingDisabled ? EagerOrder : LazyOrder
