@@ -6,16 +6,14 @@ import CustomerCreateForm from "../../ui-components/CustomerCreateForm";
 import CustomerSummary from "../CustomerSummary/CustomerSummary";
 import ProductSummary from "../ProductSummary/ProductSummary";
 import OrderSummary from "../OrderSummary/OrderSummary";
-import ProductCreateForm from "../../ui-components/ProductCreateForm";
 import OrderCreateForm from "../../ui-components/OrderCreateForm";
 import Stat from "../../ui-components/Stat";
 import { DataStore } from "@aws-amplify/datastore";
 import { Customer, Order, AuditLogs } from "../../models";
-import { Notifications, Analytics, AWSPinpointProvider } from "aws-amplify";
+import { Notifications, Analytics } from "aws-amplify";
 import AddProduct from "../AddProduct/AddProduct";
 import { Product } from "../../models";
 import { Storage } from "aws-amplify";
-import { Buffer } from "buffer";
 import ActivityLogs from "../ActivityLogs/ActivityLogs";
 
 function Dashboard() {
@@ -311,53 +309,66 @@ function Dashboard() {
     console.log("Message displayed", message);
   };
 
-  const downloadProductImages = async (products) => {
-    products.forEach(async (product) => {
-      await Storage.get(`${product.productImages[0]}`, {
-        level: "public",
-      })
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((err) => console.log(err));
-    });
-  };
-
-  const [auditLogs, setAuditLogs] = React.useState([]);
-
   useEffect(() => {
     const customerSub = DataStore.observe(Customer).subscribe((msg) => {
-      setAuditLogs((prev) => [...prev, msg]);
-    });
-
-    const orderSub = DataStore.observe(Order).subscribe((msg) => {
-      setAuditLogs((prev) => [...prev, msg]);
-    });
-
-    const productSub = DataStore.observe(Product).subscribe((msg) => {
-      setAuditLogs((prev) => [...prev, msg]);
+      DataStore.save(
+        new AuditLogs({
+          model: "Customer",
+          opType: msg.opType.toString(),
+        })
+      )
+        .then(() => console.log("saved customer"))
+        .catch((err) => console.log(err));
     });
 
     return () => {
       customerSub.unsubscribe();
-      orderSub.unsubscribe();
+    };
+  });
+
+  useEffect(() => {
+    const productSub = DataStore.observe(Product).subscribe((msg) => {
+      DataStore.save(
+        new AuditLogs({
+          model: "Product",
+          opType: msg.opType.toString(),
+        })
+      )
+        .then(() => console.log("saved product"))
+        .catch((err) => console.log(err));
+    });
+
+    return () => {
       productSub.unsubscribe();
+    };
+  });
+
+  useEffect(() => {
+    const orderSub = DataStore.observe(Order).subscribe((msg) => {
+      DataStore.save(
+        new AuditLogs({
+          model: "Order",
+          opType: msg.opType.toString(),
+        })
+      )
+        .then(() => console.log("saved order"))
+        .catch((err) => console.log(err));
+    });
+
+    return () => {
+      orderSub.unsubscribe();
     };
   }, []);
 
-  useEffect(() => {
-    auditLogs.forEach((log) => {
-      DataStore.save(
-        new AuditLogs({
-          modelName: log.modelName,
-          operationType: log.opType,
-        })
-      );
-    });
-  }, []);
-
   return (
-    <View className={style.container}>
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <SideBar
         className={style.sidebar}
         height={"100%"}
@@ -366,324 +377,337 @@ function Dashboard() {
         ProductButtonHandler={handleProductSummaryButton}
         OrderButtonHandler={handleOrderSummaryButton}
       />
-      {showHome && (
-        <>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "left",
-            }}
-          >
-            <Heading
-              style={{
-                display: "flex",
-                alignContent: "left",
-                marginTop: "1rem",
-              }}
-              level={3}
-            >
-              Admin Dashboard
-            </Heading>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "left",
-                gap: "1rem",
-              }}
-            >
-              <Button
-                style={{
-                  width: "11rem",
-                  height: "3rem",
-                  marginTop: "2rem",
-                }}
-                onClick={() => {
-                  setShowProductCreateForm(!showProductCreateForm);
-                  setShowCustomerCreateForm(false);
-                  setShowOrderCreateForm(false);
-                }}
-              >
-                Add Product
-              </Button>
-              <Button
-                style={{
-                  width: "11rem",
-                  height: "3rem",
-                  marginTop: "2rem",
-                }}
-                onClick={() => {
-                  setShowCustomerCreateForm(!showCustomerCreateForm);
-                  setShowProductCreateForm(false);
-                  setShowOrderCreateForm(false);
-                }}
-              >
-                Add Customer
-              </Button>
-              <Button
-                style={{
-                  width: "11rem",
-                  height: "3rem",
-                  marginTop: "2rem",
-                }}
-                onClick={() => {
-                  setShowOrderCreateForm(!showOrderCreateForm);
-                  setShowCustomerCreateForm(false);
-                  setShowProductCreateForm(false);
-                }}
-              >
-                Add Order
-              </Button>
-            </View>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {showHome && (
+          <>
             <View
               style={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "left",
-                marginTop: "2rem",
               }}
             >
               <Heading
                 style={{
                   display: "flex",
                   alignContent: "left",
+                  marginTop: "1rem",
                 }}
                 level={3}
               >
-                Summary
+                Admin Dashboard
               </Heading>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "left",
+                  gap: "1rem",
+                }}
+              >
+                <Button
+                  style={{
+                    width: "11rem",
+                    height: "3rem",
+                    marginTop: "2rem",
+                  }}
+                  onClick={() => {
+                    setShowProductCreateForm(!showProductCreateForm);
+                    setShowCustomerCreateForm(false);
+                    setShowOrderCreateForm(false);
+                  }}
+                >
+                  Add Product
+                </Button>
+                <Button
+                  style={{
+                    width: "11rem",
+                    height: "3rem",
+                    marginTop: "2rem",
+                  }}
+                  onClick={() => {
+                    setShowCustomerCreateForm(!showCustomerCreateForm);
+                    setShowProductCreateForm(false);
+                    setShowOrderCreateForm(false);
+                  }}
+                >
+                  Add Customer
+                </Button>
+                <Button
+                  style={{
+                    width: "11rem",
+                    height: "3rem",
+                    marginTop: "2rem",
+                  }}
+                  onClick={() => {
+                    setShowOrderCreateForm(!showOrderCreateForm);
+                    setShowCustomerCreateForm(false);
+                    setShowProductCreateForm(false);
+                  }}
+                >
+                  Add Order
+                </Button>
+              </View>
               <View
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "left",
-                  justifyContent: "left",
                   marginTop: "2rem",
                 }}
               >
-                <Button
+                <Heading
                   style={{
-                    width: "6rem",
-                    height: "1.5rem",
-                    border: "1px solid black",
+                    display: "flex",
+                    alignContent: "left",
                   }}
-                  onClick={() => {
-                    fetchCustomerData();
-                    fetchOrderData();
+                  level={3}
+                >
+                  Summary
+                </Heading>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "left",
+                    justifyContent: "left",
+                    marginTop: "2rem",
                   }}
                 >
-                  Refresh
-                </Button>
-                <Stat
-                  lable={"Total Sales"}
-                  value={salesValue}
-                  percentageChange={salesValueChange}
-                  padding={"1rem 0 1rem 0"}
-                />
-                <Stat
-                  lable={"Total Customers"}
-                  value={customerValue}
-                  percentageChange={customerValueChange}
-                  padding={"1rem 0 1rem 0"}
-                />
-                <Stat
-                  lable={"Total Orders"}
-                  value={orderValue}
-                  percentageChange={orderValueChange}
-                  padding={"1rem 0 1rem 0"}
-                />
+                  <Button
+                    style={{
+                      width: "6rem",
+                      height: "1.5rem",
+                      border: "1px solid black",
+                    }}
+                    onClick={() => {
+                      fetchCustomerData();
+                      fetchOrderData();
+                    }}
+                  >
+                    Refresh
+                  </Button>
+                  <Stat
+                    lable={"Total Sales"}
+                    value={salesValue}
+                    percentageChange={salesValueChange}
+                    padding={"1rem 0 1rem 0"}
+                  />
+                  <Stat
+                    lable={"Total Customers"}
+                    value={customerValue}
+                    percentageChange={customerValueChange}
+                    padding={"1rem 0 1rem 0"}
+                  />
+                  <Stat
+                    lable={"Total Orders"}
+                    value={orderValue}
+                    percentageChange={orderValueChange}
+                    padding={"1rem 0 1rem 0"}
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  position: "fixed",
+                  top: "0",
+                  left: "0",
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  backdropFilter: "blur(5px)",
+                  zIndex: "9998",
+                  display:
+                    showProductCreateForm ||
+                    showCustomerCreateForm ||
+                    showOrderCreateForm
+                      ? "flex"
+                      : "none",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {showProductCreateForm && (
+                  <View style={{ zIndex: "9999" }}>
+                    <Card variation="elevated">
+                      <AddProduct
+                        closeModal={() => {
+                          setShowProductCreateForm(false);
+                        }}
+                      />
+                    </Card>
+                  </View>
+                )}
+                {showCustomerCreateForm && (
+                  <View style={{ zIndex: "9999" }}>
+                    <Card variation="elevated">
+                      <View>
+                        <View
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Heading level={3}>Add Customer</Heading>
+                          <Button
+                            style={{
+                              width: "4rem",
+                              height: "2rem",
+                              margin: "0 0 0 1rem",
+                            }}
+                            onClick={closeModel}
+                          >
+                            Close
+                          </Button>
+                        </View>
+                        <CustomerCreateForm
+                          onSuccess={() => {
+                            setShowCustomerCreateSuccessAlert(true);
+                            setShowCustomerCreateForm(false);
+                          }}
+                          onError={() => {
+                            setShowCustomerCreateFailureAlert(true);
+                            setShowCustomerCreateForm(false);
+                          }}
+                        />
+                      </View>
+                    </Card>
+                  </View>
+                )}
+                {showOrderCreateForm && (
+                  <View style={{ zIndex: "9999" }}>
+                    <Card variation="elevated">
+                      <View>
+                        <View
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Heading level={3}>Add Order</Heading>
+                          <Button
+                            style={{
+                              width: "4rem",
+                              height: "2rem",
+                              margin: "0 0 0 4rem",
+                            }}
+                            onClick={closeModel}
+                          >
+                            Close
+                          </Button>
+                        </View>
+                        <OrderCreateForm
+                          onSuccess={() => {
+                            setShowOrderCreateSuccessAlert(true);
+                            setShowOrderCreateForm(false);
+                          }}
+                          onError={() => {
+                            setShowOrderCreateFailureAlert(true);
+                            setShowOrderCreateForm(false);
+                          }}
+                        />
+                      </View>
+                    </Card>
+                  </View>
+                )}
               </View>
             </View>
-            <View
-              style={{
-                position: "fixed",
-                top: "0",
-                left: "0",
-                width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-                backdropFilter: "blur(5px)",
-                zIndex: "9998",
-                display:
-                  showProductCreateForm ||
-                  showCustomerCreateForm ||
-                  showOrderCreateForm
-                    ? "flex"
-                    : "none",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {showProductCreateForm && (
-                <View style={{ zIndex: "9999" }}>
-                  <Card variation="elevated">
-                    <AddProduct
-                      closeModal={() => {
-                        setShowProductCreateForm(false);
-                      }}
-                    />
-                  </Card>
-                </View>
-              )}
-              {showCustomerCreateForm && (
-                <View style={{ zIndex: "9999" }}>
-                  <Card variation="elevated">
-                    <View>
-                      <View
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Heading level={3}>Add Customer</Heading>
-                        <Button
-                          style={{
-                            width: "4rem",
-                            height: "2rem",
-                            margin: "0 0 0 1rem",
-                          }}
-                          onClick={closeModel}
-                        >
-                          Close
-                        </Button>
-                      </View>
-                      <CustomerCreateForm
-                        onSuccess={() => {
-                          setShowCustomerCreateSuccessAlert(true);
-                          setShowCustomerCreateForm(false);
-                        }}
-                        onError={() => {
-                          setShowCustomerCreateFailureAlert(true);
-                          setShowCustomerCreateForm(false);
-                        }}
-                      />
-                    </View>
-                  </Card>
-                </View>
-              )}
-              {showOrderCreateForm && (
-                <View style={{ zIndex: "9999" }}>
-                  <Card variation="elevated">
-                    <View>
-                      <View
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Heading level={3}>Add Order</Heading>
-                        <Button
-                          style={{
-                            width: "4rem",
-                            height: "2rem",
-                            margin: "0 0 0 4rem",
-                          }}
-                          onClick={closeModel}
-                        >
-                          Close
-                        </Button>
-                      </View>
-                      <OrderCreateForm
-                        onSuccess={() => {
-                          setShowOrderCreateSuccessAlert(true);
-                          setShowOrderCreateForm(false);
-                        }}
-                        onError={() => {
-                          setShowOrderCreateFailureAlert(true);
-                          setShowOrderCreateForm(false);
-                        }}
-                      />
-                    </View>
-                  </Card>
-                </View>
-              )}
-            </View>
-          </View>
-          <View>
-            <Button
-              onClick={() => {
-                const userInfo = {
-                  address: "visheshbaghel99@gmail.com",
-                };
-                InAppMessaging.identifyUser("2323", userInfo);
-                Analytics.record(myFirstEvent)
-                  .then(() => console.log("recorded"))
-                  .catch((err) => console.log(err));
-              }}
-            >
-              Record Analytics Event
-            </Button>
+            <View>
+              <Button
+                onClick={() => {
+                  const userInfo = {
+                    address: "visheshbaghel99@gmail.com",
+                  };
+                  InAppMessaging.identifyUser("2323", userInfo);
+                  Analytics.record(myFirstEvent)
+                    .then(() => console.log("recorded"))
+                    .catch((err) => console.log(err));
+                }}
+              >
+                Record Analytics Event
+              </Button>
 
-            <Button
-              onClick={() => {
-                const userInfo = {
-                  address: "visheshbaghel99@gmail.com",
-                };
-                InAppMessaging.identifyUser("2323", userInfo);
-                InAppMessaging.dispatchEvent(myFirstEvent)
-                  .then(() => console.log("dispatched"))
-                  .catch((err) => console.log(err));
-              }}
-            >
-              Send In-App Messaging Event
-            </Button>
-            <Button
-              onClick={async () => {
-                let obj = {
-                  firstname: "vishesh",
-                  lastname: "baghel",
-                };
-                let data = {
-                  Bucket:
-                    "ecommerceappca7f386258834b109bcf533779c27846122736-staging",
-                  Key: "auditLogs.json",
-                  Body: JSON.stringify(obj),
-                };
-                await Storage.put(data)
-                  .then((result) => {
-                    console.log(result.key);
-                  })
-                  .catch((err) => console.log(err));
-              }}
-            >
-              save audit logs
-            </Button>
-            <Button
-              onClick={async () => {
-                const params = {
-                  bucket:
-                    "your-ecommerceappca7f386258834b109bcf533779c27846122736-name",
-                  key: "auditLogs.json",
-                };
-                Storage.get(params)
-                  .then((result) => {
-                    const data = result.Body.toString("utf-8");
-                    const jsonObject = JSON.parse(data);
-                    console.log(jsonObject);
-                  })
-                  .catch((err) => console.log(err));
-              }}
-            >
-              get audit logs
-            </Button>
-          </View>
-        </>
-      )}
-      {showCustomerSummary && <CustomerSummary />}
-      {showProductSummary && <ProductSummary />}
-      {showOrderSummary && <OrderSummary />}
-      {showProductCreateSuccessAlert && alertProductCreateSuccess()}
-      {showProductCreateFailureAlert && alertProductCreateFailure()}
-      {showCustomerCreateSuccessAlert && alertCustomerCreateSuccess()}
-      {showCustomerCreateFailureAlert && alertCustomerCreateFailure()}
-      {showOrderCreateSuccessAlert && alertOrderCreateSuccess()}
-      {showOrderCreateFailureAlert && alertOrderCreateFailure()}
-      <ActivityLogs />
+              <Button
+                onClick={() => {
+                  const userInfo = {
+                    address: "visheshbaghel99@gmail.com",
+                  };
+                  InAppMessaging.identifyUser("2323", userInfo);
+                  InAppMessaging.dispatchEvent(myFirstEvent)
+                    .then(() => console.log("dispatched"))
+                    .catch((err) => console.log(err));
+                }}
+              >
+                Send In-App Messaging Event
+              </Button>
+              <Button
+                onClick={async () => {
+                  let obj = {
+                    firstname: "vishesh",
+                    lastname: "baghel",
+                  };
+                  let data = {
+                    Bucket:
+                      "ecommerceappca7f386258834b109bcf533779c27846122736-staging",
+                    Key: "auditLogs.json",
+                    Body: JSON.stringify(obj),
+                  };
+                  await Storage.put(data)
+                    .then((result) => {
+                      console.log(result.key);
+                    })
+                    .catch((err) => console.log(err));
+                }}
+              >
+                save audit logs
+              </Button>
+              <Button
+                onClick={async () => {
+                  const params = {
+                    bucket:
+                      "your-ecommerceappca7f386258834b109bcf533779c27846122736-name",
+                    key: "auditLogs.json",
+                  };
+                  Storage.get(params)
+                    .then((result) => {
+                      const data = result.Body.toString("utf-8");
+                      const jsonObject = JSON.parse(data);
+                      console.log(jsonObject);
+                    })
+                    .catch((err) => console.log(err));
+                }}
+              >
+                get audit logs
+              </Button>
+            </View>
+          </>
+        )}
+        {showCustomerSummary && <CustomerSummary />}
+        {showProductSummary && <ProductSummary />}
+        {showOrderSummary && <OrderSummary />}
+        {showProductCreateSuccessAlert && alertProductCreateSuccess()}
+        {showProductCreateFailureAlert && alertProductCreateFailure()}
+        {showCustomerCreateSuccessAlert && alertCustomerCreateSuccess()}
+        {showCustomerCreateFailureAlert && alertCustomerCreateFailure()}
+        {showOrderCreateSuccessAlert && alertOrderCreateSuccess()}
+        {showOrderCreateFailureAlert && alertOrderCreateFailure()}
+        <View
+          style={{
+            height: "10rem",
+          }}
+        >
+          <ActivityLogs />
+        </View>
+      </View>
     </View>
   );
 }

@@ -12,41 +12,41 @@ import {
   Card,
 } from "@aws-amplify/ui-react";
 import { DataStore } from "aws-amplify";
-import { Customer } from "../../models";
+import { Product } from "../../models";
 import { useState, useEffect } from "react";
-import UpdateCustomer from "../UpdateCustomer/UpdateCustomer";
+import UpdateProduct from "../UpdateProduct/UpdateProduct";
 
 function ProductSummary() {
-  const [customers, setCustomers] = useState([]);
+  const [products, setProducts] = useState([]);
   const [showDeleteSuccessFullAlert, setShowDeleteSuccessFullAlert] =
     useState(false);
   const [showDeleteUnsuccessFullAlert, setShowDeleteUnsuccessFullAlert] =
     useState(false);
-  const [showCustomerUpdateForm, setShowCustomerUpdateForm] = useState(false);
-  const [customer, setCustomer] = useState({});
+  const [showProductUpdateForm, setShowProductUpdateForm] = useState(false);
+  const [product, setProduct] = useState({});
 
   useEffect(() => {
-    fetchCustomers();
+    fetchProducts();
   }, []);
 
-  const fetchCustomers = async () => {
-    const customers = await DataStore.query(Customer);
-    setCustomers(customers);
+  const fetchProducts = async () => {
+    const products = await DataStore.query(Product);
+    setProducts(products);
   };
 
-  const handleCustomerUpdate = (id) => async (e) => {
-    setShowCustomerUpdateForm(true);
-    await DataStore.query(Customer, id)
+  const handleProductUpdate = (id) => async (e) => {
+    setShowProductUpdateForm(true);
+    await DataStore.query(Product, id)
       .then((res) => {
-        setCustomer(res);
+        setProduct(res);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const handleCustomerDelete = (id) => async (e) => {
-    const model = await DataStore.query(Customer, id);
+  const handleProductDelete = (id) => async (e) => {
+    const model = await DataStore.query(Product, id);
     DataStore.delete(model)
       .then(() => {
         setShowDeleteSuccessFullAlert(true);
@@ -79,7 +79,7 @@ function ProductSummary() {
         variation="success"
         isDismissible={true}
       >
-        Customer deleted successfully
+        Product deleted successfully
       </Alert>
     );
   };
@@ -87,18 +87,10 @@ function ProductSummary() {
   const showUnsuccessfullDeleteAlert = () => {
     return (
       <Alert type="error" dismissible={true}>
-        Customer deletion failed
+        Product deletion failed
       </Alert>
     );
   };
-
-  useEffect(() => {
-    const subscription = DataStore.observe(Customer).subscribe((msg) => {
-      console.log(msg.element);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   return (
     <>
@@ -113,7 +105,7 @@ function ProductSummary() {
           }}
           level={3}
         >
-          Customer Summary
+          Product Summary
         </Heading>
         <Table
           style={{
@@ -131,37 +123,28 @@ function ProductSummary() {
                 height: "1rem",
               }}
             >
-              <TableCell as="th">Customer ID</TableCell>
-              <TableCell as="th">Customer Name</TableCell>
-              <TableCell as="th">Customer Email</TableCell>
-              <TableCell as="th">Billing Address</TableCell>
-              <TableCell as="th">Shipping Address</TableCell>
-              <TableCell as="th">Date of Birth</TableCell>
-              <TableCell as="th">Gender</TableCell>
-              <TableCell as="th">Actions</TableCell>
+              <TableCell as="th">Product ID</TableCell>
+              <TableCell as="th">Product Name</TableCell>
+              <TableCell as="th">Product Price</TableCell>
+              <TableCell as="th">Category</TableCell>
+              <TableCell as="th">Description</TableCell>
+              <TableCell as="th">Tags</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.map((customer, index) => (
+            {products.map((product, index) => (
               <TableRow key={index}>
-                <TableCell>{customer.id}</TableCell>
-                <TableCell>{customer.name}</TableCell>
-                <TableCell>{customer.email}</TableCell>
+                <TableCell>{product.id}</TableCell>
+                <TableCell>{product.name ? product.name : "NA"}</TableCell>
+                <TableCell>{product.price ? product.price : "NA"}</TableCell>
                 <TableCell>
-                  {customer.billingAddress
-                    ? customer.billingAddress.city
-                    : "NA"}
+                  {product.category ? product.category : "NA"}
                 </TableCell>
                 <TableCell>
-                  {customer.shippingAddress
-                    ? customer.shippingAddress.city
-                    : "NA"}
+                  {product.description ? product.description : "NA"}
                 </TableCell>
                 <TableCell>
-                  {customer.dateOfBirth ? customer.dateOfBirth : "NA"}
-                </TableCell>
-                <TableCell>
-                  {customer.gender ? customer.gender : "NA"}
+                  {product.productTags ? product.productTags : "NA"}
                 </TableCell>
                 <TableCell>
                   <Button
@@ -170,7 +153,7 @@ function ProductSummary() {
                       width: "5rem",
                       height: "2rem",
                     }}
-                    onClick={handleCustomerUpdate(customer.id)}
+                    onClick={handleProductUpdate(product.id)}
                   >
                     Update
                   </Button>
@@ -179,7 +162,7 @@ function ProductSummary() {
                       width: "5rem",
                       height: "2rem",
                     }}
-                    onClick={handleCustomerDelete(customer.id)}
+                    onClick={handleProductDelete(product.id)}
                   >
                     Delete
                   </Button>
@@ -200,12 +183,12 @@ function ProductSummary() {
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             backdropFilter: "blur(5px)",
             zIndex: "9998",
-            display: showCustomerUpdateForm ? "flex" : "none",
+            display: showProductUpdateForm ? "flex" : "none",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          {showCustomerUpdateForm && (
+          {showProductUpdateForm && (
             <Card
               style={{
                 position: "fixed",
@@ -219,9 +202,9 @@ function ProductSummary() {
                 flexDirection: "column",
               }}
             >
-              <UpdateCustomer
-                Customer={customer}
-                closeModel={() => setShowCustomerUpdateForm(false)}
+              <UpdateProduct
+                Product={product}
+                closeModel={() => setShowProductUpdateForm(false)}
               />
             </Card>
           )}

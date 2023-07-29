@@ -11,11 +11,39 @@ import {
   Alert,
   Card,
 } from "@aws-amplify/ui-react";
-import { DataStore } from "aws-amplify";
-import { Customer } from "../../models";
+import { DataStore, Predicates, SortDirection } from "aws-amplify";
+import { AuditLogs } from "../../models";
 import { useState, useEffect } from "react";
 
-function ActivityLogs() {
+function ActivityLogs({ sort }) {
+  const [activityLogs, setActivityLogs] = useState([]);
+
+  const fetchActivityLogs = async () => {
+    const activityLogs = await DataStore.query(
+      AuditLogs,
+      Predicates.ALL,
+      {
+        sort: (s) => s.createdAt(SortDirection.DESCENDING),
+      },
+      {
+        page: 0,
+        limit: 10,
+      }
+    )
+      .then((res) => {
+        console.log(res);
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setActivityLogs(activityLogs);
+  };
+
+  useEffect(() => {
+    fetchActivityLogs();
+  }, []);
+
   return (
     <>
       <Heading
@@ -33,7 +61,7 @@ function ActivityLogs() {
       <Table
         style={{
           marginBottom: "1rem",
-          height: "fit-content",
+          maxHeight: "20rem",
           width: "100%",
         }}
         highlightOnHover={true}
@@ -48,13 +76,19 @@ function ActivityLogs() {
           >
             <TableCell as="th">Model Name</TableCell>
             <TableCell as="th">Operation Type</TableCell>
+            <TableCell as="th">Operation Time</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
-            <TableCell as="td">{}</TableCell>
-            <TableCell as="td">{}</TableCell>
-          </TableRow>
+          {activityLogs.map((activityLog) => (
+            <TableRow key={activityLog.id}>
+              <TableCell>{activityLog ? activityLog.model : "NA"}</TableCell>
+              <TableCell>{activityLog ? activityLog.opType : "NA"}</TableCell>
+              <TableCell>
+                {activityLog.createdAt ? activityLog.createdAt : "NA"}
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </>
