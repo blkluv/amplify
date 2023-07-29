@@ -13,6 +13,10 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
 import { withInAppMessaging } from "@aws-amplify/ui-react-notifications";
+import ProductSummary from "./components/ProductSummary/ProductSummary";
+import CustomerSummary from "./components/CustomerSummary/CustomerSummary";
+import OrderSummary from "./components/OrderSummary/OrderSummary";
+import StorageSummary from "./components/StorageSummary/StorageSummary";
 
 function MyRoutes() {
   const { route } = useAuthenticator((context) => [context.route]);
@@ -34,6 +38,38 @@ function MyRoutes() {
             }
           />
           <Route path="/collections" element={<Collections />} />
+          <Route
+            path="/products"
+            element={
+              <RequireAuth>
+                <ProductSummary />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/customers"
+            element={
+              <RequireAuth>
+                <CustomerSummary />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <RequireAuth>
+                <OrderSummary />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/storage"
+            element={
+              <RequireAuth>
+                <StorageSummary />
+              </RequireAuth>
+            }
+          />
           <Route
             path="/profile"
             element={

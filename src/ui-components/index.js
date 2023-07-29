@@ -5,6 +5,7 @@
  **************************************************************************/
 
 export { default as ActionCard } from "./ActionCard";
+export { default as ActionCardCollection } from "./ActionCardCollection";
 export { default as AddProductForm } from "./AddProductForm";
 export { default as Ampligram } from "./Ampligram";
 export { default as AuditLogsCreateForm } from "./AuditLogsCreateForm";

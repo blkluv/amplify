@@ -15,6 +15,8 @@ import { DataStore } from "aws-amplify";
 import { Product } from "../../models";
 import { useState, useEffect } from "react";
 import UpdateProduct from "../UpdateProduct/UpdateProduct";
+import SideBar from "../../ui-components/SideBar";
+import { useNavigate } from "react-router";
 
 function ProductSummary() {
   const [products, setProducts] = useState([]);
@@ -24,6 +26,7 @@ function ProductSummary() {
     useState(false);
   const [showProductUpdateForm, setShowProductUpdateForm] = useState(false);
   const [product, setProduct] = useState({});
+  const Navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -92,8 +95,28 @@ function ProductSummary() {
     );
   };
 
+  const handleHomeButton = () => Navigate("/");
+  const handleCustomerSummaryButton = () => Navigate("/customers");
+  const handleProductSummaryButton = () => Navigate("/products");
+  const handleOrderSummaryButton = () => Navigate("/orders");
+
   return (
-    <>
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
+      <SideBar
+        style={{
+          width: "20%",
+          height: "100%",
+        }}
+        HomeButtonHandler={handleHomeButton}
+        CustomerButtonHandler={handleCustomerSummaryButton}
+        ProductButtonHandler={handleProductSummaryButton}
+        OrderButtonHandler={handleOrderSummaryButton}
+      />
       <View>
         <Heading
           style={{
@@ -213,7 +236,7 @@ function ProductSummary() {
           )}
         </View>
       </View>
-    </>
+    </View>
   );
 }
 

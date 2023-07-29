@@ -7,6 +7,7 @@
 import * as React from "react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { ButtonProps, FlexProps, ImageProps, RatingProps, TextProps } from "@aws-amplify/ui-react";
+import { SyntheticEvent } from "react";
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ActionCardOverridesProps = {
     ActionCard?: PrimitiveOverrideProps<FlexProps>;
@@ -20,6 +21,12 @@ export declare type ActionCardOverridesProps = {
     Button?: PrimitiveOverrideProps<ButtonProps>;
 } & EscapeHatchProps;
 export declare type ActionCardProps = React.PropsWithChildren<Partial<FlexProps> & {
+    description?: String;
+    price?: String;
+    name?: String;
+    buyButtonHandler?: (event: SyntheticEvent) => void;
+    image?: String;
+} & {
     overrides?: ActionCardOverridesProps | undefined | null;
 }>;
 export default function ActionCard(props: ActionCardProps): React.ReactElement;
