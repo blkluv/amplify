@@ -8,15 +8,35 @@ Amplify Params - DO NOT EDIT */
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
+const aws = require("aws-sdk");
+const nodemailer = require("nodemailer");
+
+// exports.handler = async (event) => {
+//   console.log(`EVENT: ${JSON.stringify(event)}`);
+//   return {
+//     statusCode: 200,
+//     headers: {
+//       "Access-Control-Allow-Origin": "*",
+//       "Access-Control-Allow-Headers": "*",
+//     },
+//     body: JSON.stringify("Hello from Lambda!"),
+//   };
+// };
+
 exports.handler = async (event) => {
-    console.log(`EVENT: ${JSON.stringify(event)}`);
-    return {
-        statusCode: 200,
-    //  Uncomment below to enable CORS requests
-    //  headers: {
-    //      "Access-Control-Allow-Origin": "*",
-    //      "Access-Control-Allow-Headers": "*"
-    //  },
-        body: JSON.stringify('Hello from Lambda!'),
-    };
+  const { senderEmail, senderName, message, date } = JSON.parse(event.body);
+
+  let transporter = nodemailer.createTransport({
+    SES: new aws.SES({ region: "ap-south-1", apiVersion: "2010-12-01" }),
+  });
+
+  let emailProps = await transporter.sendMail({
+    from: senderName,
+    to: senderEmail,
+    subject: date,
+    text: message,
+    html: "<div>" + message + "</div>",
+  });
+
+  return emailProps;
 };

@@ -73,7 +73,7 @@ function Marketing() {
         "beaead3198f7da1e70d03ab969765e0821b24fc913697e929e726aeaebf0eba3",
       "X-Amz-Date": `${new Date().toISOString()}`,
       Authorization:
-        "AWS4-HMAC-SHA256 Credential=AKIA4XETEFG4DHWCEVWO/20230730/ap-south-1/ses/aws4_request, SignedHeaders=content-length;content-type;host;x-amz-content-sha256;x-amz-date, Signature=0b1e472e7acc58d2471934514a45e644faf629cc049a3fa5a024c123df4a7068",
+        "AWS4-HMAC-SHA256 Credential=AKIA4XETEFG4DHWCEVWO/20230730/ap-south-1/ses/aws4_request, SignedHeaders=content-length;content-type;host;x-amz-content-sha256;x-amz-date, Signature=4ffc6261922e5f64b612d61f2c1dc498e62371e6cb3bfeb833150bc820bfa145",
     },
     data: data,
   };
@@ -92,6 +92,27 @@ function Marketing() {
         });
     }
   };
+
+  // const handleEmailSendSubmit = (e) => {
+  //   e.preventDefault();
+  //   fetch(
+  //     "https://acm422vdf2.execute-api.ap-south-1.amazonaws.com/staging/emails",
+  //     {
+  //       mode: "no-cors",
+  //       method: "POST",
+  //       headers: {
+  //         Accept: "application/json",
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         senderName: "visheshbaghel99@gmail.com",
+  //         senderEmail: "visheshbaghel99@gmail.com",
+  //         message: "HELLO WORLD THIS IS FROM REACT APP P.S. Lebron the GOAT.",
+  //         date: new Date(),
+  //       }),
+  //     }
+  //   ).catch((err) => console.log(err));
+  // };
 
   return (
     <>
