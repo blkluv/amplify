@@ -17,8 +17,51 @@ import { useState, useEffect } from "react";
 import UpdateOrder from "../UpdateOrder/UpdateOrder";
 import SideBar from "../../ui-components/SideBar";
 import { useNavigate } from "react-router";
+import { Analytics } from "aws-amplify";
 
 function OrderSummary() {
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+
+  useEffect(() => {
+    setStartTime(new Date());
+    return () => setEndTime(new Date());
+  }, []);
+
+  useEffect(() => {
+    if (startTime && endTime) {
+      const seconds = (endTime.getTime() - startTime.getTime()) / 1000;
+      Analytics.record({
+        name: "timeOnOrderSummaryPage",
+        attributes: { timeOnPage: seconds },
+      });
+    }
+
+    Analytics.autoTrack("session", {
+      enable: true,
+      attributes: {
+        page: "OrderSummary",
+      },
+    });
+
+    Analytics.autoTrack("pageView", {
+      enable: true,
+      eventName: "pageView",
+      type: "singlePageApp",
+      provider: "AWSPinpoint",
+      getUrl: () => {
+        return window.location.origin + window.location.pathname;
+      },
+    });
+
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, [endTime]);
+
   const [orders, setOrders] = useState([]);
   const [showDeleteSuccessFullAlert, setShowDeleteSuccessFullAlert] =
     useState(false);
@@ -183,6 +226,7 @@ function OrderSummary() {
                       border: "none",
                     }}
                     onClick={handleOrderUpdate(Order.id)}
+                    data-amplify-analytics-name="OrderUpdateButton"
                   >
                     Update
                   </Button>
@@ -193,6 +237,7 @@ function OrderSummary() {
                       border: "none",
                     }}
                     onClick={handleOrderDelete(Order.id)}
+                    data-amplify-analytics-name="OrderDeleteButton"
                   >
                     Delete
                   </Button>

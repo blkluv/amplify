@@ -12,8 +12,19 @@ import {
 import { StorageManager } from "@aws-amplify/ui-react-storage";
 import { DataStore } from "aws-amplify";
 import { Product } from "../../models";
+import { useEffect } from "react";
+import { Analytics } from "@aws-amplify/analytics";
 
 export default function UpdateProduct({ Product: ProductObj, closeModel }) {
+  useEffect(() => {
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, []);
+
   const [name, setName] = React.useState(ProductObj.name);
   const [price, setPrice] = React.useState(ProductObj.price);
   const [description, setDescription] = React.useState(ProductObj.description);
@@ -112,6 +123,7 @@ export default function UpdateProduct({ Product: ProductObj, closeModel }) {
             margin: "0 0 0 4rem",
           }}
           onClick={closeModel}
+          data-amplify-analytics-name="close-button"
         >
           Close
         </Button>
@@ -125,6 +137,7 @@ export default function UpdateProduct({ Product: ProductObj, closeModel }) {
           event.preventDefault();
           handleSubmit();
         }}
+        data-amplify-analytics-name="update-product-form"
       >
         <TextField
           label="Name"
@@ -179,12 +192,14 @@ export default function UpdateProduct({ Product: ProductObj, closeModel }) {
               event.preventDefault();
               resetStateValues();
             }}
+            data-amplify-analytics-name="reset-button"
           ></Button>
           <Flex gap="15px">
             <Button
               children="Submit"
               type="submit"
               variation="primary"
+              data-amplify-analytics-name="submit-button"
             ></Button>
           </Flex>
         </Flex>

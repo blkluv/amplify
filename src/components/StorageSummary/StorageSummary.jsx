@@ -16,8 +16,51 @@ import SideBar from "../../ui-components/SideBar";
 import { Storage } from "aws-amplify";
 import { useEffect, useState } from "react";
 import { StorageManager } from "@aws-amplify/ui-react-storage";
+import { Analytics } from "aws-amplify";
 
 function StorageSummary() {
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+
+  useEffect(() => {
+    setStartTime(new Date());
+    return () => setEndTime(new Date());
+  }, []);
+
+  useEffect(() => {
+    if (startTime && endTime) {
+      const seconds = (endTime.getTime() - startTime.getTime()) / 1000;
+      Analytics.record({
+        name: "timeOnStorageSummaryPage",
+        attributes: { timeOnPage: seconds },
+      });
+    }
+
+    Analytics.autoTrack("session", {
+      enable: true,
+      attributes: {
+        page: "StorageSummary",
+      },
+    });
+
+    Analytics.autoTrack("pageView", {
+      enable: true,
+      eventName: "pageView",
+      type: "singlePageApp",
+      provider: "AWSPinpoint",
+      getUrl: () => {
+        return window.location.origin + window.location.pathname;
+      },
+    });
+
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, [endTime]);
+
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [totalSpaceOccupied, setTotalSpaceOccupied] = useState(0);
@@ -238,6 +281,7 @@ function StorageSummary() {
               height: "2.5rem",
             }}
             onClick={() => setShowUploadContainer(!showUploadContainer)}
+            data-amplify-analytics-name="upload-files-button-clicked"
           >
             Upload Files
           </Button>
@@ -280,6 +324,7 @@ function StorageSummary() {
                         border: "none",
                       }}
                       onClick={handleFileDownload(file.key)}
+                      data-amplify-analytics-name="download-file-button-clicked"
                     >
                       View
                     </Button>
@@ -290,6 +335,7 @@ function StorageSummary() {
                         border: "none",
                       }}
                       onClick={handleFileDelete(file.key)}
+                      data-amplify-analytics-name="delete-file-button-clicked"
                     >
                       Delete
                     </Button>
@@ -331,6 +377,7 @@ function StorageSummary() {
                     marginLeft: "0.5rem",
                   }}
                   onClick={() => setShowUploadContainer(false)}
+                  data-amplify-analytics-name="close-upload-files-button-clicked"
                 >
                   Close
                 </Button>

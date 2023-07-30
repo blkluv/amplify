@@ -5,15 +5,58 @@ import {
   Card,
   Text,
   TextField,
-  ToggleButton,
   CheckboxField,
 } from "@aws-amplify/ui-react";
 import React from "react";
 import { useNavigate } from "react-router";
 import SideBar from "../../ui-components/SideBar";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { Analytics } from "aws-amplify";
 
 function Marketing() {
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+
+  useEffect(() => {
+    setStartTime(new Date());
+    return () => setEndTime(new Date());
+  }, []);
+
+  useEffect(() => {
+    if (startTime && endTime) {
+      const seconds = (endTime.getTime() - startTime.getTime()) / 1000;
+      Analytics.record({
+        name: "timeOnMarketingPage",
+        attributes: { timeOnPage: seconds },
+      });
+    }
+
+    Analytics.autoTrack("session", {
+      enable: true,
+      attributes: {
+        page: "Marketing",
+      },
+    });
+
+    Analytics.autoTrack("pageView", {
+      enable: true,
+      eventName: "pageView",
+      type: "singlePageApp",
+      provider: "AWSPinpoint",
+      getUrl: () => {
+        return window.location.origin + window.location.pathname;
+      },
+    });
+
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, [endTime]);
+
   const navigate = useNavigate();
   const [showSendEmailsContainer, setShowSendEmailsContainer] =
     React.useState(false);
@@ -93,27 +136,6 @@ function Marketing() {
     }
   };
 
-  // const handleEmailSendSubmit = (e) => {
-  //   e.preventDefault();
-  //   fetch(
-  //     "https://acm422vdf2.execute-api.ap-south-1.amazonaws.com/staging/emails",
-  //     {
-  //       mode: "no-cors",
-  //       method: "POST",
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         senderName: "visheshbaghel99@gmail.com",
-  //         senderEmail: "visheshbaghel99@gmail.com",
-  //         message: "HELLO WORLD THIS IS FROM REACT APP P.S. Lebron the GOAT.",
-  //         date: new Date(),
-  //       }),
-  //     }
-  //   ).catch((err) => console.log(err));
-  // };
-
   return (
     <>
       <View
@@ -158,12 +180,10 @@ function Marketing() {
                 margin: "0.5rem 0 0.5rem 0",
               }}
               onClick={() => setShowSendEmailsContainer(true)}
+              data-amplify-analytics-name="sendEmails"
             >
               Send emails
             </Button>
-          </View>
-          <View>
-            <Heading level={3}>SMS Marketing</Heading>
           </View>
         </View>
         <View
@@ -197,6 +217,7 @@ function Marketing() {
                   marginLeft: "0.5rem",
                 }}
                 onClick={() => setShowSendEmailsContainer(false)}
+                data-amplify-analytics-name="closeSendEmails"
               >
                 Close
               </Button>
@@ -308,6 +329,7 @@ function Marketing() {
                     margin: "0.5rem 0 0.5rem 0",
                   }}
                   onClick={handleEmailSendSubmit}
+                  data-amplify-analytics-name="sendEmails"
                 >
                   Send
                 </Button>
@@ -315,6 +337,7 @@ function Marketing() {
                   label="Send to all customers"
                   checked={sendToAllCustomers}
                   onChange={(e) => setSendToAllCustomers(e.target.checked)}
+                  data-amplify-analytics-name="sendToAllCustomers"
                 />
               </View>
             </View>

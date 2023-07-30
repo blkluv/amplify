@@ -12,8 +12,19 @@ import {
 import { StorageManager } from "@aws-amplify/ui-react-storage";
 import { DataStore } from "aws-amplify";
 import { Order } from "../../models";
+import { useEffect } from "react";
+import { Analytics } from "@aws-amplify/analytics";
 
 export default function UpdateOrder({ Order: OrderObj, closeModel }) {
+  useEffect(() => {
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, []);
+
   const [billingAddress, setBillingAddress] = React.useState(
     OrderObj.billingAddress
   );
@@ -98,6 +109,7 @@ export default function UpdateOrder({ Order: OrderObj, closeModel }) {
             margin: "0 0 0 4rem",
           }}
           onClick={closeModel}
+          data-amplify-analytics-name="close-update-order-model"
         >
           Close
         </Button>
@@ -111,6 +123,7 @@ export default function UpdateOrder({ Order: OrderObj, closeModel }) {
           event.preventDefault();
           handleSubmit();
         }}
+        data-amplify-analytics-name="update-order-form"
       >
         <TextField
           label="Total Amount"
@@ -165,12 +178,14 @@ export default function UpdateOrder({ Order: OrderObj, closeModel }) {
               event.preventDefault();
               resetStateValues();
             }}
+            data-amplify-analytics-name="reset-update-order-form"
           ></Button>
           <Flex gap="15px">
             <Button
               children="Submit"
               type="submit"
               variation="primary"
+              data-amplify-analytics-name="submit-update-order-form"
             ></Button>
           </Flex>
         </Flex>

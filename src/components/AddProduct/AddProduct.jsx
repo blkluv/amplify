@@ -12,8 +12,18 @@ import {
 import { StorageManager } from "@aws-amplify/ui-react-storage";
 import { Auth, DataStore, Storage } from "aws-amplify";
 import { Product } from "../../models";
+import { useEffect } from "react";
 
 export default function AddProduct({ closeModal }) {
+  useEffect(() => {
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, []);
+
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [price, setPrice] = React.useState("");
@@ -109,6 +119,7 @@ export default function AddProduct({ closeModal }) {
             margin: "0 0 0 2rem",
           }}
           onClick={closeModal}
+          data-amplify-analytics-name="close-add-product-modal-button"
         >
           Close
         </Button>
@@ -180,12 +191,14 @@ export default function AddProduct({ closeModal }) {
               event.preventDefault();
               resetStateValues();
             }}
+            data-amplify-analytics-name="reset-add-product-form-button"
           ></Button>
           <Flex gap="15px">
             <Button
               children="Submit"
               type="submit"
               variation="primary"
+              data-amplify-analytics-name="submit-add-product-form-button"
             ></Button>
           </Flex>
         </Flex>

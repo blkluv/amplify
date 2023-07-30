@@ -6,8 +6,19 @@ import NavBarHeader from "../../ui-components/NavBarHeader";
 import NavBarHeader2 from "../../ui-components/NavBarHeader2";
 import { Auth } from "aws-amplify";
 import { Storage } from "@aws-amplify/storage";
+import { useEffect } from "react";
+import { Analytics } from "aws-amplify";
 
 export function Layout() {
+  useEffect(() => {
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, []);
+
   const { route } = useAuthenticator((context) => [
     context.route,
     context.signOut,
@@ -43,6 +54,7 @@ export function Layout() {
           width={"100%"}
           className={style.navbar}
           loginHandler={() => navigate("/login")}
+          data-amplify-analytics-name="login"
         />
       ) : (
         <>
@@ -51,6 +63,7 @@ export function Layout() {
             className={style.navbar}
             cartHandler={() => navigate("/cart")}
             profileImage={userProfilePhoto}
+            data-amplify-analytics-name="cart"
           />
         </>
       )}

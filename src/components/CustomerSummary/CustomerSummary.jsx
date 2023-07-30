@@ -17,8 +17,51 @@ import { useState, useEffect } from "react";
 import UpdateCustomer from "../UpdateCustomer/UpdateCustomer";
 import SideBar from "../../ui-components/SideBar";
 import { useNavigate } from "react-router";
+import { Analytics } from "aws-amplify";
 
 function CustomerSummary() {
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+
+  useEffect(() => {
+    setStartTime(new Date());
+    return () => setEndTime(new Date());
+  }, []);
+
+  useEffect(() => {
+    if (startTime && endTime) {
+      const seconds = (endTime.getTime() - startTime.getTime()) / 1000;
+      Analytics.record({
+        name: "timeOnCollectionPage",
+        attributes: { timeOnPage: seconds },
+      });
+    }
+
+    Analytics.autoTrack("session", {
+      enable: true,
+      attributes: {
+        page: "CustomerSummary",
+      },
+    });
+
+    Analytics.autoTrack("pageView", {
+      enable: true,
+      eventName: "pageView",
+      type: "singlePageApp",
+      provider: "AWSPinpoint",
+      getUrl: () => {
+        return window.location.origin + window.location.pathname;
+      },
+    });
+
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, [endTime]);
+
   const [customers, setCustomers] = useState([]);
   const [showDeleteSuccessFullAlert, setShowDeleteSuccessFullAlert] =
     useState(false);
@@ -192,6 +235,7 @@ function CustomerSummary() {
                       border: "none",
                     }}
                     onClick={handleCustomerUpdate(customer.id)}
+                    data-amplify-analytics-name="CustomerUpdateButton"
                   >
                     Update
                   </Button>
@@ -202,6 +246,7 @@ function CustomerSummary() {
                       border: "none",
                     }}
                     onClick={handleCustomerDelete(customer.id)}
+                    data-amplify-analytics-name="CustomerDeleteButton"
                   >
                     Delete
                   </Button>

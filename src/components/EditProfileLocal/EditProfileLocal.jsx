@@ -11,6 +11,7 @@ import {
 } from "@aws-amplify/ui-react";
 import { StorageManager } from "@aws-amplify/ui-react-storage";
 import { Storage, Auth } from "aws-amplify";
+import { useEffect } from "react";
 
 const props = {
   idProp: undefined,
@@ -24,6 +25,15 @@ const props = {
 };
 
 export default function EditProfileLocal({ user }) {
+  useEffect(() => {
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, []);
+
   const initialValues = {
     name: user ? user.attributes.name : "",
     email: user ? user.attributes.email : "",
@@ -215,12 +225,14 @@ export default function EditProfileLocal({ user }) {
               event.preventDefault();
               resetStateValues();
             }}
+            data-amplify-analytics-name="resetButton"
           ></Button>
           <Flex gap="15px">
             <Button
               children="Submit"
               type="submit"
               variation="primary"
+              data-amplify-analytics-name="submitButton"
             ></Button>
           </Flex>
         </Flex>

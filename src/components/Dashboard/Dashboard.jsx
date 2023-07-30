@@ -3,9 +3,6 @@ import style from "./Dashboard.module.css";
 import SideBar from "../../ui-components/SideBar";
 import { Button, Card, Heading, View, Alert } from "@aws-amplify/ui-react";
 import CustomerCreateForm from "../../ui-components/CustomerCreateForm";
-import CustomerSummary from "../CustomerSummary/CustomerSummary";
-import ProductSummary from "../ProductSummary/ProductSummary";
-import OrderSummary from "../OrderSummary/OrderSummary";
 import OrderCreateForm from "../../ui-components/OrderCreateForm";
 import Stat from "../../ui-components/Stat";
 import { DataStore } from "@aws-amplify/datastore";
@@ -16,17 +13,56 @@ import { Product } from "../../models";
 import { Storage } from "aws-amplify";
 import ActivityLogs from "../ActivityLogs/ActivityLogs";
 import { useNavigate } from "react-router";
+import { useState } from "react";
 
 function Dashboard() {
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+
+  useEffect(() => {
+    setStartTime(new Date());
+    return () => setEndTime(new Date());
+  }, []);
+
+  useEffect(() => {
+    if (startTime && endTime) {
+      const seconds = (endTime.getTime() - startTime.getTime()) / 1000;
+      Analytics.record({
+        name: "timeOnCollectionPage",
+        attributes: { timeOnPage: seconds },
+      });
+    }
+
+    Analytics.autoTrack("session", {
+      enable: true,
+      attributes: {
+        page: "Dashboard",
+      },
+    });
+
+    Analytics.autoTrack("pageView", {
+      enable: true,
+      eventName: "pageView",
+      type: "singlePageApp",
+      provider: "AWSPinpoint",
+      getUrl: () => {
+        return window.location.origin + window.location.pathname;
+      },
+    });
+
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, [endTime]);
+
   const [showProductCreateForm, setShowProductCreateForm] =
     React.useState(false);
   const [showCustomerCreateForm, setShowCustomerCreateForm] =
     React.useState(false);
   const [showOrderCreateForm, setShowOrderCreateForm] = React.useState(false);
-  const [showHome, setShowHome] = React.useState(true);
-  const [showCustomerSummary, setShowCustomerSummary] = React.useState(false);
-  const [showProductSummary, setShowProductSummary] = React.useState(false);
-  const [showOrderSummary, setShowOrderSummary] = React.useState(false);
   const [salesValue, setSalesValue] = React.useState("");
   const [customerValue, setCustomerValue] = React.useState("");
   const [orderValue, setOrderValue] = React.useState("");
@@ -406,6 +442,7 @@ function Dashboard() {
                   setShowCustomerCreateForm(false);
                   setShowOrderCreateForm(false);
                 }}
+                data-amplify-analytics-name="addProductButton"
               >
                 Add Product
               </Button>
@@ -420,6 +457,7 @@ function Dashboard() {
                   setShowProductCreateForm(false);
                   setShowOrderCreateForm(false);
                 }}
+                data-amplify-analytics-name="addCustomerButton"
               >
                 Add Customer
               </Button>
@@ -434,6 +472,7 @@ function Dashboard() {
                   setShowCustomerCreateForm(false);
                   setShowProductCreateForm(false);
                 }}
+                data-amplify-analytics-name="addOrderButton"
               >
                 Add Order
               </Button>
@@ -474,6 +513,7 @@ function Dashboard() {
                     fetchCustomerData();
                     fetchOrderData();
                   }}
+                  data-amplify-analytics-name="refreshButton"
                 >
                   Refresh
                 </Button>
@@ -548,6 +588,7 @@ function Dashboard() {
                             margin: "0 0 0 1rem",
                           }}
                           onClick={closeModel}
+                          data-amplify-analytics-name="closeButton"
                         >
                           Close
                         </Button>

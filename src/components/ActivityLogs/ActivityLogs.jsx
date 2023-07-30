@@ -5,11 +5,7 @@ import {
   TableBody,
   TableHead,
   TableRow,
-  View,
   Heading,
-  Button,
-  Alert,
-  Card,
 } from "@aws-amplify/ui-react";
 import { DataStore, Predicates, SortDirection } from "aws-amplify";
 import { AuditLogs } from "../../models";

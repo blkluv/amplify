@@ -17,8 +17,51 @@ import { useState, useEffect } from "react";
 import UpdateProduct from "../UpdateProduct/UpdateProduct";
 import SideBar from "../../ui-components/SideBar";
 import { useNavigate } from "react-router";
+import { Analytics } from "aws-amplify";
 
 function ProductSummary() {
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+
+  useEffect(() => {
+    setStartTime(new Date());
+    return () => setEndTime(new Date());
+  }, []);
+
+  useEffect(() => {
+    if (startTime && endTime) {
+      const seconds = (endTime.getTime() - startTime.getTime()) / 1000;
+      Analytics.record({
+        name: "timeOnProductSummaryPage",
+        attributes: { timeOnPage: seconds },
+      });
+    }
+
+    Analytics.autoTrack("session", {
+      enable: true,
+      attributes: {
+        page: "ProductSummary",
+      },
+    });
+
+    Analytics.autoTrack("pageView", {
+      enable: true,
+      eventName: "pageView",
+      type: "singlePageApp",
+      provider: "AWSPinpoint",
+      getUrl: () => {
+        return window.location.origin + window.location.pathname;
+      },
+    });
+
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, [endTime]);
+
   const [products, setProducts] = useState([]);
   const [showDeleteSuccessFullAlert, setShowDeleteSuccessFullAlert] =
     useState(false);
@@ -187,6 +230,7 @@ function ProductSummary() {
                       border: "none",
                     }}
                     onClick={handleProductUpdate(product.id)}
+                    data-amplify-analytics-name="ProductUpdateButton"
                   >
                     Update
                   </Button>
@@ -197,6 +241,7 @@ function ProductSummary() {
                       border: "none",
                     }}
                     onClick={handleProductDelete(product.id)}
+                    data-amplify-analytics-name="ProductDeleteButton"
                   >
                     Delete
                   </Button>

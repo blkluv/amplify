@@ -12,8 +12,19 @@ import {
 import { StorageManager } from "@aws-amplify/ui-react-storage";
 import { DataStore } from "aws-amplify";
 import { Customer } from "../../models";
+import { useEffect } from "react";
+import { Analytics } from "@aws-amplify/analytics";
 
 export default function UpdateCustomer({ Customer: CustomerObj, closeModel }) {
+  useEffect(() => {
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, []);
+
   const initialAddressValue = {
     recipientName: "",
     street: "",
@@ -132,6 +143,7 @@ export default function UpdateCustomer({ Customer: CustomerObj, closeModel }) {
             margin: "0 0 0 4rem",
           }}
           onClick={closeModel}
+          data-amplify-analytics-name="close-button"
         >
           Close
         </Button>
@@ -215,6 +227,7 @@ export default function UpdateCustomer({ Customer: CustomerObj, closeModel }) {
               event.preventDefault();
               resetStateValues();
             }}
+            data-amplify-analytics-name="reset-button"
           ></Button>
           <Flex gap="15px">
             <Button

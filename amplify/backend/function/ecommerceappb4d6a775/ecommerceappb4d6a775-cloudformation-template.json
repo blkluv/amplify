@@ -23,6 +23,26 @@
     "analyticsecommerceappRegion": {
       "Type": "String",
       "Default": "analyticsecommerceappRegion"
+    },
+    "apiecommerceappGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apiecommerceappGraphQLAPIIdOutput"
+    },
+    "apiecommerceappGraphQLAPIEndpointOutput": {
+      "Type": "String",
+      "Default": "apiecommerceappGraphQLAPIEndpointOutput"
+    },
+    "apiecommerceappGraphQLAPIKeyOutput": {
+      "Type": "String",
+      "Default": "apiecommerceappGraphQLAPIKeyOutput"
+    },
+    "apiapied1054b2ApiName": {
+      "Type": "String",
+      "Default": "apiapied1054b2ApiName"
+    },
+    "apiapied1054b2ApiId": {
+      "Type": "String",
+      "Default": "apiapied1054b2ApiId"
     }
   },
   "Conditions": {
@@ -83,6 +103,21 @@
             },
             "ANALYTICS_ECOMMERCEAPP_REGION": {
               "Ref": "analyticsecommerceappRegion"
+            },
+            "API_ECOMMERCEAPP_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apiecommerceappGraphQLAPIIdOutput"
+            },
+            "API_ECOMMERCEAPP_GRAPHQLAPIENDPOINTOUTPUT": {
+              "Ref": "apiecommerceappGraphQLAPIEndpointOutput"
+            },
+            "API_ECOMMERCEAPP_GRAPHQLAPIKEYOUTPUT": {
+              "Ref": "apiecommerceappGraphQLAPIKeyOutput"
+            },
+            "API_APIED1054B2_APINAME": {
+              "Ref": "apiapied1054b2ApiName"
+            },
+            "API_APIED1054B2_APIID": {
+              "Ref": "apiapied1054b2ApiId"
             }
           }
         },
@@ -240,6 +275,104 @@
                       ":apps/",
                       {
                         "Ref": "analyticsecommerceappId"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "appsync:GraphQL"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:appsync:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apis/",
+                      {
+                        "Ref": "apiecommerceappGraphQLAPIIdOutput"
+                      },
+                      "/types/Query/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:appsync:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apis/",
+                      {
+                        "Ref": "apiecommerceappGraphQLAPIIdOutput"
+                      },
+                      "/types/Mutation/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:appsync:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apis/",
+                      {
+                        "Ref": "apiecommerceappGraphQLAPIIdOutput"
+                      },
+                      "/types/Subscription/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "apigateway:POST",
+                "apigateway:PUT",
+                "apigateway:GET",
+                "apigateway:HEAD",
+                "apigateway:OPTIONS",
+                "apigateway:PATCH",
+                "apigateway:DELETE"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      "::/restapis/",
+                      {
+                        "Ref": "apiapied1054b2ApiName"
                       },
                       "/*"
                     ]

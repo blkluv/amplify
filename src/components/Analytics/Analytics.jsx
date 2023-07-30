@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "@aws-amplify/ui-react";
+import { Heading, Text, View } from "@aws-amplify/ui-react";
 import SideBar from "../../ui-components/SideBar";
 import { useNavigate } from "react-router";
 
@@ -35,8 +35,11 @@ function Analytics() {
           storageButtonHandler={handleStorageButton}
           analyticsButtonHandler={handleAnalyticsButton}
         />
+        <View>
+          <Heading level={3}>Analytics</Heading>
+          <Text>Coming soon...</Text>
+        </View>
       </View>
-      <View>Analytics</View>
     </>
   );
 }

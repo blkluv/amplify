@@ -1,37 +1,55 @@
 import { useEffect, useState } from "react";
 import { Card, Heading, View } from "@aws-amplify/ui-react";
-import * as mutations from "../../graphql/mutations";
-import { API, graphqlOperation } from "aws-amplify";
 import { Auth } from "aws-amplify";
 import EditProfileLocal from "../EditProfileLocal/EditProfileLocal";
 import React from "react";
 import { Storage } from "aws-amplify";
 import { Button } from "@aws-amplify/ui-react";
-
-const address = {
-  recipientName: "Lorem ipsum dolor sit amet",
-  street: "Lorem ipsum dolor sit amet",
-  city: "Lorem ipsum dolor sit amet",
-  state: "Lorem ipsum dolor sit amet",
-  postalCode: "Lorem ipsum dolor sit amet",
-  country: "Lorem ipsum dolor sit amet",
-};
-
-const customer = {
-  name: "Lorem ipsum dolor sit amet",
-  dateOfBirth: "1970-01-01Z",
-  email: "test12346789@testemailtestemail.com",
-  billingAddress: address,
-  shippingAddress: address,
-  gender: "Lorem ipsum dolor sit amet",
-};
-
-const saveCustomer = async () =>
-  await API.graphql(
-    graphqlOperation(mutations.createCustomer, { input: customer })
-  );
+import { Analytics } from "aws-amplify";
 
 export default function Profile() {
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+
+  useEffect(() => {
+    setStartTime(new Date());
+    return () => setEndTime(new Date());
+  }, []);
+
+  useEffect(() => {
+    if (startTime && endTime) {
+      const seconds = (endTime.getTime() - startTime.getTime()) / 1000;
+      Analytics.record({
+        name: "timeOnProductSummaryPage",
+        attributes: { timeOnPage: seconds },
+      });
+    }
+
+    Analytics.autoTrack("session", {
+      enable: true,
+      attributes: {
+        page: "Profile",
+      },
+    });
+
+    Analytics.autoTrack("pageView", {
+      enable: true,
+      eventName: "pageView",
+      type: "singlePageApp",
+      provider: "AWSPinpoint",
+      getUrl: () => {
+        return window.location.origin + window.location.pathname;
+      },
+    });
+
+    Analytics.autoTrack("event", {
+      enable: true,
+      events: ["click"],
+      selectorPrefix: "data-amplify-analytics-name",
+      provider: "AWSPinpoint",
+    });
+  }, [endTime]);
+
   const [user, setUser] = useState({
     attributes: {
       name: "",
@@ -214,7 +232,10 @@ export default function Profile() {
                 : "none"}
             </p>
           </View>
-          <Button onClick={() => setShowUpdateProfile(!showUpdateProfile)}>
+          <Button
+            onClick={() => setShowUpdateProfile(!showUpdateProfile)}
+            data-amplify-analytics-name="updateProfileButton"
+          >
             Update Profile
           </Button>
         </View>
@@ -254,6 +275,7 @@ export default function Profile() {
                     margin: "0 0 0 4rem",
                   }}
                   onClick={closeModel}
+                  data-amplify-analytics-name="closeUpdateProfileButton"
                 >
                   Close
                 </Button>
