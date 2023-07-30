@@ -31,7 +31,6 @@ function ActivityLogs({ sort }) {
       }
     )
       .then((res) => {
-        console.log(res);
         return res;
       })
       .catch((err) => {

@@ -60,7 +60,7 @@ function StorageSummary() {
   const calculateTotalVideos = (files) => {
     let totalVideos = 0;
     files.forEach((file) => {
-      if (file.key.endsWith(".mp4")) {
+      if (file.key.endsWith(".mp4") || file.key.endsWith(".webm")) {
         totalVideos += 1;
       }
     });
@@ -72,6 +72,7 @@ function StorageSummary() {
     files.forEach((file) => {
       if (
         !file.key.endsWith(".mp4") &&
+        !file.key.endsWith(".webm") &&
         !file.key.endsWith(".jpg") &&
         !file.key.endsWith(".png")
       ) {
@@ -334,10 +335,37 @@ function StorageSummary() {
                   Close
                 </Button>
               </View>
+              <Text
+                style={{
+                  display: "flex",
+                  justifyContent: "left",
+                }}
+              >
+                You can upload upto 5 files having less than 10MB file size.{" "}
+              </Text>
+              <Text
+                style={{
+                  marginBottom: ".5rem",
+                  display: "flex",
+                  justifyContent: "left",
+                }}
+              >
+                Accepted file types are: .gif, .bmp, .doc, .jpeg, .jpg, .png,
+                .mp4, .webm
+              </Text>
               <StorageManager
-                acceptedFileTypes={["image/*"]}
+                acceptedFileTypes={[
+                  ".gif",
+                  ".bmp",
+                  ".doc",
+                  ".jpeg",
+                  ".jpg",
+                  "image/png",
+                  "video/*",
+                ]}
                 accessLevel="public"
-                maxFileCount={1}
+                maxFileCount={5}
+                maxFileSize={10000000}
                 isResumable
                 processFile={processFile}
               />

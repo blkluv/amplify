@@ -6,6 +6,20 @@
     }
   },
   "api": {
+    "apied1054b2": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "ecommerceappb4d6a775"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "ecommerceapp": {
       "dependsOn": [],
       "output": {
@@ -62,6 +76,23 @@
       "service": "Cognito"
     }
   },
+  "function": {
+    "ecommerceappb4d6a775": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Id",
+            "Region"
+          ],
+          "category": "analytics",
+          "resourceName": "ecommerceapp"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "notifications": {
     "ecommerceapp": {
       "channels": [
@@ -92,6 +123,22 @@
         {
           "category": "analytics",
           "resourceName": "Pinpoint"
+        }
+      ]
+    },
+    "AMPLIFY_function_ecommerceappb4d6a775_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "ecommerceappb4d6a775"
+        }
+      ]
+    },
+    "AMPLIFY_function_ecommerceappb4d6a775_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "ecommerceappb4d6a775"
         }
       ]
     },

@@ -20,7 +20,8 @@
         "ecommerceapp": {}
       },
       "api": {
-        "ecommerceapp": {}
+        "ecommerceapp": {},
+        "apied1054b2": {}
       },
       "notifications": {
         "Pinpoint": {
@@ -36,6 +37,12 @@
           "Region": "ap-south-1"
         },
         "ecommerceapp": {}
+      },
+      "function": {
+        "ecommerceappb4d6a775": {
+          "deploymentBucketName": "amplify-ecommerceapp-staging-122736-deployment",
+          "s3Key": "amplify-builds/ecommerceappb4d6a775-5a366d30706d31576575-build.zip"
+        }
       }
     }
   }
