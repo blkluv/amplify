@@ -53,6 +53,9 @@ export declare type SideBarProps = React.PropsWithChildren<Partial<FlexProps> & 
     ProductButtonHandler?: (event: SyntheticEvent) => void;
     CustomerButtonHandler?: (event: SyntheticEvent) => void;
     OrderButtonHandler?: (event: SyntheticEvent) => void;
+    marketingButtonHandler?: (event: SyntheticEvent) => void;
+    storageButtonHandler?: (event: SyntheticEvent) => void;
+    analyticsButtonHandler?: (event: SyntheticEvent) => void;
 } & {
     overrides?: SideBarOverridesProps | undefined | null;
 }>;

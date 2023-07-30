@@ -22,7 +22,9 @@ export function Collections() {
   }, []);
 
   const downloadImage = async (imageArray) => {
-    const signedUrl = await Storage.get(imageArray);
+    const image = imageArray.slice(0, 1)[0];
+    const signedUrl = await Storage.get(image);
+    console.log(signedUrl);
     return signedUrl;
   };
 
@@ -52,7 +54,7 @@ export function Collections() {
               name={product.name}
               description={product.description}
               price={`$${product.price}`}
-              image={downloadImage(product.productImage)}
+              image={downloadImage(product.productImages)}
             />
           </View>
         ))}

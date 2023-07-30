@@ -100,6 +100,8 @@ function CustomerSummary() {
   const handleCustomerSummaryButton = () => Navigate("/customers");
   const handleProductSummaryButton = () => Navigate("/products");
   const handleOrderSummaryButton = () => Navigate("/orders");
+  const handleMarketingButton = () => Navigate("/marketing");
+  const handleStorageButton = () => Navigate("/storage");
 
   return (
     <View
@@ -117,6 +119,8 @@ function CustomerSummary() {
         CustomerButtonHandler={handleCustomerSummaryButton}
         ProductButtonHandler={handleProductSummaryButton}
         OrderButtonHandler={handleOrderSummaryButton}
+        marketingButtonHandler={handleMarketingButton}
+        storageButtonHandler={handleStorageButton}
       />
       <View>
         <Heading

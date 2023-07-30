@@ -1,9 +1,9 @@
-import { View } from "@aws-amplify/ui-react";
 import React from "react";
-import { useNavigate } from "react-router";
+import { View } from "@aws-amplify/ui-react";
 import SideBar from "../../ui-components/SideBar";
+import { useNavigate } from "react-router";
 
-function StorageSummary() {
+function Analytics() {
   const navigate = useNavigate();
 
   const handleHomeButton = () => navigate("/");
@@ -36,9 +36,9 @@ function StorageSummary() {
           analyticsButtonHandler={handleAnalyticsButton}
         />
       </View>
-      <View>Storage</View>
+      <View>Analytics</View>
     </>
   );
 }
 
-export default StorageSummary;
+export default Analytics;

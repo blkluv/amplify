@@ -99,6 +99,9 @@ function ProductSummary() {
   const handleCustomerSummaryButton = () => Navigate("/customers");
   const handleProductSummaryButton = () => Navigate("/products");
   const handleOrderSummaryButton = () => Navigate("/orders");
+  const handleMarketingButton = () => Navigate("/marketing");
+  const handleStorageButton = () => Navigate("/storage");
+  const handleAnalyticsButton = () => Navigate("/analytics");
 
   return (
     <View
@@ -116,6 +119,9 @@ function ProductSummary() {
         CustomerButtonHandler={handleCustomerSummaryButton}
         ProductButtonHandler={handleProductSummaryButton}
         OrderButtonHandler={handleOrderSummaryButton}
+        marketingButtonHandler={handleMarketingButton}
+        storageButtonHandler={handleStorageButton}
+        analyticsButtonHandler={handleAnalyticsButton}
       />
       <View>
         <Heading

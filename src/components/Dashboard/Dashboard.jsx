@@ -63,6 +63,9 @@ function Dashboard() {
   const handleCustomerSummaryButton = () => navigate("/customers");
   const handleProductSummaryButton = () => navigate("/products");
   const handleOrderSummaryButton = () => navigate("/orders");
+  const handleMarketingButton = () => navigate("/marketing");
+  const handleStorageButton = () => navigate("/storage");
+  const handleAnalyticsButton = () => navigate("/analytics");
 
   React.useEffect(() => {
     fetchCustomerData();
@@ -340,6 +343,12 @@ function Dashboard() {
     };
   }, []);
 
+  useEffect(() => {
+    Storage.list("", { level: "public" })
+      .then(({ results }) => console.log("s3", results))
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <View
       style={{
@@ -356,6 +365,9 @@ function Dashboard() {
         CustomerButtonHandler={handleCustomerSummaryButton}
         ProductButtonHandler={handleProductSummaryButton}
         OrderButtonHandler={handleOrderSummaryButton}
+        marketingButtonHandler={handleMarketingButton}
+        storageButtonHandler={handleStorageButton}
+        analyticsButtonHandler={handleAnalyticsButton}
       />
       <View
         style={{

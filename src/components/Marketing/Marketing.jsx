@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router";
 import SideBar from "../../ui-components/SideBar";
 
-function StorageSummary() {
+function Marketing() {
   const navigate = useNavigate();
 
   const handleHomeButton = () => navigate("/");
@@ -36,9 +36,9 @@ function StorageSummary() {
           analyticsButtonHandler={handleAnalyticsButton}
         />
       </View>
-      <View>Storage</View>
+      <View>Marketing</View>
     </>
   );
 }
 
-export default StorageSummary;
+export default Marketing;

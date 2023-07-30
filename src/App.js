@@ -17,9 +17,13 @@ import ProductSummary from "./components/ProductSummary/ProductSummary";
 import CustomerSummary from "./components/CustomerSummary/CustomerSummary";
 import OrderSummary from "./components/OrderSummary/OrderSummary";
 import StorageSummary from "./components/StorageSummary/StorageSummary";
+import { Storage } from "aws-amplify";
+import Marketing from "./components/Marketing/Marketing";
+import Analytics from "./components/Analytics/Analytics";
 
 function MyRoutes() {
   const { route } = useAuthenticator((context) => [context.route]);
+  Storage.configure({ track: true });
 
   return (
     <BrowserRouter>
@@ -67,6 +71,22 @@ function MyRoutes() {
             element={
               <RequireAuth>
                 <StorageSummary />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/marketing"
+            element={
+              <RequireAuth>
+                <Marketing />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <RequireAuth>
+                <Analytics />
               </RequireAuth>
             }
           />

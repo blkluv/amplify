@@ -15,6 +15,9 @@ export default function SideBar(props) {
     ProductButtonHandler,
     CustomerButtonHandler,
     OrderButtonHandler,
+    marketingButtonHandler,
+    storageButtonHandler,
+    analyticsButtonHandler,
     overrides,
     ...rest
   } = props;
@@ -438,7 +441,7 @@ export default function SideBar(props) {
                   shrink="0"
                   position="relative"
                   padding="0px 0px 0px 0px"
-                  type="data"
+                  type="chat-bubble-outline"
                   {...getOverrideProps(overrides, "MyIcon39493381")}
                 ></MyIcon>
               </Flex>
@@ -461,7 +464,8 @@ export default function SideBar(props) {
                 position="relative"
                 padding="0px 0px 0px 0px"
                 whiteSpace="pre-wrap"
-                children="Data"
+                children="Marketing"
+                onClick={marketingButtonHandler}
                 {...getOverrideProps(overrides, "label39493382")}
               ></Text>
             </Flex>
@@ -526,6 +530,7 @@ export default function SideBar(props) {
                 padding="0px 0px 0px 0px"
                 whiteSpace="pre-wrap"
                 children="Storage"
+                onClick={storageButtonHandler}
                 {...getOverrideProps(overrides, "label39493386")}
               ></Text>
             </Flex>
@@ -566,7 +571,7 @@ export default function SideBar(props) {
                   shrink="0"
                   position="relative"
                   padding="0px 0px 0px 0px"
-                  type="authentication"
+                  type="dashboard"
                   {...getOverrideProps(overrides, "MyIcon39493389")}
                 ></MyIcon>
               </Flex>
@@ -589,7 +594,8 @@ export default function SideBar(props) {
                 position="relative"
                 padding="0px 0px 0px 0px"
                 whiteSpace="pre-wrap"
-                children="Authentication"
+                children="Analytics"
+                onClick={analyticsButtonHandler}
                 {...getOverrideProps(overrides, "label39493390")}
               ></Text>
             </Flex>
