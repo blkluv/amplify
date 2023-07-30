@@ -343,12 +343,6 @@ function Dashboard() {
     };
   }, []);
 
-  useEffect(() => {
-    Storage.list("", { level: "public" })
-      .then(({ results }) => console.log("s3", results))
-      .catch((err) => console.log(err));
-  }, []);
-
   return (
     <View
       style={{

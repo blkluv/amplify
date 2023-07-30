@@ -42,6 +42,7 @@ function ProductSummary() {
     await DataStore.query(Product, id)
       .then((res) => {
         setProduct(res);
+        fetchProducts();
       })
       .catch((err) => {
         console.log(err);
@@ -53,6 +54,7 @@ function ProductSummary() {
     DataStore.delete(model)
       .then(() => {
         setShowDeleteSuccessFullAlert(true);
+        fetchProducts();
       })
       .catch((err) => {
         setShowDeleteUnsuccessFullAlert(true);
