@@ -274,7 +274,7 @@ export default function MarketingPricing(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              children="Get upto 100 sales per month"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.29766691"
@@ -344,7 +344,7 @@ export default function MarketingPricing(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              children="Get upto 500 Customers"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.29766695"
@@ -414,7 +414,7 @@ export default function MarketingPricing(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              children="Get upto $10,000 in Sales Volume"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.29766699"
@@ -589,7 +589,7 @@ export default function MarketingPricing(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              children="Get upto 500 sales per month"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.39393399"
@@ -659,7 +659,7 @@ export default function MarketingPricing(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              children="Get Unlimited Customers"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.39393403"
@@ -729,7 +729,7 @@ export default function MarketingPricing(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              children="Get Unlimited Sales Volume"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.39393407"
@@ -904,7 +904,7 @@ export default function MarketingPricing(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              children="Get Unlimited Sales per month"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.39393615"
@@ -974,7 +974,7 @@ export default function MarketingPricing(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              children="Get Unlimited Customers"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.39393619"
@@ -1044,7 +1044,7 @@ export default function MarketingPricing(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              children="Get Unlimited Sales Volume"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.39393623"

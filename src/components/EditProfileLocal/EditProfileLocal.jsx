@@ -12,6 +12,7 @@ import {
 import { StorageManager } from "@aws-amplify/ui-react-storage";
 import { Storage, Auth } from "aws-amplify";
 import { useEffect } from "react";
+import { Analytics } from "aws-amplify";
 
 const props = {
   idProp: undefined,

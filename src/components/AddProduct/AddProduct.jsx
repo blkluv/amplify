@@ -13,6 +13,7 @@ import { StorageManager } from "@aws-amplify/ui-react-storage";
 import { Auth, DataStore, Storage } from "aws-amplify";
 import { Product } from "../../models";
 import { useEffect } from "react";
+import { Analytics } from "@aws-amplify/analytics";
 
 export default function AddProduct({ closeModal }) {
   useEffect(() => {

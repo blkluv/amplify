@@ -27,8 +27,6 @@ export default function NavBarHeader(props) {
     type: "url",
     url: "/collections",
   });
-  const shirtsOnClick = useNavigateAction({ type: "url", url: "/shirts" });
-  const tshirtsOnClick = useNavigateAction({ type: "url", url: "/tshirts" });
   const logoutOnClick = useAuthSignOutAction({ global: false });
   const imageOnClick = useNavigateAction({ type: "url", url: "/profile" });
   return (
@@ -115,10 +113,7 @@ export default function NavBarHeader(props) {
           position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
-          children="Shirts"
-          onClick={() => {
-            shirtsOnClick();
-          }}
+          children=" "
           {...getOverrideProps(overrides, "Shirts")}
         ></Text>
         <Text
@@ -139,10 +134,7 @@ export default function NavBarHeader(props) {
           position="relative"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
-          children="Tshirts"
-          onClick={() => {
-            tshirtsOnClick();
-          }}
+          children=" "
           {...getOverrideProps(overrides, "Tshirts")}
         ></Text>
       </Flex>

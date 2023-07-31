@@ -7,6 +7,8 @@ import MarketingPricing from "../../ui-components/MarketingPricing";
 import MarketingFooterBrand from "../../ui-components/MarketingFooterBrand";
 import { useState, useEffect } from "react";
 import { Analytics } from "aws-amplify";
+import { Storage } from "aws-amplify";
+import heroImg from "../../assets/isometric-idea-for-business-success-1.gif";
 
 export function Home() {
   const [startTime, setStartTime] = useState(null);
@@ -44,6 +46,21 @@ export function Home() {
     });
   }, [endTime]);
 
+  const [heroGif, setHeroGif] = useState(null);
+
+  useEffect(() => {
+    Storage.get("6091df4d8c560993596787ef0278551d2d87b362.png", {
+      level: "public",
+    })
+      .then((result) => {
+        setHeroGif(result);
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <View
       style={{
@@ -56,7 +73,7 @@ export function Home() {
         flexDirection: "column",
       }}
     >
-      <HeroLayout1 width={"100%"} />
+      <HeroLayout1 width={"100%"} heroGif={heroImg} />
       <HeroLayout2 width={"100%"} />
       <Features2x2 width={"100%"} />
       <MarketingPricing width={"100%"} />

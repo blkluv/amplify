@@ -13,7 +13,7 @@ import {
 } from "@aws-amplify/ui-react/internal";
 import { Button, Flex, Image, Text } from "@aws-amplify/ui-react";
 export default function HeroLayout1(props) {
-  const { overrides: overridesProp, ...rest } = props;
+  const { heroGif, overrides: overridesProp, ...rest } = props;
   const variants = [
     {
       overrides: {
@@ -127,7 +127,7 @@ export default function HeroLayout1(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Full stack"
+              children="Discover the Future of E-Commerce: Your Shopify Alternative"
               {...getOverrideProps(overrides, "Eyebrow")}
             ></Text>
             <Text
@@ -149,7 +149,7 @@ export default function HeroLayout1(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Build full-stack web and mobile apps in hours. Easy to start, easy to scale"
+              children="Unlike other platforms, We offers unparalleled customization options"
               {...getOverrideProps(overrides, "Heading")}
             ></Text>
             <Text
@@ -172,7 +172,7 @@ export default function HeroLayout1(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="AWS Amplify is a complete solution that lets frontend web and mobile developers easily build, ship, and host full-stack applications on AWS, with the flexibility to leverage the breadth of AWS services as use cases evolve. No cloud expertise needed."
+              children="Speed and reliability are paramount in the fast-paced world of e-commerce. Experience lightning-fast loading times and an infrastructure designed to handle any traffic spike, ensuring your customers have a smooth shopping experience every time."
               {...getOverrideProps(overrides, "Body")}
             ></Text>
           </Flex>
@@ -216,6 +216,7 @@ export default function HeroLayout1(props) {
           position="relative"
           padding="0px 0px 0px 0px"
           objectFit="unset"
+          src={heroGif}
           {...getOverrideProps(overrides, "image")}
         ></Image>
       </Flex>

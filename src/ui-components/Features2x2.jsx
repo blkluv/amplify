@@ -116,7 +116,7 @@ export default function Features2x2(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Feature A"
+              children="All-in-One Dashboard"
               {...getOverrideProps(overrides, "Feature A")}
             ></Text>
             <Text
@@ -139,7 +139,7 @@ export default function Features2x2(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."
+              children="With our all-in-one dashboard, you can say goodbye to scattered data and time-consuming processes. Streamline your operations like never before by effortlessly adding and managing customers, orders, and products in a single, intuitive platform. "
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.29766596"
@@ -211,7 +211,7 @@ export default function Features2x2(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Feature B"
+              children="Unlock Your Marketing Potential"
               {...getOverrideProps(overrides, "Feature B")}
             ></Text>
             <Text
@@ -234,7 +234,7 @@ export default function Features2x2(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."
+              children="Revolutionize your marketing game with our all-in-one dashboard that puts the power of email campaigns at your fingertips. Gone are the days of navigating multiple platforms to reach your customers. Now, you can effortlessly send personalized emails to all your customers directly from our intuitive dashboard"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.29766599"
@@ -321,7 +321,7 @@ export default function Features2x2(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Feature C"
+              children="Seamless Storage Solutions"
               {...getOverrideProps(overrides, "Feature C")}
             ></Text>
             <Text
@@ -344,7 +344,7 @@ export default function Features2x2(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."
+              children="Welcome to our all-in-one dashboard, where managing your assets has never been easier. Say goodbye to the chaos of scattered files and folders. With our storage page, you can effortlessly upload, organize, and access various assets all in one place"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.29766603"
@@ -416,7 +416,7 @@ export default function Features2x2(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Feature D"
+              children="Data-Driven Decision Making"
               {...getOverrideProps(overrides, "Feature D")}
             ></Text>
             <Text
@@ -439,7 +439,7 @@ export default function Features2x2(props) {
               position="relative"
               padding="0px 0px 0px 0px"
               whiteSpace="pre-wrap"
-              children="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."
+              children="Make informed decisions with confidence as you delve into granular data on website traffic, sales, customer demographics, and more. Our analytics tool empowers you to identify growth opportunities"
               {...getOverrideProps(
                 overrides,
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.29766606"
