@@ -169,7 +169,6 @@ function StorageSummary() {
 
   const processFile = async ({ file }) => {
     const fileExtension = file.name.split(".").pop();
-
     return file
       .arrayBuffer()
       .then((filebuffer) => window.crypto.subtle.digest("SHA-1", filebuffer))

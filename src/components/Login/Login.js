@@ -1,8 +1,6 @@
-import { useEffect } from "react";
-
-import { Authenticator, useAuthenticator, View } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
-
+import { useEffect } from "react";
+import { Authenticator, useAuthenticator, View } from "@aws-amplify/ui-react";
 import { useNavigate, useLocation } from "react-router";
 
 export function Login() {

@@ -10,7 +10,6 @@ import { Customer, Order, AuditLogs } from "../../models";
 import { Notifications, Analytics } from "aws-amplify";
 import AddProduct from "../AddProduct/AddProduct";
 import { Product } from "../../models";
-import { Storage } from "aws-amplify";
 import ActivityLogs from "../ActivityLogs/ActivityLogs";
 import { useNavigate } from "react-router";
 import { useState } from "react";
@@ -42,7 +41,7 @@ function Dashboard() {
 
     Analytics.autoTrack("pageView", {
       enable: true,
-      eventName: "pageView",
+      eventName: "DashboardPageView",
       type: "singlePageApp",
       provider: "AWSPinpoint",
       getUrl: () => {
@@ -86,14 +85,45 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const { InAppMessaging } = Notifications;
-  const myFirstEvent = {
-    name: "My_first_event",
-    attributes: { color: "red" },
+  const [sendInAppMessage, setSendInAppMessage] = React.useState(false);
+
+  useEffect(() => {
+    Analytics.record(refreshEvent);
+    InAppMessaging.dispatchEvent(refreshEvent);
+  }, [sendInAppMessage]);
+
+  const refreshEvent = {
+    name: "refresh",
+    label: "Refresh",
+    page: "Dashboard",
+    handler: () => {
+      console.log("refresh");
+    },
   };
 
   useEffect(() => {
     InAppMessaging.syncMessages();
   }, []);
+
+  useEffect(() => {
+    const listener = InAppMessaging.onMessageReceived(myMessageReceivedHandler);
+    return () => listener.remove();
+  }, []);
+
+  useEffect(() => {
+    const displayListener = InAppMessaging.onMessageDisplayed(
+      myMessageDisplayedHandler
+    );
+    return () => displayListener.remove();
+  }, []);
+
+  const myMessageReceivedHandler = (message) => {
+    console.log(message);
+  };
+
+  const myMessageDisplayedHandler = (message) => {
+    console.log("Message displayed", message);
+  };
 
   const handleHomeButton = () => navigate("/");
   const handleCustomerSummaryButton = () => navigate("/customers");
@@ -309,26 +339,6 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    const listener = InAppMessaging.onMessageReceived(myMessageReceivedHandler);
-    return () => listener.remove();
-  }, []);
-
-  useEffect(() => {
-    const displayListener = InAppMessaging.onMessageDisplayed(
-      myMessageDisplayedHandler
-    );
-    return () => displayListener.remove();
-  }, []);
-
-  const myMessageReceivedHandler = (message) => {
-    console.log(message);
-  };
-
-  const myMessageDisplayedHandler = (message) => {
-    console.log("Message displayed", message);
-  };
-
-  useEffect(() => {
     const customerSub = DataStore.observe(Customer).subscribe((msg) => {
       DataStore.save(
         new AuditLogs({
@@ -512,6 +522,7 @@ function Dashboard() {
                   onClick={() => {
                     fetchCustomerData();
                     fetchOrderData();
+                    setSendInAppMessage(true);
                   }}
                   data-amplify-analytics-name="refreshButton"
                 >
