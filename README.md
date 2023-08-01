@@ -1,70 +1,86 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Demo
 
-## Available Scripts
+https://www.loom.com/share/df1c091079224aeeae43041be5e38237?sid=b62be478-f8fb-48f1-8591-d6c50646dd64
 
-In the project directory, you can run:
 
-### `npm start`
+# Shopify Alternative app
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+If you've ever dreamed of building a full-stack app but have been intimidated by the technical challenges of setting up the whole backend, this story is for you.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Using AWS Amplify, I quickly generated the frontend components I needed - from forms and tables to modals and menus. Amplify Studio's drag-and-drop interface allowed me to build the app's data models and APIs in just a few hours.
 
-### `npm test`
+Behind the scenes, Amplify is handling all the backend work for me - hosting my app, managing the database, and integrating features like analytics and cloud storage. This freed me up to focus on the user experience and functionality that matters most for the users.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The result? An all-in-one e-commerce platform that helps users:
 
-### `npm run build`
+• Create and manage their product catalog, customers, and orders.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+• Store product images and documents in the cloud
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+• Send targeted promotional emails to the right customers
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+• Track sales, orders, and other key metrics
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Licenses
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
+[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+## Features
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- 🔐 Secure Login/Signup with AWS Cognito - Amplify makes it a breeze to integrate user authentication and authorization using AWS Cognito. Users can quickly create accounts and log in to access the app's features.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- 📝 GraphQL API - Amplify provides a GraphQL API out of the box to interact with the front end. This allowed me to quickly build the data models and CRUD operations for products, orders, and customers.
 
-### Code Splitting
+- ⚛️ Amplify UI Components - I leveraged Amplify's React UI library to generate forms, tables, modal windows, and other UI components - saving me hours of frontend development work.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- 🎨 Amplify Studio Data Models - Amplify Studio's visual interface helped me design and generate the data models for my backend, which I then connected to my React frontend.
 
-### Analyzing the Bundle Size
+- 📧 AWS SES + Pinpoint Email Campaigns - I integrated AWS SES and Pinpoint to enable targeted promotional email campaigns to the right customers at the right time.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- 📊 Built-in Analytics with Pinpoint - Amplify's integration with Pinpoint gave me real-time analytics and metrics like total auto-tracking a page time spent, auto-tracking user sessions, and page views - right out of the box.
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Run Locally
 
-### Advanced Configuration
+Clone the project
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```bash
+  git clone https://github.com/vishesh-baghel/amplify-hackathon.git
+```
 
-### Deployment
+Go to the project directory
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+  cd my-project
+```
 
-### `npm run build` fails to minify
+Install node dependencies by going to the webapp directory
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+  npm i 
+```
+To deploy this project
+
+```bash
+  npm start
+```
+
+
+
+## Tech Stack
+
+**Client:** React, AWS Amplify
+
+**Server:** AWS AppSync, AWS Lambda, AWS Pinpoint
+
+
+## Support
+
+For support, email me at visheshbaghel99@gmail.com
+
