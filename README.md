@@ -1,3 +1,6 @@
+## Results for hackathon
+
+![image](https://github.com/vishesh-baghel/amplify-hackathon/assets/71141511/296fa87c-3acc-4930-ba9d-fe9b274f5cd0)
 
 ## Demo
 
